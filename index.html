@@ -37,25 +37,20 @@
             z-index: 0;
             pointer-events: none;
         }
-        
-        /* <CHANGE> Adicionando sidebar e layout com flexbox */
-        .main-layout {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-            z-index: 1;
-        }
 
+        /* Sidebar responsivo */
         .sidebar {
-            width: 280px;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            padding: 30px 0;
             position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
             height: 100vh;
+            background: rgba(45, 55, 72, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
             overflow-y: auto;
+            z-index: 1000;
             transition: transform 0.3s ease;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar.hidden {
@@ -63,117 +58,119 @@
         }
 
         .sidebar-header {
-            padding: 0 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
         }
 
         .sidebar-title {
             font-size: 18px;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 5px;
         }
 
-        .sidebar-subtitle {
-            font-size: 12px;
-            opacity: 0.7;
+        .close-sidebar {
+            display: none;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
         }
 
         .sidebar-menu {
             list-style: none;
         }
 
-        .sidebar-item {
-            margin: 0;
-            padding: 0;
+        .sidebar-menu li {
+            margin-bottom: 10px;
         }
 
-        .sidebar-link {
-            display: block;
-            padding: 15px 25px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
+        .sidebar-menu button {
+            width: 100%;
+            background: transparent;
+            color: #cbd5e0;
+            border: none;
+            padding: 12px 15px;
+            text-align: left;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        .sidebar-link:hover,
-        .sidebar-link.active {
-            background: rgba(255, 255, 255, 0.1);
+        .sidebar-menu button:hover {
+            background: rgba(102, 126, 234, 0.2);
             color: #fff;
-            border-left-color: #fbbf24;
+            transform: none;
         }
 
-        .content-wrapper {
-            flex: 1;
-            margin-left: 280px;
-            transition: margin-left 0.3s ease;
+        .sidebar-menu button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
         }
 
-        .content-wrapper.expanded {
-            margin-left: 0;
-        }
-
-        .hamburger {
+        .toggle-sidebar {
             display: none;
             position: fixed;
             top: 20px;
             left: 20px;
-            z-index: 101;
-            background: rgba(255, 255, 255, 0.2);
+            z-index: 999;
+            width: auto;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
+            color: #fff;
             border-radius: 8px;
-            backdrop-filter: blur(10px);
+            cursor: pointer;
+            font-size: 18px;
         }
 
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .sidebar {
-                width: 100%;
-                z-index: 100;
-            }
-
-            .content-wrapper {
-                margin-left: 0;
-            }
-
-            .main-layout.sidebar-open .sidebar {
-                transform: translateX(0);
-            }
-
-            .main-layout.sidebar-open .content-wrapper::after {
-                content: '';
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 99;
-            }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
         }
-        
+
+        .overlay.visible {
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content.full-width {
+            margin-left: 0;
+        }
+
         .container { 
             max-width: 1400px; 
             margin: 0 auto; 
             padding: 40px 20px;
+            position: relative;
+            z-index: 1;
         }
         
         .hero-section {
             text-align: center;
-            padding: 80px 20px 60px;
+            padding: 60px 20px 40px;
+            position: relative;
+            z-index: 1;
         }
         
         .hero-badge {
@@ -291,10 +288,6 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
-
-        .grid-2col {
-            grid-template-columns: 2fr 1fr;
-        }
         
         .stat-card { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -396,21 +389,21 @@
             color: #742a2a;
         }
         
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: auto;
-            padding: 12px 24px;
-            z-index: 100;
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 80mm;
+            }
         }
         
-        .loading {
-            text-align: center;
-            padding: 40px;
-            opacity: 0.6;
-        }
-
         .tab-buttons {
             display: flex;
             gap: 10px;
@@ -430,69 +423,130 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            .print-area, .print-area * {
-                visibility: visible;
-            }
-            .print-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 80mm;
-            }
+        
+        .logout-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: calc(100% - 40px);
+            padding: 12px 24px;
+            z-index: 100;
         }
         
+        .loading {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.6;
+        }
+
+        /* Responsividade Mobile */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+        }
+
         @media (max-width: 768px) {
+            .toggle-sidebar {
+                display: block;
+            }
+
+            .close-sidebar {
+                display: block;
+            }
+
+            .sidebar {
+                width: 260px;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
             .hero-title { font-size: 36px; }
             .hero-subtitle { font-size: 16px; }
             .card { padding: 20px; }
             .grid { grid-template-columns: 1fr; }
-            .grid-2col { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
-            .container { padding: 40px 15px; }
-            .logout-btn {
-                top: 70px;
-                padding: 10px 16px;
+            .stat-value { font-size: 32px; }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+
+            .tab-btn {
+                min-width: 120px;
+                padding: 10px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 28px; }
+            .hero-subtitle { font-size: 14px; }
+            .container { padding: 20px 15px; }
+            .card { padding: 15px; }
+            .stat-value { font-size: 24px; }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            input, select, button, textarea {
+                padding: 12px 15px;
                 font-size: 14px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+                min-width: auto;
             }
         }
     </style>
 </head>
 <body>
-    <div class="main-layout" id="mainLayout">
-        <!-- <CHANGE> Sidebar lateral colapsável -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-title">👗 Tamires Lima</div>
-                <div class="sidebar-subtitle">Fashion Store</div>
-            </div>
-            <ul class="sidebar-menu" id="sidebarMenu">
-                <li class="sidebar-item">
-                    <a class="sidebar-link active" onclick="changeTab('products'); toggleSidebar();" href="#">📦 Estoque</a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" onclick="changeTab('sales'); toggleSidebar();" href="#">🛒 Caixa de Vendas</a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" onclick="changeTab('history'); toggleSidebar();" href="#">📊 Histórico</a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" onclick="handleLogout(); toggleSidebar();" href="#">🚪 Sair</a>
-                </li>
-            </ul>
-        </aside>
+    <!-- Overlay para fechar sidebar -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-        <!-- <CHANGE> Botão hamburger para mobile -->
-        <button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+    <!-- Toggle button para sidebar mobile -->
+    <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
 
-        <!-- Conteúdo principal -->
-        <div class="content-wrapper" id="contentWrapper">
-            <div id="app"></div>
+    <!-- Sidebar responsiva -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
         </div>
+        <ul class="sidebar-menu">
+            <li><button class="sidebar-btn active" data-page="dashboard" onclick="changePage('dashboard')">📊 Dashboard</button></li>
+            <li><button class="sidebar-btn" data-page="products" onclick="changePage('products')">📦 Produtos</button></li>
+            <li><button class="sidebar-btn" data-page="sales" onclick="changePage('sales')">🛒 Vendas</button></li>
+            <li><button class="sidebar-btn" data-page="history" onclick="changePage('history')">📋 Histórico</button></li>
+            <li><button class="sidebar-btn" data-page="customers" onclick="changePage('customers')">👥 Clientes</button></li>
+            <li><button class="sidebar-btn" data-page="settings" onclick="changePage('settings')">⚙️ Configurações</button></li>
+        </ul>
+        <button class="logout-btn btn-danger" onclick="handleLogout()">🚪 Sair</button>
+    </aside>
+
+    <!-- Main content com classe responsiva -->
+    <div class="main-content" id="mainContent">
+        <div id="app"></div>
     </div>
 
     <script>
@@ -506,19 +560,33 @@
         let currentTab = 'products';
         let products = [];
         let sales = [];
+        let customers = [];
         let cart = [];
 
-        // <CHANGE> Função para toggle da sidebar no mobile
         function toggleSidebar() {
-            const mainLayout = document.getElementById('mainLayout');
-            const isMobile = window.innerWidth <= 768;
-            
-            if (isMobile) {
-                mainLayout.classList.toggle('sidebar-open');
-            }
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('visible');
         }
 
-        // ... existing functions - loadProducts ...
+        function changePage(page) {
+            currentPage = page;
+            toggleSidebar(); // Fechar sidebar ao mudar de página no mobile
+            updateSidebarActive();
+            render();
+        }
+
+        function updateSidebarActive() {
+            document.querySelectorAll('.sidebar-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === currentPage) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Funções do Supabase - Produtos
         async function loadProducts() {
             try {
                 const { data, error } = await supabase
@@ -589,6 +657,60 @@
             }
         }
 
+        async function loadCustomers() {
+            try {
+                const { data, error } = await supabase
+                    .from('tamires_customers')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                customers = data || [];
+            } catch (error) {
+                console.error('Erro ao carregar clientes:', error);
+                customers = [];
+            }
+        }
+
+        async function addCustomer(name, email, phone, address, city) {
+            try {
+                const { data, error } = await supabase
+                    .from('tamires_customers')
+                    .insert([{
+                        name,
+                        email: email || null,
+                        phone: phone || null,
+                        address: address || null,
+                        city: city || null,
+                        created_at: new Date().toISOString()
+                    }])
+                    .select();
+                
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Erro ao adicionar cliente:', error);
+                alert('Erro ao adicionar cliente: ' + error.message);
+                return false;
+            }
+        }
+
+        async function deleteCustomer(id) {
+            try {
+                const { error } = await supabase
+                    .from('tamires_customers')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Erro ao deletar cliente:', error);
+                return false;
+            }
+        }
+
+        // Funções do Supabase - Vendas
         async function loadSales() {
             try {
                 const { data, error } = await supabase
@@ -604,7 +726,7 @@
             }
         }
 
-        async function createSale(items, paymentMethod, customerName = '') {
+        async function createSale(items, paymentMethod, customerName = '', customerId = null) {
             try {
                 const total = items.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
                 const totalCost = items.reduce((sum, item) => sum + (item.cost_price * item.quantity), 0);
@@ -619,6 +741,7 @@
                         profit,
                         payment_method: paymentMethod,
                         customer_name: customerName,
+                        customer_id: customerId,
                         date: new Date().toISOString()
                     }])
                     .select();
@@ -707,23 +830,9 @@
             cart = [];
         }
 
-        // <CHANGE> Função de impressão corrigida sem JSON.stringify quebrado
         function printReceipt(sale) {
             const items = typeof sale.items === 'string' ? JSON.parse(sale.items) : sale.items;
             
-            let itemsHTML = '';
-            items.forEach(item => {
-                itemsHTML += `
-                    <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                        <span>${item.name} (${item.size})</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-left: 10px; margin: 5px 0;">
-                        <span>${item.quantity}x R$ ${item.sale_price.toFixed(2)}</span>
-                        <span>R$ ${(item.quantity * item.sale_price).toFixed(2)}</span>
-                    </div>
-                `;
-            });
-
             const receiptHTML = `
                 <div style="font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.4; max-width: 80mm;">
                     <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px; margin-bottom: 10px;">
@@ -735,7 +844,15 @@
                     </div>
                     
                     <div style="margin: 10px 0;">
-                        ${itemsHTML}
+                        ${items.map(item => `
+                            <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                <span>${item.name} (${item.size})</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-left: 10px; margin: 5px 0;">
+                                <span>${item.quantity}x R$ ${item.sale_price.toFixed(2)}</span>
+                                <span>R$ ${(item.quantity * item.sale_price).toFixed(2)}</span>
+                            </div>
+                        `).join('')}
                     </div>
                     
                     <div style="border-top: 1px dashed #000; padding-top: 10px; margin-top: 10px; font-weight: bold;">
@@ -830,10 +947,45 @@
             const totalRevenue = sales.reduce((sum, s) => sum + s.total, 0);
             const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
 
-            let tabContent = '';
+            return `
+                <div class="hero-section" style="padding: 60px 20px 40px;">
+                    <div class="hero-badge">
+                        👗 Bem-vinda, ${currentUser.name}
+                    </div>
+                    <h1 class="hero-title" style="font-size: 42px;">Tamires Lima Fashion</h1>
+                    <p class="hero-subtitle">Sistema de Gerenciamento Completo</p>
+                </div>
 
-            if (currentTab === 'products') {
-                tabContent = `
+                <div class="container">
+                    <div class="grid">
+                        <div class="stat-card">
+                            <div class="stat-label">📦 Produtos</div>
+                            <div class="stat-value">${totalProducts}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">${totalStock} unidades em estoque</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">💰 Vendas Hoje</div>
+                            <div class="stat-value">R$ ${todayRevenue.toFixed(2)}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">${todaySales.length} vendas realizadas</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">📈 Lucro Hoje</div>
+                            <div class="stat-value">R$ ${todayProfit.toFixed(2)}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">Margem diária</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">👥 Clientes</div>
+                            <div class="stat-value">${customers.length}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">Clientes cadastrados</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProductsPage() {
+            return `
+                <div class="container">
                     <div class="card">
                         <h2>Cadastrar Nova Peça</h2>
                         <div class="form-row">
@@ -870,7 +1022,7 @@
                     </div>
 
                     <div class="card">
-                        <h2>Estoque de Peças (${totalProducts} itens)</h2>
+                        <h2>Estoque de Peças (${products.length} itens)</h2>
                         ${products.length === 0 ? '<p class="loading">Nenhuma peça cadastrada</p>' : `
                             <div style="overflow-x: auto;">
                                 <table>
@@ -910,80 +1062,86 @@
                             </div>
                         `}
                     </div>
-                `;
-            } else if (currentTab === 'sales') {
-                const availableProducts = products.filter(p => p.stock > 0);
-                const cartTotal = cart.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
-                const cartProfit = cart.reduce((sum, item) => sum + ((item.sale_price - item.cost_price) * item.quantity), 0);
+                </div>
+            `;
+        }
 
-                tabContent = `
-                    <div class="card">
-                        <div class="grid grid-2col">
-                            <div>
-                                <h2>Produtos Disponíveis</h2>
-                                ${availableProducts.length === 0 ? '<p class="loading">Nenhum produto em estoque</p>' : `
-                                    <div class="grid">
-                                        ${availableProducts.map(p => `
-                                            <div class="product-card" onclick="handleSelectProduct('${p.id}')">
-                                                <h3>${p.name}</h3>
-                                                <p style="color: #718096; font-size: 14px; margin: 5px 0;">${p.category} | ${p.size} | ${p.color}</p>
-                                                <p style="font-weight: 700; color: #667eea; font-size: 18px; margin: 8px 0;">R$ ${p.sale_price.toFixed(2)}</p>
-                                                <p style="font-size: 13px; color: #718096;">Estoque: ${p.stock} un.</p>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                `}
-                            </div>
+        function renderSalesPage() {
+            const availableProducts = products.filter(p => p.stock > 0);
+            const cartTotal = cart.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
+            const cartProfit = cart.reduce((sum, item) => sum + ((item.sale_price - item.cost_price) * item.quantity), 0);
 
-                            <div>
-                                <h2>Carrinho (${cart.length})</h2>
-                                ${cart.length === 0 ? '<p class="loading">Carrinho vazio</p>' : `
-                                    <div>
-                                        ${cart.map(item => `
-                                            <div class="cart-item">
-                                                <div>
-                                                    <strong>${item.name}</strong>
-                                                    <p style="font-size: 12px; color: #718096;">${item.quantity}x R$ ${item.sale_price.toFixed(2)}</p>
-                                                </div>
-                                                <div style="text-align: right;">
-                                                    <strong>R$ ${(item.quantity * item.sale_price).toFixed(2)}</strong>
-                                                    <button onclick="handleRemoveFromCart('${item.id}')" class="btn-danger" style="width: auto; padding: 4px 8px; font-size: 12px; margin-top: 5px;">❌</button>
-                                                </div>
+            return `
+                <div class="container">
+                    <div class="grid" style="grid-template-columns: 2fr 1fr;">
+                        <div class="card">
+                            <h2>Produtos Disponíveis</h2>
+                            ${availableProducts.length === 0 ? '<p class="loading">Nenhum produto em estoque</p>' : `
+                                <div class="grid">
+                                    ${availableProducts.map(p => `
+                                        <div class="product-card" onclick="handleSelectProduct('${p.id}')">
+                                            <h3>${p.name}</h3>
+                                            <p style="color: #718096; font-size: 14px; margin: 5px 0;">${p.category} | ${p.size} | ${p.color}</p>
+                                            <p style="font-weight: 700; color: #667eea; font-size: 18px; margin: 8px 0;">R$ ${p.sale_price.toFixed(2)}</p>
+                                            <p style="font-size: 13px; color: #718096;">Estoque: ${p.stock} un.</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `}
+                        </div>
+
+                        <div class="card" style="position: sticky; top: 20px;">
+                            <h2>Carrinho (${cart.length})</h2>
+                            ${cart.length === 0 ? '<p class="loading">Carrinho vazio</p>' : `
+                                <div>
+                                    ${cart.map(item => `
+                                        <div class="cart-item">
+                                            <div>
+                                                <strong>${item.name}</strong>
+                                                <p style="font-size: 12px; color: #718096;">${item.quantity}x R$ ${item.sale_price.toFixed(2)}</p>
                                             </div>
-                                        `).join('')}
-                                        
-                                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
-                                            <div style="display: flex; justify-content: space-between; margin: 8px 0;">
-                                                <strong>Subtotal:</strong>
-                                                <strong>R$ ${cartTotal.toFixed(2)}</strong>
-                                            </div>
-                                            <div style="display: flex; justify-content: space-between; margin: 8px 0; color: #38a169;">
-                                                <strong>Lucro:</strong>
-                                                <strong>R$ ${cartProfit.toFixed(2)}</strong>
+                                            <div style="text-align: right;">
+                                                <strong>R$ ${(item.quantity * item.sale_price).toFixed(2)}</strong>
+                                                <button onclick="handleRemoveFromCart('${item.id}')" class="btn-danger" style="width: auto; padding: 4px 8px; font-size: 12px; margin-top: 5px;">❌</button>
                                             </div>
                                         </div>
-
-                                        <input type="text" id="customerName" placeholder="Nome do Cliente (opcional)" style="margin-top: 15px;">
-                                        <select id="paymentMethod" style="margin-top: 10px;">
-                                            <option value="">Forma de Pagamento</option>
-                                            <option value="Dinheiro">Dinheiro</option>
-                                            <option value="Cartão Débito">Cartão Débito</option>
-                                            <option value="Cartão Crédito">Cartão Crédito</option>
-                                            <option value="PIX">PIX</option>
-                                        </select>
-
-                                        <button onclick="handleFinalizeSale()" class="btn-success" style="margin-top: 15px;">✅ Finalizar Venda</button>
-                                        <button onclick="clearCart(); render();" class="btn-danger" style="margin-top: 10px;">🗑️ Limpar Carrinho</button>
+                                    `).join('')}
+                                    
+                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                                        <div style="display: flex; justify-content: space-between; margin: 8px 0;">
+                                            <strong>Subtotal:</strong>
+                                            <strong>R$ ${cartTotal.toFixed(2)}</strong>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin: 8px 0; color: #38a169;">
+                                            <strong>Lucro:</strong>
+                                            <strong>R$ ${cartProfit.toFixed(2)}</strong>
+                                        </div>
                                     </div>
-                                `}
-                            </div>
+
+                                    <input type="text" id="customerName" placeholder="Nome do Cliente (opcional)" style="margin-top: 15px;">
+                                    <select id="paymentMethod" style="margin-top: 10px;">
+                                        <option value="">Forma de Pagamento</option>
+                                        <option value="Dinheiro">Dinheiro</option>
+                                        <option value="Cartão Débito">Cartão Débito</option>
+                                        <option value="Cartão Crédito">Cartão Crédito</option>
+                                        <option value="PIX">PIX</option>
+                                    </select>
+
+                                    <button onclick="handleFinalizeSale()" class="btn-success" style="margin-top: 15px;">✅ Finalizar Venda</button>
+                                    <button onclick="clearCart(); render();" class="btn-danger" style="margin-top: 10px;">🗑️ Limpar Carrinho</button>
+                                </div>
+                            `}
                         </div>
                     </div>
-                `;
-            } else if (currentTab === 'history') {
-                const sortedSales = [...sales].sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                tabContent = `
+                </div>
+            `;
+        }
+
+        function renderHistoryPage() {
+            const sortedSales = [...sales].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            return `
+                <div class="container">
                     <div class="card">
                         <h2>Histórico de Vendas (${sales.length} vendas)</h2>
                         ${sales.length === 0 ? '<p class="loading">Nenhuma venda realizada</p>' : `
@@ -1014,7 +1172,7 @@
                                                     <td style="font-weight: 600; color: #38a169;">R$ ${s.profit.toFixed(2)}</td>
                                                     <td>${s.payment_method}</td>
                                                     <td>
-                                                        <button onclick="handlePrintReceipt(${s.id})" class="btn-success" style="width: auto; padding: 8px 16px; margin: 0;">🖨️ Imprimir</button>
+                                                        <button onclick='printReceipt(${JSON.stringify(s).replace(/'/g, "\\'")})'  class="btn-success" style="width: auto; padding: 8px 16px; margin: 0;">🖨️</button>
                                                     </td>
                                                 </tr>
                                             `;
@@ -1024,66 +1182,107 @@
                             </div>
                         `}
                     </div>
-                `;
-            }
-
-            // Hide sidebar for login
-            document.getElementById('sidebar').style.display = 'block';
-            document.getElementById('hamburger').style.display = window.innerWidth <= 768 ? 'flex' : 'none';
-            
-            return `
-                <div class="hero-section" style="padding: 60px 20px 40px;">
-                    <div class="hero-badge">
-                        👗 Bem-vinda, ${currentUser.name}
-                    </div>
-                    <h1 class="hero-title" style="font-size: 42px;">Tamires Lima Fashion</h1>
-                    <p class="hero-subtitle">Sistema de Gerenciamento Completo</p>
-                </div>
-
-                <div class="container">
-                    <div class="grid">
-                        <div class="stat-card">
-                            <div class="stat-label">📦 Produtos</div>
-                            <div class="stat-value">${totalProducts}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">${totalStock} unidades em estoque</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">💰 Vendas Hoje</div>
-                            <div class="stat-value">R$ ${todayRevenue.toFixed(2)}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">${todaySales.length} vendas realizadas</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">📈 Lucro Hoje</div>
-                            <div class="stat-value">R$ ${todayProfit.toFixed(2)}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">Margem diária</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">💎 Lucro Total</div>
-                            <div class="stat-value">R$ ${totalProfit.toFixed(2)}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">R$ ${totalRevenue.toFixed(2)} em vendas</p>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="tab-buttons">
-                            <button class="tab-btn ${currentTab === 'products' ? 'active' : ''}" onclick="changeTab('products')">
-                                📦 Estoque
-                            </button>
-                            <button class="tab-btn ${currentTab === 'sales' ? 'active' : ''}" onclick="changeTab('sales')">
-                                🛒 Caixa de Vendas
-                            </button>
-                            <button class="tab-btn ${currentTab === 'history' ? 'active' : ''}" onclick="changeTab('history')">
-                                📊 Histórico
-                            </button>
-                        </div>
-                    </div>
-
-                    ${tabContent}
                 </div>
             `;
         }
 
-        // ... existing handlers ...
+        function renderCustomersPage() {
+            return `
+                <div class="container">
+                    <div class="card">
+                        <h2>Cadastrar Novo Cliente</h2>
+                        <div class="form-row">
+                            <input type="text" id="customerName" placeholder="Nome Completo*" required>
+                            <input type="email" id="customerEmail" placeholder="Email (opcional)">
+                        </div>
+                        <div class="form-row">
+                            <input type="tel" id="customerPhone" placeholder="Telefone/WhatsApp (opcional)">
+                            <input type="text" id="customerCity" placeholder="Cidade (opcional)">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="customerAddress" placeholder="Endereço (opcional)" style="grid-column: 1 / -1;">
+                        </div>
+                        <button onclick="handleAddCustomer()" class="btn-success">➕ Cadastrar Cliente</button>
+                    </div>
+
+                    <div class="card">
+                        <h2>Lista de Clientes (${customers.length} clientes)</h2>
+                        ${customers.length === 0 ? '<p class="loading">Nenhum cliente cadastrado</p>' : `
+                            <div style="overflow-x: auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Email</th>
+                                            <th>Telefone</th>
+                                            <th>Cidade</th>
+                                            <th>Endereço</th>
+                                            <th>Data</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${customers.map(c => `
+                                            <tr>
+                                                <td><strong>${c.name}</strong></td>
+                                                <td>${c.email || '-'}</td>
+                                                <td>${c.phone || '-'}</td>
+                                                <td>${c.city || '-'}</td>
+                                                <td>${c.address || '-'}</td>
+                                                <td>${new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
+                                                <td>
+                                                    <button onclick="handleDeleteCustomer('${c.id}')" class="btn-danger" style="width: auto; padding: 8px 16px; margin: 0;">🗑️</button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSettingsPage() {
+            return `
+                <div class="container">
+                    <div class="card">
+                        <h2>⚙️ Configurações</h2>
+                        <div style="padding: 20px; background: rgba(102, 126, 234, 0.1); border-radius: 12px; margin-bottom: 20px;">
+                            <h3>Conta do Administrador</h3>
+                            <p style="color: #2d3748; margin-top: 10px;"><strong>Email:</strong> ${currentUser.email}</p>
+                            <p style="color: #2d3748;"><strong>Nome:</strong> ${currentUser.name}</p>
+                        </div>
+                        <button onclick="handleLogout()" class="btn-danger" style="width: 100%;">🚪 Fazer Logout</button>
+                    </div>
+
+                    <div class="card">
+                        <h2>📊 Estatísticas Gerais</h2>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
+                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Total de Produtos</p>
+                                <p style="font-size: 24px; font-weight: 700; color: #667eea;">${products.length}</p>
+                            </div>
+                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
+                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Total de Vendas</p>
+                                <p style="font-size: 24px; font-weight: 700; color: #667eea;">${sales.length}</p>
+                            </div>
+                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
+                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Total de Clientes</p>
+                                <p style="font-size: 24px; font-weight: 700; color: #667eea;">${customers.length}</p>
+                            </div>
+                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
+                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Receita Total</p>
+                                <p style="font-size: 24px; font-weight: 700; color: #38a169;">R$ ${sales.reduce((sum, s) => sum + s.total, 0).toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Handlers
         async function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
@@ -1097,6 +1296,7 @@
             if (success) {
                 await loadProducts();
                 await loadSales();
+                await loadCustomers();
                 currentPage = 'dashboard';
                 render();
             }
@@ -1139,21 +1339,13 @@
         }
 
         function showLogin() {
-            if (document.getElementById('loginCard')) {
-                document.getElementById('loginCard').style.display = 'block';
-            }
-            if (document.getElementById('registerCard')) {
-                document.getElementById('registerCard').style.display = 'none';
-            }
+            document.getElementById('loginCard').style.display = 'block';
+            document.getElementById('registerCard').style.display = 'none';
         }
 
         function showRegister() {
-            if (document.getElementById('loginCard')) {
-                document.getElementById('loginCard').style.display = 'none';
-            }
-            if (document.getElementById('registerCard')) {
-                document.getElementById('registerCard').style.display = 'block';
-            }
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('registerCard').style.display = 'block';
         }
 
         function handleLogout() {
@@ -1161,7 +1353,6 @@
                 logout();
                 currentPage = 'login';
                 currentTab = 'products';
-                document.getElementById('sidebar').style.display = 'none';
                 render();
             }
         }
@@ -1203,6 +1394,41 @@
             }
         }
 
+        async function handleAddCustomer() {
+            const name = document.getElementById('customerName').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const address = document.getElementById('customerAddress').value.trim();
+            const city = document.getElementById('customerCity').value.trim();
+
+            if (!name) {
+                alert('Preencha o nome do cliente!');
+                return;
+            }
+
+            const success = await addCustomer(name, email, phone, address, city);
+            if (success) {
+                alert('✅ Cliente cadastrado com sucesso!');
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerEmail').value = '';
+                document.getElementById('customerPhone').value = '';
+                document.getElementById('customerAddress').value = '';
+                document.getElementById('customerCity').value = '';
+                await loadCustomers();
+                render();
+            }
+        }
+
+        async function handleDeleteCustomer(id) {
+            if (confirm('Deseja realmente excluir este cliente?')) {
+                const success = await deleteCustomer(id);
+                if (success) {
+                    await loadCustomers();
+                    render();
+                }
+            }
+        }
+
         function handleSelectProduct(id) {
             const product = products.find(p => p.id === id);
             if (!product) return;
@@ -1228,14 +1454,6 @@
         function handleRemoveFromCart(id) {
             removeFromCart(id);
             render();
-        }
-
-        // <CHANGE> Handler para impressão corrigido
-        function handlePrintReceipt(saleId) {
-            const sale = sales.find(s => s.id === saleId);
-            if (sale) {
-                printReceipt(sale);
-            }
         }
 
         async function handleFinalizeSale() {
@@ -1269,44 +1487,43 @@
             }
         }
 
-        async function changeTab(tab) {
-            currentTab = tab;
-            render();
-        }
-
         function render() {
             const app = document.getElementById('app');
             
             if (currentPage === 'login') {
-                document.getElementById('sidebar').style.display = 'none';
-                document.getElementById('hamburger').style.display = 'none';
+                const mainContent = document.getElementById('mainContent');
+                mainContent.classList.add('full-width');
                 app.innerHTML = renderLoginPage();
-            } else if (currentPage === 'dashboard') {
-                app.innerHTML = renderDashboard();
+            } else {
+                const mainContent = document.getElementById('mainContent');
+                mainContent.classList.remove('full-width');
+                updateSidebarActive();
+
+                if (currentPage === 'dashboard') {
+                    app.innerHTML = renderDashboard();
+                } else if (currentPage === 'products') {
+                    app.innerHTML = renderProductsPage();
+                } else if (currentPage === 'sales') {
+                    app.innerHTML = renderSalesPage();
+                } else if (currentPage === 'history') {
+                    app.innerHTML = renderHistoryPage();
+                } else if (currentPage === 'customers') {
+                    app.innerHTML = renderCustomersPage();
+                } else if (currentPage === 'settings') {
+                    app.innerHTML = renderSettingsPage();
+                }
             }
         }
 
-        // Inicialização
         async function init() {
             const hasSession = await checkSession();
             if (hasSession) {
                 await loadProducts();
                 await loadSales();
+                await loadCustomers();
                 currentPage = 'dashboard';
             }
             render();
-
-            // Responsividade
-            window.addEventListener('resize', () => {
-                const isMobile = window.innerWidth <= 768;
-                const hamburger = document.getElementById('hamburger');
-                if (isMobile && currentPage === 'dashboard') {
-                    hamburger.style.display = 'flex';
-                } else {
-                    hamburger.style.display = 'none';
-                    document.getElementById('mainLayout').classList.remove('sidebar-open');
-                }
-            });
         }
 
         init();
