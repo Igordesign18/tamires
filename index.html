@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tamires Lima - Sistema de Vendas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -1412,11 +1413,11 @@
         let allCustomers = [];
         let allMessages = [];
 
-        // NOVO: Armazena os objetos File para upload
-        window.productFiles = []; 
-        window.logoFile = null;
-        window.faviconFile = null;
+        // Variáveis de upload atualizadas
+        let logoFileToUpload = null;
+        let faviconFileToUpload = null;
 
+        // Nova variável de estado para a mensagem atual
         let currentMessageToSend = {
             messageId: null,
             customerId: null,
@@ -1434,46 +1435,6 @@
             loadCategories();
             closeSidebarOnMobile();
         });
-
-        // --- INÍCIO: NOVAS FUNÇÕES DE UTILIDADE PARA STORAGE ---
-
-        // Função para gerar um UUID (Necessário para dar nome único aos arquivos no Storage)
-        function uuidv4() {
-            return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-            );
-        }
-
-        // Função centralizada para upload de arquivo
-        async function uploadFileToSupabase(file, bucketName, filePath) {
-            if (!file) return null;
-
-            try {
-                // 1. Upload do arquivo
-                const { data, error: uploadError } = await supabase.storage
-                    .from(bucketName)
-                    .upload(filePath, file, {
-                        cacheControl: '3600', // Cache por 1 hora
-                        upsert: true         // Permite substituir se o nome do arquivo for o mesmo
-                    });
-
-                if (uploadError) throw uploadError;
-
-                // 2. Obter URL pública
-                const { data: publicUrlData } = supabase.storage
-                    .from(bucketName)
-                    .getPublicUrl(filePath);
-
-                return publicUrlData.publicUrl;
-
-            } catch (error) {
-                console.error(`[Supabase Storage] Erro ao fazer upload em ${bucketName}/${filePath}:`, error.message);
-                throw new Error(`Falha no upload: ${error.message}`);
-            }
-        }
-
-        // --- FIM: NOVAS FUNÇÕES DE UTILIDADE PARA STORAGE ---
-
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1666,21 +1627,16 @@
             document.getElementById('productCost').value = '';
             document.getElementById('productStock').value = '';
             document.getElementById('imagePreview').innerHTML = '';
-            // Limpa o estado global dos arquivos
-            window.productFiles = []; 
         }
 
         function closeProductModal() {
             document.getElementById('productModal').classList.remove('active');
         }
 
-        // --- FUNÇÕES DE IMAGEM ATUALIZADAS PARA USAR O OBJETO FILE ---
-
         function handleImageUpload(event) {
             const files = Array.from(event.target.files).slice(0, 3);
             const preview = document.getElementById('imagePreview');
             preview.innerHTML = '';
-            window.productFiles = []; // Zera os arquivos para o novo upload
 
             files.forEach((file, index) => {
                 const reader = new FileReader();
@@ -1689,39 +1645,24 @@
                     div.className = 'image-item';
                     div.innerHTML = `
                         <img src="${e.target.result}" alt="Preview">
-                        <button class="image-remove" onclick="removeProductImage(${index})">×</button>
+                        <button class="image-remove" onclick="removeImage(${index})">×</button>
                     `;
                     preview.appendChild(div);
-                };
-                reader.readAsDataURL(file); // Apenas para pré-visualização (Base64)
-                
-                window.productFiles.push(file); // Armazena o objeto File para o upload real
-            });
-        }
-
-        function removeProductImage(index) {
-            if (window.productFiles && index >= 0 && index < window.productFiles.length) {
-                window.productFiles.splice(index, 1);
-            }
-            // Re-renderiza a pré-visualização para refletir a remoção
-            const preview = document.getElementById('imagePreview');
-            preview.innerHTML = ''; 
-            window.productFiles.forEach((file, idx) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const div = document.createElement('div');
-                    div.className = 'image-item';
-                    div.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <button class="image-remove" onclick="removeProductImage(${idx})">×</button>
-                    `;
-                    preview.appendChild(div);
+                    
+                    if (!window.productImages) window.productImages = [];
+                    window.productImages[index] = e.target.result;
                 };
                 reader.readAsDataURL(file);
             });
         }
 
-        // --- FUNÇÃO SAVE PRODUCT ATUALIZADA PARA USAR O UPLOAD DE IMAGENS ---
+        function removeImage(index) {
+            if (window.productImages) {
+                window.productImages.splice(index, 1);
+            }
+            document.getElementById('productImages').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+        }
 
         async function saveProduct() {
             const name = document.getElementById('productName').value.trim();
@@ -1730,7 +1671,6 @@
             const price = parseFloat(document.getElementById('productPrice').value);
             const cost = parseFloat(document.getElementById('productCost').value);
             const stock = parseInt(document.getElementById('productStock').value) || 0;
-            const files = window.productFiles || [];
 
             if (!name || !category || !price || !cost) {
                 alert('Preencha todos os campos obrigatórios');
@@ -1738,48 +1678,31 @@
             }
 
             try {
-                const product_id = uuidv4(); // ID único para a linha da tabela e para o caminho no Storage
-                const uploadedUrls = [];
-
-                // 1. Upload das imagens para o Supabase Storage
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    // Gera o caminho: products/id_produto/1.ext
-                    const fileExtension = file.name.split('.').pop();
-                    const filePath = `products/${product_id}/${i + 1}.${fileExtension}`; 
-
-                    const url = await uploadFileToSupabase(file, 'products', filePath); // Usa o bucket 'products'
-                    if (url) {
-                        uploadedUrls.push(url);
-                    }
-                }
-
-                // 2. Inserção do produto no banco de dados com as URLs
+                // Implementação simplificada: sem upload de storage, apenas base64 no banco de dados.
+                // Para produção, deve ser reescrita para usar o Storage como no saveStoreSettings.
                 const { data, error } = await supabase
                     .from('products')
                     .insert([{
-                        id: product_id, // Insere o ID gerado
                         name,
                         description,
                         category,
                         price,
                         cost,
                         stock_quantity: stock,
-                        image_url_1: uploadedUrls[0] || null,
-                        image_url_2: uploadedUrls[1] || null,
-                        image_url_3: uploadedUrls[2] || null
+                        image_url_1: window.productImages?.[0] || null,
+                        image_url_2: window.productImages?.[1] || null,
+                        image_url_3: window.productImages?.[2] || null
                     }])
                     .select();
 
                 if (error) throw error;
 
-                alert('Produto salvo e imagens enviadas!');
+                alert('Produto salvo!');
                 closeProductModal();
                 loadProducts();
                 loadCategories();
-                window.productFiles = []; // Limpa o estado após o upload
             } catch (error) {
-                alert('Erro ao salvar produto ou fazer upload da imagem: ' + error.message);
+                alert('Erro: ' + error.message);
             }
         }
 
@@ -2330,7 +2253,7 @@
 
 
                 const whatsappPhone = customer.phone.replace(/\D/g, '');
-                const whatsappLink = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(messageText)}`;
+                const whatsappLink = `https://wa.me/55${whatsappPhone}?text=${encodeURIComponent(messageText)}`;
 
                 // Salvar histórico
                 await supabase
@@ -2357,18 +2280,142 @@
             }
         }
 
-        // These functions seem to be remnants or not directly used in the current flow.
-        // Kept for potential future use or if they were intended for other actions.
-        async function sendBirthdayMessages(messageId) {
-            console.log('sendBirthdayMessages called with id:', messageId);
-            // Implement logic to find birthday customers and send messages if needed
+        // --- FUNÇÕES DE CONFIGURAÇÃO DE LOJA E UPLOAD (ATUALIZADAS) ---
+
+        // Função genérica para fazer o upload para o Supabase Storage
+        async function uploadFileToSupabase(file, folder) {
+            if (!file) return null;
+
+            const fileExt = file.name.split('.').pop();
+            // Use o nome do arquivo único para evitar conflitos
+            const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+            
+            // Use 'store-assets' como nome do bucket
+            const { error: uploadError } = await supabase.storage
+                .from('store-assets') 
+                .upload(fileName, file);
+
+            if (uploadError) {
+                console.error('Erro ao fazer upload:', uploadError);
+                throw new Error('Erro ao fazer upload da imagem: ' + uploadError.message);
+            }
+            
+            // Retorna a URL pública
+            const { data: urlData } = supabase.storage
+                .from('store-assets')
+                .getPublicUrl(fileName);
+                
+            return urlData.publicUrl;
         }
 
-        async function sendCollectionMessage(messageId) {
-            console.log('sendCollectionMessage called with id:', messageId);
-            // Implement logic to find relevant customers and send collection messages if needed
+        // Função para carregar a imagem e criar o preview, armazenando o File Object
+        async function uploadLogo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            logoFileToUpload = file; // Armazena o objeto File
+            faviconFileToUpload = null; // Limpa o outro se for o caso
+            
+            // Preview usando FileReader
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" style="max-width: 100px; border-radius: 8px;">`;
+            };
+            reader.readAsDataURL(file);
         }
 
+        // Função para carregar o favicon e criar o preview, armazenando o File Object
+        async function uploadFavicon(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            faviconFileToUpload = file; // Armazena o objeto File
+            logoFileToUpload = null; // Limpa o outro se for o caso
+
+            // Preview usando FileReader
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('faviconPreview').innerHTML = `<img src="${e.target.result}" style="max-width: 50px; border-radius: 8px;">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function saveStoreSettings() {
+            const name = document.getElementById('storeName').value.trim();
+            const description = document.getElementById('storeDescription').value.trim();
+            const whatsapp = document.getElementById('whatsappNumber').value.trim();
+
+            try {
+                let logoUrl = null;
+                let faviconUrl = null;
+                
+                // 1. UPLOAD DA LOGO (Se houver um novo arquivo)
+                if (logoFileToUpload) {
+                    logoUrl = await uploadFileToSupabase(logoFileToUpload, 'logos');
+                } else {
+                     // Mantém o URL existente se nenhum novo arquivo foi selecionado
+                     const logoPreviewElement = document.querySelector('#logoPreview img');
+                     if (logoPreviewElement && logoPreviewElement.src.startsWith('http')) {
+                         logoUrl = logoPreviewElement.src;
+                     }
+                }
+                
+                // 2. UPLOAD DO FAVICON (Se houver um novo arquivo)
+                if (faviconFileToUpload) {
+                    faviconUrl = await uploadFileToSupabase(faviconFileToUpload, 'favicons');
+                } else {
+                     // Mantém o URL existente se nenhum novo arquivo foi selecionado
+                     const faviconPreviewElement = document.querySelector('#faviconPreview img');
+                     if (faviconPreviewElement && faviconPreviewElement.src.startsWith('http')) {
+                         faviconUrl = faviconPreviewElement.src;
+                     }
+                }
+
+                // 3. BUSCAR CONFIGURAÇÃO EXISTENTE (ID é necessário para o UPDATE)
+                const { data: configData, error: getConfigError } = await supabase
+                    .from('store_config')
+                    .select('id, logo_url, favicon_url')
+                    .limit(1)
+                    .single();
+                
+                if (getConfigError && getConfigError.code !== 'PGRST116') throw getConfigError;
+
+                const configId = configData ? configData.id : null;
+
+                const updateData = {
+                    store_name: name,
+                    store_description: description,
+                    whatsapp_number: whatsapp,
+                    // Se o upload falhou (null) ou não foi feito, mantém o URL existente se não houve novo upload
+                    logo_url: logoUrl !== null ? logoUrl : configData?.logo_url, 
+                    favicon_url: faviconUrl !== null ? faviconUrl : configData?.favicon_url
+                };
+
+                // 4. SALVAR NO BANCO DE DADOS
+                if (configId) {
+                    const { error } = await supabase
+                        .from('store_config')
+                        .update(updateData)
+                        .eq('id', configId);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabase
+                        .from('store_config')
+                        .insert([updateData]);
+                    if (error) throw error;
+                }
+                
+                // Limpa os objetos de arquivo após o sucesso
+                logoFileToUpload = null;
+                faviconFileToUpload = null;
+
+                alert('Configurações salvas!');
+                loadStoreSettings(); // Recarrega para mostrar os novos URLs/dados
+            } catch (error) {
+                alert('Erro ao salvar: ' + error.message);
+                console.error(error);
+            }
+        }
 
         async function loadStoreSettings() {
             try {
@@ -2378,19 +2425,25 @@
                     .limit(1)
                     .single();
 
-                if (error && error.code !== 'PGRST116') throw error; // Ignore 'Not found' error
+                if (error && error.code !== 'PGRST116') throw error;
 
                 if (data) {
                     document.getElementById('storeName').value = data.store_name || 'Tamires Lima';
                     document.getElementById('storeDescription').value = data.store_description || '';
                     document.getElementById('whatsappNumber').value = data.whatsapp_number || '';
                     
+                    // Exibe a logo se a URL existir
                     if (data.logo_url) {
                         document.getElementById('logoPreview').innerHTML = `<img src="${data.logo_url}" style="max-width: 100px; border-radius: 8px;">`;
+                    } else {
+                        document.getElementById('logoPreview').innerHTML = '';
                     }
                     
+                    // Exibe o favicon se a URL existir
                     if (data.favicon_url) {
                         document.getElementById('faviconPreview').innerHTML = `<img src="${data.favicon_url}" style="max-width: 50px; border-radius: 8px;">`;
+                    } else {
+                        document.getElementById('faviconPreview').innerHTML = '';
                     }
                 } else {
                     // Create default config if none exists
@@ -2403,104 +2456,12 @@
             }
         }
 
-        // --- FUNÇÕES DE LOGO/FAVICON ATUALIZADAS PARA USAR O OBJETO FILE ---
-
-        async function uploadLogo(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            window.logoFile = file; // Armazena o objeto File
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" style="max-width: 100px; border-radius: 8px;">`;
-            };
-            reader.readAsDataURL(file); // Apenas para pré-visualização
-        }
-
-        async function uploadFavicon(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            window.faviconFile = file; // Armazena o objeto File
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('faviconPreview').innerHTML = `<img src="${e.target.result}" style="max-width: 50px; border-radius: 8px;">`;
-            };
-            reader.readAsDataURL(file); // Apenas para pré-visualização
-        }
-
-        // --- FUNÇÃO SAVE STORE SETTINGS ATUALIZADA PARA USAR O UPLOAD DE IMAGENS ---
-
-        async function saveStoreSettings() {
-            const name = document.getElementById('storeName').value.trim();
-            const description = document.getElementById('storeDescription').value.trim();
-            const whatsapp = document.getElementById('whatsappNumber').value.trim();
-
-            try {
-                // 1. Obter config ID existente
-                const { data: configData, error: getConfigError } = await supabase
-                    .from('store_config')
-                    .select('id, logo_url, favicon_url')
-                    .limit(1)
-                    .single();
-                
-                if (getConfigError && getConfigError.code !== 'PGRST116') throw getConfigError;
-
-                const configId = configData ? configData.id : null;
-                let logoUrl = configData?.logo_url || null;
-                let faviconUrl = configData?.favicon_url || null;
-
-                // 2. Upload da Logo se um novo arquivo foi selecionado
-                if (window.logoFile) {
-                    const fileExtension = window.logoFile.name.split('.').pop();
-                    const filePath = `store/logo.${fileExtension}`; 
-                    logoUrl = await uploadFileToSupabase(window.logoFile, 'store', filePath); // Usa o bucket 'store'
-                    window.logoFile = null; // Limpa o estado
-                }
-
-                // 3. Upload do Favicon se um novo arquivo foi selecionado
-                if (window.faviconFile) {
-                    const fileExtension = window.faviconFile.name.split('.').pop();
-                    const filePath = `store/favicon.${fileExtension}`;
-                    faviconUrl = await uploadFileToSupabase(window.faviconFile, 'store', filePath); // Usa o bucket 'store'
-                    window.faviconFile = null; // Limpa o estado
-                }
-
-                const updateData = {
-                    store_name: name,
-                    store_description: description,
-                    whatsapp_number: whatsapp,
-                    logo_url: logoUrl,
-                    favicon_url: faviconUrl
-                };
-
-                // 4. Salvar/Atualizar no banco de dados
-                if (configId) {
-                    // Update existing config
-                    const { error } = await supabase
-                        .from('store_config')
-                        .update(updateData)
-                        .eq('id', configId);
-                    if (error) throw error;
-                } else {
-                    // Insert new config
-                    const { error } = await supabase
-                        .from('store_config')
-                        .insert([updateData]);
-                    if (error) throw error;
-                }
-
-                alert('Configurações salvas e imagens enviadas!');
-                loadStoreSettings(); // Recarrega para mostrar as novas URLs
-            } catch (error) {
-                alert('Erro ao salvar configurações ou fazer upload da imagem: ' + error.message);
-            }
-        }
-
         function logoutUser() {
             // Implement actual logout if authentication is added
             alert('Logout realizado');
         }
+
+        window.productImages = []; // Initialize for product image handling
     </script>
 </body>
 </html>
