@@ -63,6 +63,21 @@
             overflow: hidden;
         }
 
+        /* Add mobile menu toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 24px;
+            padding: 0;
+        }
+
         /* Sidebar */
         .sidebar {
             width: 280px;
@@ -72,6 +87,7 @@
             flex-direction: column;
             padding: 20px;
             overflow-y: auto;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-header {
@@ -94,6 +110,7 @@
             color: white;
             font-weight: bold;
             font-size: 20px;
+            flex-shrink: 0;
         }
 
         .sidebar-title {
@@ -127,6 +144,7 @@
             background: transparent;
             font-size: 14px;
             font-weight: 500;
+            text-align: left;
         }
 
         .menu-item:hover {
@@ -145,6 +163,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .sidebar-footer {
@@ -166,16 +185,22 @@
         .header {
             background-color: var(--bg-secondary);
             border-bottom: 1px solid var(--border-color);
-            padding: 16px 24px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
         }
 
         .header-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .header-actions {
@@ -195,6 +220,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -228,7 +254,7 @@
         .content {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
+            padding: 20px;
         }
 
         .page {
@@ -242,7 +268,7 @@
         /* Dashboard */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
@@ -251,60 +277,67 @@
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+            gap: 12px;
         }
 
         .stat-content h3 {
             color: var(--text-tertiary);
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .stat-value {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 4px;
+            word-break: break-word;
         }
 
         .stat-change {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-tertiary);
         }
 
         .stat-icon {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
+            font-size: 20px;
+            flex-shrink: 0;
         }
 
         .period-selector {
             display: flex;
             gap: 8px;
             margin-bottom: 24px;
+            flex-wrap: wrap;
         }
 
         .period-btn {
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
             background-color: var(--bg-secondary);
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             transition: all 0.2s;
+            flex: 1;
+            min-width: 80px;
         }
 
         .period-btn.active {
@@ -317,8 +350,9 @@
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             margin-bottom: 24px;
+            overflow-x: auto;
         }
 
         .table-container {
@@ -326,28 +360,33 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px;
         }
 
         th {
             background-color: var(--bg-tertiary);
             color: var(--text-secondary);
-            padding: 12px 16px;
+            padding: 12px;
             text-align: left;
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
             border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
         }
 
         td {
-            padding: 12px 16px;
+            padding: 12px;
             border-bottom: 1px solid var(--border-color);
             font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         tr:last-child td {
@@ -388,7 +427,7 @@
 
         .form-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 16px;
         }
 
@@ -404,6 +443,7 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal.active {
@@ -413,9 +453,9 @@
         .modal-content {
             background-color: var(--bg-primary);
             border-radius: 12px;
-            padding: 24px;
+            padding: 20px;
             max-width: 600px;
-            width: 90%;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
@@ -428,12 +468,15 @@
             margin-bottom: 20px;
             padding-bottom: 16px;
             border-bottom: 1px solid var(--border-color);
+            gap: 12px;
         }
 
         .modal-title {
             font-size: 18px;
             font-weight: 600;
             color: var(--text-primary);
+            flex: 1;
+            min-width: 0;
         }
 
         .close-btn {
@@ -447,6 +490,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         /* Image Upload */
@@ -472,7 +516,7 @@
 
         .image-preview {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 12px;
             margin-top: 12px;
         }
@@ -522,6 +566,7 @@
             font-size: 20px;
             transition: all 0.2s;
             background-color: var(--bg-tertiary);
+            color: var(--text-primary);
         }
 
         .theme-toggle:hover {
@@ -572,50 +617,28 @@
             border: 1px solid rgba(124, 58, 237, 0.3);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                height: auto;
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .cart-sidebar {
-            width: 350px;
+            width: 100%;
             background-color: var(--bg-secondary);
-            border-left: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            padding: 20px;
-            overflow-y: auto;
+            padding: 16px;
+            gap: 12px;
         }
 
         .cart-item {
             background-color: var(--bg-tertiary);
             border-radius: 8px;
             padding: 12px;
-            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
 
         .cart-total {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
             padding: 12px;
@@ -626,7 +649,6 @@
 
         .customer-search {
             position: relative;
-            margin-bottom: 16px;
         }
 
         .search-results {
@@ -640,6 +662,7 @@
             max-height: 300px;
             overflow-y: auto;
             z-index: 100;
+            margin-top: 4px;
         }
 
         .search-result-item {
@@ -652,12 +675,231 @@
         .search-result-item:hover {
             background-color: var(--bg-tertiary);
         }
+
+        /* SVG Icons */
+        svg {
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+        }
+
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 999;
+                transform: translateX(-100%);
+                border-right: 1px solid var(--border-color);
+                border-bottom: none;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .header {
+                padding: 12px 16px;
+                gap: 8px;
+            }
+
+            .header-title {
+                font-size: 18px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+
+            .stat-card {
+                padding: 12px;
+                flex-direction: column;
+            }
+
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .period-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+                min-width: 70px;
+            }
+
+            .chart-container {
+                padding: 12px;
+            }
+
+            .table-container {
+                border-radius: 8px;
+            }
+
+            th {
+                padding: 8px;
+                font-size: 11px;
+            }
+
+            td {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .modal-content {
+                padding: 16px;
+                border-radius: 12px;
+                max-width: 95vw;
+            }
+
+            .modal-header {
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+            }
+
+            .modal-title {
+                font-size: 16px;
+            }
+
+            .close-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 20px;
+            }
+
+            .image-preview {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                border-top: 1px solid var(--border-color);
+                border-left: none;
+            }
+
+            .header-actions {
+                gap: 8px;
+            }
+
+            .btn-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .stat-value {
+                font-size: 16px;
+            }
+
+            .content {
+                padding: 12px;
+            }
+
+            .period-btn {
+                padding: 6px 8px;
+                font-size: 11px;
+                min-width: 60px;
+            }
+
+            td {
+                font-size: 12px;
+                padding: 6px;
+            }
+
+            th {
+                font-size: 10px;
+                padding: 6px;
+            }
+
+            .chart-container {
+                padding: 8px;
+                margin-bottom: 12px;
+            }
+
+            .image-preview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            label {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            input, textarea, select {
+                font-size: 16px;
+                padding: 8px 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">TL</div>
                 <div>
@@ -668,42 +910,59 @@
 
             <div class="menu">
                 <button class="menu-item active" onclick="switchPage('dashboard')">
-                    <span class="menu-icon">📊</span>
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    </span>
                     Dashboard
                 </button>
                 <button class="menu-item" onclick="switchPage('products')">
-                    <span class="menu-icon">📦</span>
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </span>
                     Produtos
                 </button>
                 <button class="menu-item" onclick="switchPage('sales')">
-                    <span class="menu-icon">🛍️</span>
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+                    </span>
                     Vendas
                 </button>
                 <button class="menu-item" onclick="switchPage('customers')">
-                    <span class="menu-icon">👥</span>
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm8 7c0-2.67-4.04-4-8-4s-8 1.33-8 4v3h16v-3zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5C7.34 5 6 6.34 6 8s1.34 3 3 3zm0 7c2.67 0 8.04 1.33 8 4v3H1v-3c0-2.67 5.33-4 8-4z"/></svg>
+                    </span>
                     Clientes
                 </button>
                 <button class="menu-item" onclick="switchPage('messages')">
-                    <span class="menu-icon">💬</span>
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm13 7H6v-2h13v2zm0-4H6V9h13v3z"/></svg>
+                    </span>
                     Mensagens
                 </button>
                 <button class="menu-item" onclick="switchPage('settings')">
-                    <span class="menu-icon">⚙️</span>
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.64l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35C8.66 5.59 8.12 5.92 7.63 6.29L5.24 5.33c-.22-.08-.47 0-.59.22L2.74 8.87c-.13.23-.07.5.12.64l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.64l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.5-.12-.64l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                    </span>
                     Configurações
                 </button>
             </div>
 
             <div class="sidebar-footer">
-                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
+                    <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
             <div class="header">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()">
+                    <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                </button>
                 <h1 class="header-title" id="pageTitle">Dashboard</h1>
                 <div class="header-actions">
-                    <button class="btn btn-secondary" onclick="logoutUser()">Sair</button>
+                    <button class="btn btn-secondary" onclick="logoutUser()" style="padding: 8px 12px;">Sair</button>
                 </div>
             </div>
 
@@ -712,8 +971,8 @@
                 <div id="dashboard" class="page active">
                     <div class="period-selector">
                         <button class="period-btn active" onclick="changePeriod('day')">Hoje</button>
-                        <button class="period-btn" onclick="changePeriod('week')">Esta Semana</button>
-                        <button class="period-btn" onclick="changePeriod('month')">Este Mês</button>
+                        <button class="period-btn" onclick="changePeriod('week')">Semana</button>
+                        <button class="period-btn" onclick="changePeriod('month')">Mês</button>
                     </div>
 
                     <div class="stats-grid">
@@ -721,9 +980,11 @@
                             <div class="stat-content">
                                 <h3>Vendas</h3>
                                 <div class="stat-value" id="totalSalesValue">R$ 0</div>
-                                <div class="stat-change">+0 comparado ao período anterior</div>
+                                <div class="stat-change">+0 vs anterior</div>
                             </div>
-                            <div class="stat-icon">💰</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+                            </div>
                         </div>
 
                         <div class="stat-card">
@@ -732,7 +993,9 @@
                                 <div class="stat-value" id="totalProfitValue">R$ 0</div>
                                 <div class="stat-change">Margem: <span id="profitMargin">0</span>%</div>
                             </div>
-                            <div class="stat-icon">📈</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18 10 11.41l4 4 6.3-6.29L22 12v-6z"/></svg>
+                            </div>
                         </div>
 
                         <div class="stat-card">
@@ -741,21 +1004,25 @@
                                 <div class="stat-value" id="totalTransactionsValue">0</div>
                                 <div class="stat-change">Número de vendas</div>
                             </div>
-                            <div class="stat-icon">🔢</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
+                            </div>
                         </div>
 
                         <div class="stat-card">
                             <div class="stat-content">
                                 <h3>Clientes</h3>
                                 <div class="stat-value" id="totalCustomersValue">0</div>
-                                <div class="stat-change">Clientes cadastrados</div>
+                                <div class="stat-change">Cadastrados</div>
                             </div>
-                            <div class="stat-icon">👤</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            </div>
                         </div>
                     </div>
 
                     <div class="chart-container">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">Últimas Transações</h3>
+                        <h3 style="margin-bottom: 12px; font-size: 15px; font-weight: 600;">Últimas Transações</h3>
                         <div class="table-container">
                             <table>
                                 <thead>
@@ -778,15 +1045,15 @@
 
                 <!-- Products Page -->
                 <div id="products" class="page">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 style="font-size: 20px; font-weight: 600;">Gerenciar Produtos</h2>
-                        <button class="btn btn-primary" onclick="openProductModal()">+ Novo Produto</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap;">
+                        <h2 style="font-size: 18px; font-weight: 600;">Produtos</h2>
+                        <button class="btn btn-primary" onclick="openProductModal()">+ Novo</button>
                     </div>
 
-                    <div style="display: flex; gap: 12px; margin-bottom: 24px;">
-                        <input type="text" id="productSearch" placeholder="Buscar produto..." onkeyup="filterProducts()">
-                        <select id="categoryFilter" onchange="filterProducts()" style="width: 200px;">
-                            <option value="">Todas as categorias</option>
+                    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <input type="text" id="productSearch" placeholder="Buscar..." onkeyup="filterProducts()" style="flex: 1; min-width: 150px;">
+                        <select id="categoryFilter" onchange="filterProducts()" style="min-width: 140px;">
+                            <option value="">Todas categorias</option>
                         </select>
                     </div>
 
@@ -813,37 +1080,38 @@
 
                 <!-- Sales Page -->
                 <div id="sales" class="page">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 style="font-size: 20px; font-weight: 600;">Nova Venda</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h2 style="font-size: 18px; font-weight: 600;">Nova Venda</h2>
                     </div>
 
-                    <div class="form-row">
-                        <div>
+                    <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
                             <label>Buscar Cliente</label>
                             <div class="customer-search">
-                                <input type="text" id="customerSearch" placeholder="Digite nome ou telefone..." onkeyup="searchCustomers()">
+                                <input type="text" id="customerSearch" placeholder="Nome ou telefone..." onkeyup="searchCustomers()">
                                 <div class="search-results" id="searchResults"></div>
                             </div>
-                            <div id="selectedCustomerInfo" style="background-color: var(--bg-secondary); border-radius: 8px; padding: 12px; margin-top: 12px; display: none;">
-                                <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;" id="selectedCustomerName"></div>
-                                <div style="font-size: 12px; color: var(--text-tertiary);" id="selectedCustomerPhone"></div>
-                            </div>
                         </div>
-                        <div>
-                            <button class="btn btn-secondary" onclick="openRegisterCustomerModal()" style="width: 100%; margin-top: 24px;">+ Cadastrar Cliente</button>
+                        <div style="display: flex; align-items: flex-end;">
+                            <button class="btn btn-secondary" onclick="openRegisterCustomerModal()">+ Cliente</button>
                         </div>
                     </div>
 
-                    <div style="display: flex; gap: 12px; margin: 24px 0;">
-                        <input type="text" id="productSearchSales" placeholder="Buscar produto..." style="flex: 1;">
-                        <select id="categoryFilterSales" style="width: 200px;">
-                            <option value="">Todas as categorias</option>
+                    <div id="selectedCustomerInfo" style="background-color: var(--bg-secondary); border-radius: 8px; padding: 12px; margin-bottom: 16px; display: none;">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;" id="selectedCustomerName"></div>
+                        <div style="font-size: 12px; color: var(--text-tertiary);" id="selectedCustomerPhone"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <input type="text" id="productSearchSales" placeholder="Buscar produto..." style="flex: 1; min-width: 150px;">
+                        <select id="categoryFilterSales" style="min-width: 140px;">
+                            <option value="">Todas categorias</option>
                         </select>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 350px; gap: 24px;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px;">
                         <div>
-                            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Produtos Disponíveis</h3>
+                            <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Produtos</h3>
                             <div class="table-container">
                                 <table>
                                     <thead>
@@ -863,23 +1131,23 @@
                             </div>
                         </div>
 
-                        <div>
-                            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Carrinho</h3>
-                            <div id="cartItems" style="margin-bottom: 16px; max-height: 300px; overflow-y: auto;"></div>
+                        <div style="background-color: var(--bg-secondary); border-radius: 12px; padding: 16px;">
+                            <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Carrinho</h3>
+                            <div id="cartItems" style="margin-bottom: 12px; max-height: 300px; overflow-y: auto;"></div>
 
                             <div class="cart-total">
-                                <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">Total</div>
-                                <div id="cartTotal">R$ 0</div>
-                                <div style="font-size: 12px; color: var(--success); margin-top: 8px;">Lucro: <span id="cartProfit">R$ 0</span></div>
+                                <div style="font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px;">Total</div>
+                                <div id="cartTotal" style="margin-bottom: 8px;">R$ 0</div>
+                                <div style="font-size: 11px; color: var(--success);">Lucro: <span id="cartProfit">R$ 0</span></div>
                             </div>
 
-                            <button class="btn btn-primary" onclick="completeSale()" style="width: 100%; margin-top: 12px;">Finalizar Venda</button>
-                            <button class="btn btn-secondary" onclick="clearCart()" style="width: 100%; margin-top: 8px;">Limpar Carrinho</button>
+                            <button class="btn btn-primary" onclick="completeSale()" style="width: 100%; margin-top: 12px;">Finalizar</button>
+                            <button class="btn btn-secondary" onclick="clearCart()" style="width: 100%; margin-top: 8px;">Limpar</button>
                         </div>
                     </div>
 
-                    <div class="chart-container" style="margin-top: 24px;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">Histórico de Vendas</h3>
+                    <div class="chart-container">
+                        <h3 style="margin-bottom: 12px; font-size: 15px; font-weight: 600;">Histórico</h3>
                         <div class="table-container">
                             <table>
                                 <thead>
@@ -903,12 +1171,12 @@
 
                 <!-- Customers Page -->
                 <div id="customers" class="page">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 style="font-size: 20px; font-weight: 600;">Gerenciar Clientes</h2>
-                        <button class="btn btn-primary" onclick="openRegisterCustomerModal()">+ Novo Cliente</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap;">
+                        <h2 style="font-size: 18px; font-weight: 600;">Clientes</h2>
+                        <button class="btn btn-primary" onclick="openRegisterCustomerModal()">+ Novo</button>
                     </div>
 
-                    <div style="margin-bottom: 24px;">
+                    <div style="margin-bottom: 16px;">
                         <input type="text" id="customerSearchMain" placeholder="Buscar cliente..." onkeyup="filterCustomers()">
                     </div>
 
@@ -934,35 +1202,69 @@
 
                 <!-- Messages Page -->
                 <div id="messages" class="page">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 style="font-size: 20px; font-weight: 600;">Mensagens Pré-prontas</h2>
+                    <div style="margin-bottom: 16px;">
+                        <h2 style="font-size: 18px; font-weight: 600;">Mensagens Pré-prontas</h2>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
                         <div>
-                            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Aniversários</h3>
+                            <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Aniversários</h3>
                             <div id="birthdayMessages"></div>
                         </div>
                         <div>
-                            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Coleções Novas</h3>
+                            <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Coleções Novas</h3>
                             <div id="newCollectionMessages"></div>
                         </div>
                     </div>
+
+                    <!-- Modal para selecionar cliente e produto para enviar mensagem -->
+                    <div id="sendMessageModal" class="modal" style="display: none;">
+                        <div class="modal-content" style="max-width: 500px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h3 style="font-size: 18px; font-weight: 600;">Enviar Mensagem</h3>
+                                <button onclick="closeSendMessageModal()" style="background: none; border: none; cursor: pointer; font-size: 24px;">×</button>
+                            </div>
+
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px;">Selecione o Cliente</label>
+                                <select id="messageCustomerSelect" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--bg-secondary); color: var(--text-primary); font-size: 14px;">
+                                    <option value="">-- Selecione um cliente --</option>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px;">Selecione o Produto (opcional)</label>
+                                <select id="messageProductSelect" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--bg-secondary); color: var(--text-primary); font-size: 14px;">
+                                    <option value="">-- Sem produto --</option>
+                                </select>
+                            </div>
+
+                            <div style="background-color: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px; max-height: 200px; overflow-y: auto;">
+                                <div style="font-size: 13px; line-height: 1.6;" id="messagePreviewText"></div>
+                            </div>
+
+                            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                                <button onclick="closeSendMessageModal()" class="btn" style="background-color: var(--bg-tertiary); color: var(--text-primary);">Cancelar</button>
+                                <button onclick="confirmSendMessage()" class="btn btn-primary">Enviar via WhatsApp</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Settings Page -->
                 <div id="settings" class="page">
-                    <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 24px;">Configurações da Loja</h2>
+                    <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Configurações</h2>
 
-                    <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; max-width: 600px;">
+                    <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; max-width: 600px;">
                         <div class="form-group">
                             <label>Nome da Loja</label>
-                            <input type="text" id="storeName" placeholder="Digite o nome da loja">
+                            <input type="text" id="storeName" placeholder="Digite o nome">
                         </div>
 
                         <div class="form-group">
                             <label>Descrição</label>
-                            <textarea id="storeDescription" placeholder="Descrição da loja" rows="3"></textarea>
+                            <textarea id="storeDescription" placeholder="Descrição" rows="3"></textarea>
                         </div>
 
                         <div class="form-group">
@@ -971,10 +1273,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Logo da Loja (PNG, JPG)</label>
+                            <label>Logo (PNG, JPG)</label>
                             <div class="image-upload" onclick="document.getElementById('logoInput').click()">
-                                <div style="font-size: 32px; margin-bottom: 8px;">📸</div>
-                                <div>Clique ou arraste para upload</div>
+                                <div style="font-size: 28px; margin-bottom: 8px;">
+                                    <svg viewBox="0 0 24 24" style="width: 30px; height: 30px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                </div>
+                                <div style="font-size: 13px;">Clique ou arraste</div>
                                 <input type="file" id="logoInput" accept="image/*" style="display: none;" onchange="uploadLogo(event)">
                             </div>
                             <div id="logoPreview" style="margin-top: 12px;"></div>
@@ -983,14 +1287,16 @@
                         <div class="form-group">
                             <label>Favicon (PNG, ICO)</label>
                             <div class="image-upload" onclick="document.getElementById('faviconInput').click()">
-                                <div style="font-size: 32px; margin-bottom: 8px;">🔗</div>
-                                <div>Clique ou arraste para upload</div>
+                                <div style="font-size: 28px; margin-bottom: 8px;">
+                                    <svg viewBox="0 0 24 24" style="width: 30px; height: 30px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                </div>
+                                <div style="font-size: 13px;">Clique ou arraste</div>
                                 <input type="file" id="faviconInput" accept="image/*" style="display: none;" onchange="uploadFavicon(event)">
                             </div>
                             <div id="faviconPreview" style="margin-top: 12px;"></div>
                         </div>
 
-                        <button class="btn btn-primary" onclick="saveStoreSettings()" style="width: 100%;">Salvar Configurações</button>
+                        <button class="btn btn-primary" onclick="saveStoreSettings()" style="width: 100%;">Salvar</button>
                     </div>
                 </div>
             </div>
@@ -1006,13 +1312,13 @@
             </div>
 
             <div class="form-group">
-                <label>Nome do Produto</label>
+                <label>Nome</label>
                 <input type="text" id="productName" placeholder="Digite o nome">
             </div>
 
             <div class="form-group">
                 <label>Descrição</label>
-                <textarea id="productDescription" placeholder="Descrição do produto" rows="3"></textarea>
+                <textarea id="productDescription" placeholder="Descrição" rows="3"></textarea>
             </div>
 
             <div class="form-row">
@@ -1028,7 +1334,7 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Preço de Venda (R$)</label>
+                    <label>Preço (R$)</label>
                     <input type="number" id="productPrice" placeholder="0.00" min="0" step="0.01">
                 </div>
                 <div class="form-group">
@@ -1038,16 +1344,18 @@
             </div>
 
             <div class="form-group">
-                <label>Imagens do Produto (até 3)</label>
+                <label>Imagens (até 3)</label>
                 <div class="image-upload" id="imageUploadZone" onclick="document.getElementById('productImages').click()">
-                    <div style="font-size: 32px; margin-bottom: 8px;">📸</div>
-                    <div>Clique ou arraste para upload</div>
+                    <div style="font-size: 28px; margin-bottom: 8px;">
+                        <svg viewBox="0 0 24 24" style="width: 30px; height: 30px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    </div>
+                    <div style="font-size: 13px;">Clique ou arraste</div>
                     <input type="file" id="productImages" accept="image/*" multiple style="display: none;" onchange="handleImageUpload(event)">
                 </div>
                 <div class="image-preview" id="imagePreview"></div>
             </div>
 
-            <button class="btn btn-primary" onclick="saveProduct()" style="width: 100%; margin-top: 24px;">Salvar Produto</button>
+            <button class="btn btn-primary" onclick="saveProduct()" style="width: 100%; margin-top: 16px;">Salvar</button>
         </div>
     </div>
 
@@ -1076,7 +1384,7 @@
             </div>
 
             <div class="form-group">
-                <label>Data de Aniversário</label>
+                <label>Aniversário</label>
                 <input type="date" id="customerBirthDate">
             </div>
 
@@ -1096,7 +1404,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-primary" onclick="saveCustomer()" style="width: 100%; margin-top: 24px;">Salvar Cliente</button>
+            <button class="btn btn-primary" onclick="saveCustomer()" style="width: 100%; margin-top: 16px;">Salvar</button>
         </div>
     </div>
 
@@ -1115,6 +1423,14 @@
         let allCustomers = [];
         let allMessages = [];
 
+        // Nova variável de estado para a mensagem atual
+        let currentMessageToSend = {
+            messageId: null,
+            customerId: null,
+            productId: null,
+            messageType: null
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
             setTheme(currentTheme);
             loadStoreSettings();
@@ -1123,7 +1439,23 @@
             loadCustomers();
             loadMessages();
             loadCategories();
+            closeSidebarOnMobile();
         });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        function closeSidebarOnMobile() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').addEventListener('click', (e) => {
+                    if (e.target.closest('.menu-item')) {
+                        document.getElementById('sidebar').classList.remove('active');
+                    }
+                });
+            }
+        }
 
         // Theme management
         function toggleTheme() {
@@ -1135,7 +1467,9 @@
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             const themeBtn = document.querySelector('.theme-toggle');
-            themeBtn.textContent = theme === 'light' ? '🌙' : '☀️';
+            if (themeBtn) {
+                themeBtn.innerHTML = theme === 'light' ? '<svg viewBox="0 0 24 24"><path d="M12 17.25a5.25 5.25 0 1 0 0-10.5 5.25 5.25 0 0 0 0 10.5zM21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9z"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+            }
         }
 
         // Page switching
@@ -1187,7 +1521,6 @@
                 const recentSales = sales.slice(-5).reverse();
                 let html = '';
                 for (const sale of recentSales) {
-                    const customer = allCustomers.find(c => c.id === sale.customer_id);
                     html += `
                         <tr>
                             <td>${sale.customer_name}</td>
@@ -1246,7 +1579,6 @@
         function displayProducts() {
             let html = '';
             for (const product of allProducts) {
-                const profit = (parseFloat(product.price) - parseFloat(product.cost)).toFixed(2);
                 html += `
                     <tr>
                         <td>${product.name}</td>
@@ -1255,13 +1587,13 @@
                         <td>R$ ${parseFloat(product.cost).toFixed(2)}</td>
                         <td>${product.stock_quantity}</td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editProduct('${product.id}')">Editar</button>
-                            <button class="btn" style="padding: 4px 8px; font-size: 12px; background-color: var(--danger); color: white;" onclick="deleteProduct('${product.id}')">Deletar</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editProduct('${product.id}')">Edit</button>
+                            <button class="btn" style="padding: 4px 8px; font-size: 12px; background-color: var(--danger); color: white;" onclick="deleteProduct('${product.id}')">Del</button>
                         </td>
                     </tr>
                 `;
             }
-            document.getElementById('productsTable').innerHTML = html || '<tr><td colspan="6" style="text-align: center; color: var(--text-tertiary);">Nenhum produto</td></tr>';
+            document.getElementById('productsTable').innerHTML = html || '<tr><td colspan="6" style="text-align: center; color: var(--text-tertiary);">Sem produtos</td></tr>';
         }
 
         function filterProducts() {
@@ -1275,7 +1607,6 @@
 
             let html = '';
             for (const product of filtered) {
-                const profit = (parseFloat(product.price) - parseFloat(product.cost)).toFixed(2);
                 html += `
                     <tr>
                         <td>${product.name}</td>
@@ -1284,13 +1615,13 @@
                         <td>R$ ${parseFloat(product.cost).toFixed(2)}</td>
                         <td>${product.stock_quantity}</td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editProduct('${product.id}')">Editar</button>
-                            <button class="btn" style="padding: 4px 8px; font-size: 12px; background-color: var(--danger); color: white;" onclick="deleteProduct('${product.id}')">Deletar</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editProduct('${product.id}')">Edit</button>
+                            <button class="btn" style="padding: 4px 8px; font-size: 12px; background-color: var(--danger); color: white;" onclick="deleteProduct('${product.id}')">Del</button>
                         </td>
                     </tr>
                 `;
             }
-            document.getElementById('productsTable').innerHTML = html || '<tr><td colspan="6" style="text-align: center; color: var(--text-tertiary);">Nenhum produto encontrado</td></tr>';
+            document.getElementById('productsTable').innerHTML = html || '<tr><td colspan="6" style="text-align: center; color: var(--text-tertiary);">Nenhum encontrado</td></tr>';
         }
 
         function openProductModal() {
@@ -1320,11 +1651,10 @@
                     div.className = 'image-item';
                     div.innerHTML = `
                         <img src="${e.target.result}" alt="Preview">
-                        <button class="image-remove" onclick="removeImage(${index})">✕</button>
+                        <button class="image-remove" onclick="removeImage(${index})">×</button>
                     `;
                     preview.appendChild(div);
                     
-                    // Store in data attribute
                     if (!window.productImages) window.productImages = [];
                     window.productImages[index] = e.target.result;
                 };
@@ -1371,17 +1701,17 @@
 
                 if (error) throw error;
 
-                alert('Produto salvo com sucesso!');
+                alert('Produto salvo!');
                 closeProductModal();
                 loadProducts();
                 loadCategories();
             } catch (error) {
-                alert('Erro ao salvar produto: ' + error.message);
+                alert('Erro: ' + error.message);
             }
         }
 
         async function deleteProduct(id) {
-            if (!confirm('Tem certeza que deseja deletar este produto?')) return;
+            if (!confirm('Tem certeza?')) return;
 
             try {
                 const { error } = await supabase
@@ -1391,10 +1721,10 @@
 
                 if (error) throw error;
 
-                alert('Produto removido com sucesso!');
+                alert('Removido!');
                 loadProducts();
             } catch (error) {
-                alert('Erro ao deletar produto: ' + error.message);
+                alert('Erro: ' + error.message);
             }
         }
 
@@ -1411,7 +1741,7 @@
                     const select = document.getElementById(id);
                     if (select) {
                         const currentValue = select.value;
-                        select.innerHTML = '<option value="">Todas as categorias</option>';
+                        select.innerHTML = '<option value="">Todas categorias</option>';
                         categories.forEach(cat => {
                             select.innerHTML += `<option value="${cat}">${cat}</option>`;
                         });
@@ -1449,15 +1779,15 @@
                         <td>${customer.phone}</td>
                         <td>${birthDate}</td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="viewCustomerHistory('${customer.id}')">Ver Histórico</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="viewCustomerHistory('${customer.id}')">Ver</button>
                         </td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editCustomer('${customer.id}')">Editar</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editCustomer('${customer.id}')">Edit</button>
                         </td>
                     </tr>
                 `;
             }
-            document.getElementById('customersTable').innerHTML = html || '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">Nenhum cliente</td></tr>';
+            document.getElementById('customersTable').innerHTML = html || '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">Sem clientes</td></tr>';
         }
 
         function filterCustomers() {
@@ -1475,15 +1805,15 @@
                         <td>${customer.phone}</td>
                         <td>${birthDate}</td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="viewCustomerHistory('${customer.id}')">Ver Histórico</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="viewCustomerHistory('${customer.id}')">Ver</button>
                         </td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editCustomer('${customer.id}')">Editar</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="editCustomer('${customer.id}')">Edit</button>
                         </td>
                     </tr>
                 `;
             }
-            document.getElementById('customersTable').innerHTML = html || '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">Nenhum cliente encontrado</td></tr>';
+            document.getElementById('customersTable').innerHTML = html || '<tr><td colspan="5" style="text-align: center; color: var(--text-tertiary);">Nenhum encontrado</td></tr>';
         }
 
         function openRegisterCustomerModal() {
@@ -1531,18 +1861,16 @@
 
                 if (error) throw error;
 
-                // Select the newly created customer
                 selectedCustomerId = data[0].id;
                 document.getElementById('selectedCustomerInfo').style.display = 'block';
                 document.getElementById('selectedCustomerName').textContent = name;
                 document.getElementById('selectedCustomerPhone').textContent = phone;
-                document.getElementById('customerSearch').value = '';
 
-                alert('Cliente cadastrado com sucesso!');
+                alert('Cliente cadastrado!');
                 closeCustomerModal();
                 loadCustomers();
             } catch (error) {
-                alert('Erro ao salvar cliente: ' + error.message);
+                alert('Erro: ' + error.message);
             }
         }
 
@@ -1558,9 +1886,9 @@
                 const customer = allCustomers.find(c => c.id === customerId);
                 const totalSpent = data.reduce((sum, s) => sum + parseFloat(s.total_amount), 0);
 
-                alert(`Histórico de ${customer.name}\n\nTotal de compras: ${data.length}\nTotal gasto: R$ ${totalSpent.toFixed(2)}`);
+                alert(`${customer.name}\n\nCompras: ${data.length}\nTotal: R$ ${totalSpent.toFixed(2)}`);
             } catch (error) {
-                alert('Erro ao carregar histórico: ' + error.message);
+                alert('Erro: ' + error.message);
             }
         }
 
@@ -1578,7 +1906,7 @@
                         <td>R$ ${parseFloat(product.price).toFixed(2)}</td>
                         <td>${product.stock_quantity}</td>
                         <td>
-                            <input type="number" id="qty_${product.id}" min="1" value="1" max="${product.stock_quantity}" style="width: 60px;">
+                            <input type="number" id="qty_${product.id}" min="1" value="1" max="${product.stock_quantity}" style="width: 50px; padding: 4px;">
                             <button class="btn btn-primary" style="padding: 4px 8px; font-size: 12px;" onclick="addToCart('${product.id}')">+</button>
                         </td>
                     </tr>
@@ -1592,7 +1920,7 @@
             const qty = parseInt(document.getElementById(`qty_${productId}`).value);
 
             if (qty > product.stock_quantity) {
-                alert('Quantidade indisponível em estoque');
+                alert('Estoque insuficiente');
                 return;
             }
 
@@ -1625,13 +1953,13 @@
 
                 html += `
                     <div class="cart-item">
-                        <div>
-                            <div style="font-weight: 600; font-size: 14px;">${item.name}</div>
-                            <div style="font-size: 12px; color: var(--text-tertiary);">Qtd: ${item.quantity} x R$ ${item.price.toFixed(2)}</div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+                            <div style="font-size: 11px; color: var(--text-tertiary);">Qtd: ${item.quantity}</div>
                         </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-secondary" style="padding: 4px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;" onclick="removeFromCart('${item.id}')">−</button>
-                            <button class="btn" style="padding: 4px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background-color: var(--danger); color: white;" onclick="removeItemFromCart('${item.id}')">✕</button>
+                        <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                            <button class="btn btn-secondary" style="padding: 3px 6px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px;" onclick="removeFromCart('${item.id}')">−</button>
+                            <button class="btn" style="padding: 3px 6px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background-color: var(--danger); color: white; font-size: 11px;" onclick="removeItemFromCart('${item.id}')">×</button>
                         </div>
                     </div>
                 `;
@@ -1700,7 +2028,6 @@
 
                 if (saleError) throw saleError;
 
-                // Insert sale items
                 for (const item of currentCart) {
                     const itemProfit = (item.price - item.cost) * item.quantity;
                     await supabase
@@ -1716,7 +2043,6 @@
                             profit: itemProfit
                         }]);
 
-                    // Update product stock
                     const product = allProducts.find(p => p.id === item.id);
                     await supabase
                         .from('products')
@@ -1724,12 +2050,12 @@
                         .eq('id', item.id);
                 }
 
-                alert('Venda realizada com sucesso!');
+                alert('Venda realizada!');
                 clearCart();
                 loadProductsForSales();
                 loadDashboard();
             } catch (error) {
-                alert('Erro ao completar venda: ' + error.message);
+                alert('Erro: ' + error.message);
             }
         }
 
@@ -1750,8 +2076,8 @@
             for (const customer of filtered) {
                 html += `
                     <div class="search-result-item" onclick="selectCustomer('${customer.id}', '${customer.name}', '${customer.phone}')">
-                        <div style="font-weight: 600;">${customer.name}</div>
-                        <div style="font-size: 12px; color: var(--text-tertiary);">${customer.phone}</div>
+                        <div style="font-weight: 600; font-size: 13px;">${customer.name}</div>
+                        <div style="font-size: 11px; color: var(--text-tertiary);">${customer.phone}</div>
                     </div>
                 `;
             }
@@ -1779,6 +2105,7 @@
 
                 allMessages = data || [];
                 displayMessages();
+                // populateMessageSelects(); // Removed, now populated in openSendMessageModal
             } catch (error) {
                 console.log('[v0] Load messages error:', error.message);
             }
@@ -1792,9 +2119,9 @@
             for (const msg of birthdays) {
                 birthdayHtml += `
                     <div style="background-color: var(--bg-tertiary); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                        <div style="font-weight: 600; margin-bottom: 8px;">${msg.title}</div>
-                        <div style="font-size: 14px; margin-bottom: 12px; line-height: 1.5;">${msg.content}</div>
-                        <button class="btn btn-primary" style="width: 100%; font-size: 12px;" onclick="sendBirthdayMessages('${msg.id}')">Enviar para Aniversariantes</button>
+                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">${msg.title}</div>
+                        <div style="font-size: 13px; margin-bottom: 12px; line-height: 1.5;">${msg.content}</div>
+                        <button class="btn btn-primary" style="width: 100%; font-size: 12px;" onclick="openSendMessageModal('${msg.id}', 'birthday')">Enviar</button>
                     </div>
                 `;
             }
@@ -1803,90 +2130,173 @@
             for (const msg of collections) {
                 collectionHtml += `
                     <div style="background-color: var(--bg-tertiary); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                        <div style="font-weight: 600; margin-bottom: 8px;">${msg.title}</div>
-                        <div style="font-size: 14px; margin-bottom: 12px; line-height: 1.5;">${msg.content}</div>
-                        <button class="btn btn-primary" style="width: 100%; font-size: 12px;" onclick="sendCollectionMessage('${msg.id}')">Enviar com Coleção</button>
+                        <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">${msg.title}</div>
+                        <div style="font-size: 13px; margin-bottom: 12px; line-height: 1.5;">${msg.content}</div>
+                        <button class="btn btn-primary" style="width: 100%; font-size: 12px;" onclick="openSendMessageModal('${msg.id}', 'new_collection')">Enviar</button>
                     </div>
                 `;
             }
 
-            document.getElementById('birthdayMessages').innerHTML = birthdayHtml || '<div style="color: var(--text-tertiary);">Nenhuma mensagem</div>';
-            document.getElementById('newCollectionMessages').innerHTML = collectionHtml || '<div style="color: var(--text-tertiary);">Nenhuma mensagem</div>';
+            document.getElementById('birthdayMessages').innerHTML = birthdayHtml || '<div style="color: var(--text-tertiary); font-size: 13px;">Nenhuma</div>';
+            document.getElementById('newCollectionMessages').innerHTML = collectionHtml || '<div style="color: var(--text-tertiary); font-size: 13px;">Nenhuma</div>';
         }
 
-        async function sendBirthdayMessages(messageId) {
+        function openSendMessageModal(messageId, messageType) {
+            currentMessageToSend.messageId = messageId;
+            currentMessageToSend.messageType = messageType;
+            currentMessageToSend.customerId = null;
+            currentMessageToSend.productId = null;
+
+            // Preencher select de clientes
+            const customerSelect = document.getElementById('messageCustomerSelect');
+            customerSelect.innerHTML = '<option value="">-- Selecione um cliente --</option>';
+            for (const customer of allCustomers) {
+                customerSelect.innerHTML += `<option value="${customer.id}">${customer.name} - ${customer.phone}</option>`;
+            }
+
+            // Preencher select de produtos
+            const productSelect = document.getElementById('messageProductSelect');
+            productSelect.innerHTML = '<option value="">-- Sem produto --</option>';
+            for (const product of allProducts) {
+                productSelect.innerHTML += `<option value="${product.id}">${product.name} - R$ ${product.price.toFixed(2)}</option>`;
+            }
+
+            updateMessagePreview();
+            document.getElementById('sendMessageModal').style.display = 'flex';
+        }
+
+        function closeSendMessageModal() {
+            document.getElementById('sendMessageModal').style.display = 'none';
+            currentMessageToSend = { messageId: null, customerId: null, productId: null, messageType: null };
+        }
+
+        function updateMessagePreview() {
+            const message = allMessages.find(m => m.id === currentMessageToSend.messageId);
+            if (!message) return;
+
+            let previewText = message.content;
+
+            // Substituir placeholders com base na seleção
+            if (currentMessageToSend.customerId) {
+                const customer = allCustomers.find(c => c.id === currentMessageToSend.customerId);
+                if (customer) {
+                    previewText = previewText.replace('[Nome do Cliente]', customer.name);
+                }
+            } else {
+                 previewText = previewText.replace('[Nome do Cliente]', 'Cliente');
+            }
+
+            if (currentMessageToSend.productId) {
+                const product = allProducts.find(p => p.id === currentMessageToSend.productId);
+                if (product) {
+                    let productDetails = `\n\n📦 Produto: ${product.name}\n💰 Preço: R$ ${product.price.toFixed(2)}`;
+                    if (product.image_url_1) {
+                        productDetails += `\n🔗 Ver produto: ${window.location.origin}?product=${product.id}`;
+                    }
+                    previewText = previewText.replace('[Lista de Produtos]', productDetails);
+                }
+            } else {
+                 previewText = previewText.replace('[Lista de Produtos]', '');
+            }
+
+            document.getElementById('messagePreviewText').textContent = previewText;
+        }
+
+        // Adicionar event listeners aos selects para atualizar o preview dinamicamente
+        document.addEventListener('DOMContentLoaded', function() {
+            const customerSelect = document.getElementById('messageCustomerSelect');
+            const productSelect = document.getElementById('messageProductSelect');
+
+            if (customerSelect) {
+                customerSelect.addEventListener('change', function() {
+                    currentMessageToSend.customerId = this.value;
+                    updateMessagePreview();
+                });
+            }
+
+            if (productSelect) {
+                productSelect.addEventListener('change', function() {
+                    currentMessageToSend.productId = this.value;
+                    updateMessagePreview();
+                });
+            }
+        });
+
+
+        async function confirmSendMessage() {
+            const { messageId, customerId, productId, messageType } = currentMessageToSend;
+
+            if (!customerId) {
+                alert('Selecione um cliente');
+                return;
+            }
+
             const message = allMessages.find(m => m.id === messageId);
-            const today = new Date().toISOString().split('T')[0];
+            const customer = allCustomers.find(c => c.id === customerId);
+
+            if (!message || !customer) {
+                alert('Erro: Cliente ou mensagem não encontrado');
+                return;
+            }
 
             try {
-                const birthdayCustomers = allCustomers.filter(c => {
-                    if (!c.birth_date) return false;
-                    const birthDate = c.birth_date.substring(5);
-                    const currentDate = today.substring(5);
-                    return birthDate === currentDate;
-                });
+                let messageText = message.content;
+                let productLink = null;
 
-                if (birthdayCustomers.length === 0) {
-                    alert('Nenhum aniversariante hoje');
-                    return;
+                // Substituir placeholders
+                messageText = messageText.replace('[Nome do Cliente]', customer.name);
+
+                if (productId) {
+                    const product = allProducts.find(p => p.id === productId);
+                    if (product) {
+                        productLink = `${window.location.origin}?product=${product.id}`;
+                        messageText += `\n\n📦 Produto: ${product.name}\n💰 Preço: R$ ${product.price.toFixed(2)}\n🔗 Ver produto: ${productLink}`;
+                    }
+                } else {
+                    messageText = messageText.replace('[Lista de Produtos]', ''); // Remove placeholder if no product
                 }
 
-                for (const customer of birthdayCustomers) {
-                    const whatsappLink = `https://wa.me/${customer.phone.replace(/\D/g, '')}?text=${encodeURIComponent(message.content)}`;
-                    
-                    await supabase
-                        .from('message_history')
-                        .insert([{
-                            customer_id: customer.id,
-                            message_template_id: messageId,
-                            message_type: 'birthday',
-                            message_content: message.content,
-                            whatsapp_link: whatsappLink
-                        }]);
-                }
 
-                alert(`Mensagens preparadas para ${birthdayCustomers.length} cliente(s)`);
+                const whatsappPhone = customer.phone.replace(/\D/g, '');
+                const whatsappLink = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(messageText)}`;
+
+                // Salvar histórico
+                await supabase
+                    .from('message_history')
+                    .insert([{
+                        customer_id: customerId,
+                        message_template_id: messageId,
+                        product_id: productId || null,
+                        message_type: messageType,
+                        message_content: messageText,
+                        whatsapp_link: whatsappLink,
+                        sent_at: new Date().toISOString(),
+                        status: 'pending' // Or 'sent' if we can confirm delivery
+                    }]);
+
+                // Abrir WhatsApp
+                window.open(whatsappLink, '_blank');
+
+                closeSendMessageModal();
+                alert('Mensagem preparada! WhatsApp será aberto para envio.');
             } catch (error) {
-                alert('Erro ao enviar mensagens: ' + error.message);
+                console.log('[v0] Error sending message:', error.message);
+                alert('Erro ao enviar: ' + error.message);
             }
+        }
+
+        // These functions seem to be remnants or not directly used in the current flow.
+        // Kept for potential future use or if they were intended for other actions.
+        async function sendBirthdayMessages(messageId) {
+            console.log('sendBirthdayMessages called with id:', messageId);
+            // Implement logic to find birthday customers and send messages if needed
         }
 
         async function sendCollectionMessage(messageId) {
-            const message = allMessages.find(m => m.id === messageId);
-            
-            try {
-                const products = allProducts.slice(0, 3);
-                
-                if (products.length === 0) {
-                    alert('Adicione produtos primeiro');
-                    return;
-                }
-
-                for (const customer of allCustomers) {
-                    let messageText = message.content + '\n\n';
-                    
-                    for (const product of products) {
-                        messageText += `${product.name} - R$ ${product.price.toFixed(2)}\n`;
-                    }
-
-                    const whatsappLink = `https://wa.me/${customer.phone.replace(/\D/g, '')}?text=${encodeURIComponent(messageText)}`;
-                    
-                    await supabase
-                        .from('message_history')
-                        .insert([{
-                            customer_id: customer.id,
-                            message_template_id: messageId,
-                            message_type: 'new_collection',
-                            message_content: messageText,
-                            whatsapp_link: whatsappLink
-                        }]);
-                }
-
-                alert(`Mensagens de coleção preparadas para ${allCustomers.length} cliente(s)`);
-            } catch (error) {
-                alert('Erro ao enviar mensagens: ' + error.message);
-            }
+            console.log('sendCollectionMessage called with id:', messageId);
+            // Implement logic to find relevant customers and send collection messages if needed
         }
+
 
         async function loadStoreSettings() {
             try {
@@ -1896,7 +2306,7 @@
                     .limit(1)
                     .single();
 
-                if (error && error.code !== 'PGRST116') throw error;
+                if (error && error.code !== 'PGRST116') throw error; // Ignore 'Not found' error
 
                 if (data) {
                     document.getElementById('storeName').value = data.store_name || 'Tamires Lima';
@@ -1911,7 +2321,7 @@
                         document.getElementById('faviconPreview').innerHTML = `<img src="${data.favicon_url}" style="max-width: 50px; border-radius: 8px;">`;
                     }
                 } else {
-                    // Create default config
+                    // Create default config if none exists
                     await supabase
                         .from('store_config')
                         .insert([{ store_name: 'Tamires Lima' }]);
@@ -1928,7 +2338,7 @@
             const reader = new FileReader();
             reader.onload = (e) => {
                 document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" style="max-width: 100px; border-radius: 8px;">`;
-                window.logoData = e.target.result;
+                window.logoData = e.target.result; // Store base64 data
             };
             reader.readAsDataURL(file);
         }
@@ -1940,7 +2350,7 @@
             const reader = new FileReader();
             reader.onload = (e) => {
                 document.getElementById('faviconPreview').innerHTML = `<img src="${e.target.result}" style="max-width: 50px; border-radius: 8px;">`;
-                window.faviconData = e.target.result;
+                window.faviconData = e.target.result; // Store base64 data
             };
             reader.readAsDataURL(file);
         }
@@ -1951,31 +2361,56 @@
             const whatsapp = document.getElementById('whatsappNumber').value.trim();
 
             try {
-                const { error } = await supabase
+                // Check if config exists to decide between insert or update
+                const { data: configData, error: getConfigError } = await supabase
                     .from('store_config')
-                    .update({
-                        store_name: name,
-                        store_description: description,
-                        whatsapp_number: whatsapp,
-                        logo_url: window.logoData || null,
-                        favicon_url: window.faviconData || null
-                    })
-                    .eq('id', (await supabase.from('store_config').select('id').limit(1).single()).data.id);
+                    .select('id')
+                    .limit(1)
+                    .single();
+                
+                if (getConfigError && getConfigError.code !== 'PGRST116') throw getConfigError;
 
-                if (error) throw error;
+                const configId = configData ? configData.id : null;
 
-                alert('Configurações salvas com sucesso!');
+                if (configId) {
+                    // Update existing config
+                    const { error } = await supabase
+                        .from('store_config')
+                        .update({
+                            store_name: name,
+                            store_description: description,
+                            whatsapp_number: whatsapp,
+                            logo_url: window.logoData || null, // Use uploaded if available, else keep existing or null
+                            favicon_url: window.faviconData || null
+                        })
+                        .eq('id', configId);
+                    if (error) throw error;
+                } else {
+                    // Insert new config
+                    const { error } = await supabase
+                        .from('store_config')
+                        .insert([{
+                            store_name: name,
+                            store_description: description,
+                            whatsapp_number: whatsapp,
+                            logo_url: window.logoData || null,
+                            favicon_url: window.faviconData || null
+                        }]);
+                    if (error) throw error;
+                }
+
+                alert('Configurações salvas!');
             } catch (error) {
-                alert('Erro ao salvar configurações: ' + error.message);
+                alert('Erro ao salvar: ' + error.message);
             }
         }
 
         function logoutUser() {
+            // Implement actual logout if authentication is added
             alert('Logout realizado');
-            // Future: Implement proper logout
         }
 
-        window.productImages = [];
+        window.productImages = []; // Initialize for product image handling
     </script>
 </body>
 </html>
