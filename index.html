@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamires Lima Fashion - Sistema de Vendas</title>
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3050/3050155.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-section {
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .hero-title {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            line-height: 1.1;
+            text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card { 
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px; 
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            color: #2d3748;
+        }
+        
+        h1, h2, h3 { 
+            color: #2d3748;
+            font-weight: 700;
+        }
+        h1 { font-size: 32px; margin-bottom: 20px; }
+        h2 { font-size: 24px; margin-bottom: 16px; }
+        h3 { font-size: 18px; margin-bottom: 12px; }
+        
+        input, select, button, textarea { 
+            width: 100%; 
+            padding: 14px 18px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        input, select, textarea { 
+            background: #fff;
+            color: #2d3748;
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            outline: none; 
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff; 
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled { 
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+        
+        .grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stat-value { 
+            font-size: 42px;
+            font-weight: 800;
+            margin: 12px 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        table { 
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td { 
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th { 
+            background: #f7fafc;
+            color: #667eea;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        
+        tr:hover {
+            background: #f7fafc;
+        }
+        
+        .product-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .product-card.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .cart-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .badge-warning {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 80mm;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 36px; }
+            .hero-subtitle { font-size: 16px; }
+            .card { padding: 20px; }
+            .grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: auto;
+            padding: 12px 24px;
+            z-index: 100;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://ulykbxvtclrpmikhrbeh.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVseWtieHZ0Y2xycG1pa2hyYmVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTI4MzUsImV4cCI6MjA3Nzc4ODgzNX0.tixzhXBVtPy1S61mhlxAEK4uqcbFqTY7qIheBtAGRUY';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const ADMIN_EMAIL = 'admin@tamireslima.com';
+        const ADMIN_PASSWORD = 'TamiresLima2025';
+
+        let currentUser = null;
+        let currentPage = 'login';
+        let currentTab = 'products';
+        let products = [];
+        let sales = [];
+        let cart = [];
+
+        // Funções do Supabase - Produtos
+        async function loadProducts() {
+            try {
+                const { data, error } = await supabase
+                    .from('tamires_products')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                products = data || [];
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                products = [];
+            }
+        }
+
+        async function addProduct(name, category, size, color, costPrice, salePrice, stock) {
+            try {
+                const { data, error } = await supabase
+                    .from('tamires_products')
+                    .insert([{
+                        name,
+                        category,
+                        size,
+                        color,
+                        cost_price: parseFloat(costPrice),
+                        sale_price: parseFloat(salePrice),
+                        stock: parseInt(stock),
+                        created_at: new Date().toISOString()
+                    }])
+                    .select();
+                
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Erro ao adicionar produto:', error);
+                alert('Erro ao adicionar produto: ' + error.message);
+                return false;
+            }
+        }
+
+        async function updateProduct(id, updates) {
+            try {
+                const { error } = await supabase
+                    .from('tamires_products')
+                    .update(updates)
+                    .eq('id', id);
+                
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Erro ao atualizar produto:', error);
+                return false;
+            }
+        }
+
+        async function deleteProduct(id) {
+            try {
+                const { error } = await supabase
+                    .from('tamires_products')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Erro ao deletar produto:', error);
+                return false;
+            }
+        }
+
+        // Funções do Supabase - Vendas
+        async function loadSales() {
+            try {
+                const { data, error } = await supabase
+                    .from('tamires_sales')
+                    .select('*')
+                    .order('date', { ascending: false });
+                
+                if (error) throw error;
+                sales = data || [];
+            } catch (error) {
+                console.error('Erro ao carregar vendas:', error);
+                sales = [];
+            }
+        }
+
+        async function createSale(items, paymentMethod, customerName = '') {
+            try {
+                const total = items.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
+                const totalCost = items.reduce((sum, item) => sum + (item.cost_price * item.quantity), 0);
+                const profit = total - totalCost;
+
+                // Inserir venda
+                const { data: saleData, error: saleError } = await supabase
+                    .from('tamires_sales')
+                    .insert([{
+                        items: JSON.stringify(items),
+                        total,
+                        total_cost: totalCost,
+                        profit,
+                        payment_method: paymentMethod,
+                        customer_name: customerName,
+                        date: new Date().toISOString()
+                    }])
+                    .select();
+                
+                if (saleError) throw saleError;
+
+                // Atualizar estoque de cada produto
+                for (const item of items) {
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        await updateProduct(item.id, { stock: product.stock - item.quantity });
+                    }
+                }
+
+                return saleData[0];
+            } catch (error) {
+                console.error('Erro ao criar venda:', error);
+                alert('Erro ao criar venda: ' + error.message);
+                return null;
+            }
+        }
+
+        // Funções de Login/Logout
+        async function login(email, password) {
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                currentUser = { email: ADMIN_EMAIL, name: 'Tamires Lima' };
+                return true;
+            }
+            alert('Credenciais inválidas! Apenas o administrador pode acessar.');
+            return false;
+        }
+
+        function logout() {
+            currentUser = null;
+            cart = [];
+        }
+
+        // Funções do Carrinho
+        function addToCart(product, quantity) {
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                cart.push({ ...product, quantity });
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+        }
+
+        function clearCart() {
+            cart = [];
+        }
+
+        // Função para imprimir nota fiscal
+        function printReceipt(sale) {
+            const items = typeof sale.items === 'string' ? JSON.parse(sale.items) : sale.items;
+            
+            const receiptHTML = `
+                <div style="font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.4; max-width: 80mm;">
+                    <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px; margin-bottom: 10px;">
+                        <h2 style="margin: 5px 0;">TAMIRES LIMA FASHION</h2>
+                        <p style="margin: 3px 0;">Moda Feminina</p>
+                        <p style="margin: 3px 0;">Data: ${new Date(sale.date).toLocaleString('pt-BR')}</p>
+                        <p style="margin: 3px 0;">Venda: #${sale.id}</p>
+                        ${sale.customer_name ? `<p style="margin: 3px 0;">Cliente: ${sale.customer_name}</p>` : ''}
+                    </div>
+                    
+                    <div style="margin: 10px 0;">
+                        ${items.map(item => `
+                            <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                                <span>${item.name} (${item.size})</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-left: 10px; margin: 5px 0;">
+                                <span>${item.quantity}x R$ ${item.sale_price.toFixed(2)}</span>
+                                <span>R$ ${(item.quantity * item.sale_price).toFixed(2)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="border-top: 1px dashed #000; padding-top: 10px; margin-top: 10px; font-weight: bold;">
+                        <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                            <span>SUBTOTAL:</span>
+                            <span>R$ ${sale.total.toFixed(2)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                            <span>PAGAMENTO:</span>
+                            <span>${sale.payment_method}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 5px; margin: 5px 0;">
+                            <span>TOTAL:</span>
+                            <span>R$ ${sale.total.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px; border-top: 1px dashed #000; padding-top: 10px;">
+                        <p style="margin: 3px 0;">Obrigada pela preferência!</p>
+                        <p style="margin: 3px 0;">Volte sempre!</p>
+                    </div>
+                </div>
+            `;
+
+            const printWindow = window.open('', '', 'width=300,height=600');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Nota Fiscal - ${sale.id}</title>
+                </head>
+                <body onload="window.print(); window.close();">
+                    ${receiptHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        // Renderização das páginas
+        function renderLoginPage() {
+            return `
+                <div class="hero-section">
+                    <div class="hero-badge">
+                        👗 Sistema Exclusivo
+                    </div>
+                    <h1 class="hero-title">Tamires Lima Fashion</h1>
+                    <p class="hero-subtitle">Sistema de Gerenciamento de Vendas</p>
+                </div>
+                
+                <div class="container">
+                    <div style="max-width: 450px; margin: 0 auto;">
+                        <div class="card">
+                            <h2 style="text-align: center; margin-bottom: 30px;">Acesso Administrativo</h2>
+                            <input type="email" id="loginEmail" placeholder="Email do Administrador" value="">
+                            <input type="password" id="loginPassword" placeholder="Senha" value="">
+                            <button onclick="handleLogin()">🔐 Entrar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDashboard() {
+            const totalProducts = products.length;
+            const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
+            const todaySales = sales.filter(s => {
+                const saleDate = new Date(s.date).toDateString();
+                return saleDate === new Date().toDateString();
+            });
+            const todayRevenue = todaySales.reduce((sum, s) => sum + s.total, 0);
+            const todayProfit = todaySales.reduce((sum, s) => sum + s.profit, 0);
+            const totalRevenue = sales.reduce((sum, s) => sum + s.total, 0);
+            const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
+
+            let tabContent = '';
+
+            if (currentTab === 'products') {
+                tabContent = `
+                    <div class="card">
+                        <h2>Cadastrar Nova Peça</h2>
+                        <div class="form-row">
+                            <input type="text" id="productName" placeholder="Nome da Peça">
+                            <select id="productCategory">
+                                <option value="">Categoria</option>
+                                <option value="Vestido">Vestido</option>
+                                <option value="Blusa">Blusa</option>
+                                <option value="Calça">Calça</option>
+                                <option value="Saia">Saia</option>
+                                <option value="Short">Short</option>
+                                <option value="Conjunto">Conjunto</option>
+                                <option value="Acessório">Acessório</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <select id="productSize">
+                                <option value="">Tamanho</option>
+                                <option value="PP">PP</option>
+                                <option value="P">P</option>
+                                <option value="M">M</option>
+                                <option value="G">G</option>
+                                <option value="GG">GG</option>
+                                <option value="Único">Único</option>
+                            </select>
+                            <input type="text" id="productColor" placeholder="Cor">
+                        </div>
+                        <div class="form-row">
+                            <input type="number" id="productCost" placeholder="Preço de Custo (R$)" step="0.01">
+                            <input type="number" id="productSale" placeholder="Preço de Venda (R$)" step="0.01">
+                            <input type="number" id="productStock" placeholder="Quantidade em Estoque" min="0">
+                        </div>
+                        <button onclick="handleAddProduct()" class="btn-success">➕ Cadastrar Peça</button>
+                    </div>
+
+                    <div class="card">
+                        <h2>Estoque de Peças (${totalProducts} itens)</h2>
+                        ${products.length === 0 ? '<p class="loading">Nenhuma peça cadastrada</p>' : `
+                            <div style="overflow-x: auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Categoria</th>
+                                            <th>Tam/Cor</th>
+                                            <th>Custo</th>
+                                            <th>Venda</th>
+                                            <th>Lucro</th>
+                                            <th>Estoque</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${products.map(p => `
+                                            <tr>
+                                                <td>${p.name}</td>
+                                                <td>${p.category}</td>
+                                                <td>${p.size} / ${p.color}</td>
+                                                <td>R$ ${p.cost_price.toFixed(2)}</td>
+                                                <td>R$ ${p.sale_price.toFixed(2)}</td>
+                                                <td style="color: #38a169; font-weight: 600;">R$ ${(p.sale_price - p.cost_price).toFixed(2)}</td>
+                                                <td>
+                                                    <span class="badge ${p.stock > 5 ? 'badge-success' : 'badge-warning'}">
+                                                        ${p.stock} un.
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button onclick="handleDeleteProduct('${p.id}')" class="btn-danger" style="width: auto; padding: 8px 16px; margin: 0;">🗑️</button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                `;
+            } else if (currentTab === 'sales') {
+                const availableProducts = products.filter(p => p.stock > 0);
+                const cartTotal = cart.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
+                const cartProfit = cart.reduce((sum, item) => sum + ((item.sale_price - item.cost_price) * item.quantity), 0);
+
+                tabContent = `
+                    <div class="grid" style="grid-template-columns: 2fr 1fr;">
+                        <div class="card">
+                            <h2>Produtos Disponíveis</h2>
+                            ${availableProducts.length === 0 ? '<p class="loading">Nenhum produto em estoque</p>' : `
+                                <div class="grid">
+                                    ${availableProducts.map(p => `
+                                        <div class="product-card" onclick="handleSelectProduct('${p.id}')">
+                                            <h3>${p.name}</h3>
+                                            <p style="color: #718096; font-size: 14px; margin: 5px 0;">${p.category} | ${p.size} | ${p.color}</p>
+                                            <p style="font-weight: 700; color: #667eea; font-size: 18px; margin: 8px 0;">R$ ${p.sale_price.toFixed(2)}</p>
+                                            <p style="font-size: 13px; color: #718096;">Estoque: ${p.stock} un.</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `}
+                        </div>
+
+                        <div class="card" style="position: sticky; top: 20px;">
+                            <h2>Carrinho (${cart.length})</h2>
+                            ${cart.length === 0 ? '<p class="loading">Carrinho vazio</p>' : `
+                                <div>
+                                    ${cart.map(item => `
+                                        <div class="cart-item">
+                                            <div>
+                                                <strong>${item.name}</strong>
+                                                <p style="font-size: 12px; color: #718096;">${item.quantity}x R$ ${item.sale_price.toFixed(2)}</p>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <strong>R$ ${(item.quantity * item.sale_price).toFixed(2)}</strong>
+                                                <button onclick="handleRemoveFromCart('${item.id}')" class="btn-danger" style="width: auto; padding: 4px 8px; font-size: 12px; margin-top: 5px;">❌</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                    
+                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                                        <div style="display: flex; justify-content: space-between; margin: 8px 0;">
+                                            <strong>Subtotal:</strong>
+                                            <strong>R$ ${cartTotal.toFixed(2)}</strong>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin: 8px 0; color: #38a169;">
+                                            <strong>Lucro:</strong>
+                                            <strong>R$ ${cartProfit.toFixed(2)}</strong>
+                                        </div>
+                                    </div>
+
+                                    <input type="text" id="customerName" placeholder="Nome do Cliente (opcional)" style="margin-top: 15px;">
+                                    <select id="paymentMethod" style="margin-top: 10px;">
+                                        <option value="">Forma de Pagamento</option>
+                                        <option value="Dinheiro">Dinheiro</option>
+                                        <option value="Cartão Débito">Cartão Débito</option>
+                                        <option value="Cartão Crédito">Cartão Crédito</option>
+                                        <option value="PIX">PIX</option>
+                                    </select>
+
+                                    <button onclick="handleFinalizeSale()" class="btn-success" style="margin-top: 15px;">✅ Finalizar Venda</button>
+                                    <button onclick="clearCart(); render();" class="btn-danger" style="margin-top: 10px;">🗑️ Limpar Carrinho</button>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            } else if (currentTab === 'history') {
+                const sortedSales = [...sales].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                tabContent = `
+                    <div class="card">
+                        <h2>Histórico de Vendas (${sales.length} vendas)</h2>
+                        ${sales.length === 0 ? '<p class="loading">Nenhuma venda realizada</p>' : `
+                            <div style="overflow-x: auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Cliente</th>
+                                            <th>Itens</th>
+                                            <th>Total</th>
+                                            <th>Custo</th>
+                                            <th>Lucro</th>
+                                            <th>Pagamento</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${sortedSales.map(s => {
+                                            const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
+                                            return `
+                                                <tr>
+                                                    <td>${new Date(s.date).toLocaleString('pt-BR')}</td>
+                                                    <td>${s.customer_name || '-'}</td>
+                                                    <td>${items.length} itens</td>
+                                                    <td style="font-weight: 600; color: #667eea;">R$ ${s.total.toFixed(2)}</td>
+                                                    <td>R$ ${s.total_cost.toFixed(2)}</td>
+                                                    <td style="font-weight: 600; color: #38a169;">R$ ${s.profit.toFixed(2)}</td>
+                                                    <td>${s.payment_method}</td>
+                                                    <td>
+                                                        <button onclick='printReceipt(${JSON.stringify(s).replace(/'/g, "\\'")})'  class="btn-success" style="width: auto; padding: 8px 16px; margin: 0;">🖨️ Imprimir</button>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }
+
+            return `
+                <button onclick="handleLogout()" class="logout-btn btn-danger">🚪 Sair</button>
+                
+                <div class="hero-section" style="padding: 60px 20px 40px;">
+                    <div class="hero-badge">
+                        👗 Bem-vinda, ${currentUser.name}
+                    </div>
+                    <h1 class="hero-title" style="font-size: 42px;">Tamires Lima Fashion</h1>
+                    <p class="hero-subtitle">Sistema de Gerenciamento Completo</p>
+                </div>
+
+                <div class="container">
+                    <div class="grid">
+                        <div class="stat-card">
+                            <div class="stat-label">📦 Produtos</div>
+                            <div class="stat-value">${totalProducts}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">${totalStock} unidades em estoque</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">💰 Vendas Hoje</div>
+                            <div class="stat-value">R$ ${todayRevenue.toFixed(2)}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">${todaySales.length} vendas realizadas</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">📈 Lucro Hoje</div>
+                            <div class="stat-value">R$ ${todayProfit.toFixed(2)}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">Margem diária</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">💎 Lucro Total</div>
+                            <div class="stat-value">R$ ${totalProfit.toFixed(2)}</div>
+                            <p style="opacity: 0.9; font-size: 14px;">R$ ${totalRevenue.toFixed(2)} em vendas</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="tab-buttons">
+                            <button class="tab-btn ${currentTab === 'products' ? 'active' : ''}" onclick="changeTab('products')">
+                                📦 Estoque
+                            </button>
+                            <button class="tab-btn ${currentTab === 'sales' ? 'active' : ''}" onclick="changeTab('sales')">
+                                🛒 Caixa de Vendas
+                            </button>
+                            <button class="tab-btn ${currentTab === 'history' ? 'active' : ''}" onclick="changeTab('history')">
+                                📊 Histórico
+                            </button>
+                        </div>
+                    </div>
+
+                    ${tabContent}
+                </div>
+            `;
+        }
+
+        // Handlers
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+
+            const success = await login(email, password);
+            if (success) {
+                await loadProducts();
+                await loadSales();
+                currentPage = 'dashboard';
+                render();
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Deseja realmente sair?')) {
+                logout();
+                currentPage = 'login';
+                currentTab = 'products';
+                render();
+            }
+        }
+
+        async function handleAddProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('productCategory').value;
+            const size = document.getElementById('productSize').value;
+            const color = document.getElementById('productColor').value.trim();
+            const cost = document.getElementById('productCost').value;
+            const sale = document.getElementById('productSale').value;
+            const stock = document.getElementById('productStock').value;
+
+            if (!name || !category || !size || !color || !cost || !sale || !stock) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+
+            if (parseFloat(cost) >= parseFloat(sale)) {
+                alert('O preço de venda deve ser maior que o preço de custo!');
+                return;
+            }
+
+            const success = await addProduct(name, category, size, color, cost, sale, stock);
+            if (success) {
+                alert('✅ Peça cadastrada com sucesso!');
+                await loadProducts();
+                render();
+            }
+        }
+
+        async function handleDeleteProduct(id) {
+            if (confirm('Deseja realmente excluir esta peça?')) {
+                const success = await deleteProduct(id);
+                if (success) {
+                    await loadProducts();
+                    render();
+                }
+            }
+        }
+
+        function handleSelectProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const quantity = prompt(`Quantas unidades de "${product.name}" deseja adicionar?\n\nDisponível: ${product.stock} unidades`, '1');
+            if (!quantity) return;
+
+            const qty = parseInt(quantity);
+            if (isNaN(qty) || qty <= 0) {
+                alert('Quantidade inválida!');
+                return;
+            }
+
+            if (qty > product.stock) {
+                alert(`Estoque insuficiente! Disponível: ${product.stock} unidades`);
+                return;
+            }
+
+            addToCart(product, qty);
+            render();
+        }
+
+        function handleRemoveFromCart(id) {
+            removeFromCart(id);
+            render();
+        }
+
+        async function handleFinalizeSale() {
+            if (cart.length === 0) {
+                alert('Adicione produtos ao carrinho!');
+                return;
+            }
+
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            if (!paymentMethod) {
+                alert('Selecione a forma de pagamento!');
+                return;
+            }
+
+            const customerName = document.getElementById('customerName').value.trim();
+
+            if (confirm('Confirmar a venda?')) {
+                const sale = await createSale(cart, paymentMethod, customerName);
+                
+                if (sale) {
+                    clearCart();
+                    await loadProducts();
+                    await loadSales();
+                    
+                    if (confirm('Venda finalizada com sucesso! Deseja imprimir a nota fiscal?')) {
+                        printReceipt(sale);
+                    }
+                    
+                    render();
+                }
+            }
+        }
+
+        async function changeTab(tab) {
+            currentTab = tab;
+            render();
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            
+            if (currentPage === 'login') {
+                app.innerHTML = renderLoginPage();
+            } else if (currentPage === 'dashboard') {
+                app.innerHTML = renderDashboard();
+            }
+        }
+
+        // Inicialização
+        async function init() {
+            render();
+        }
+
+        init();
+    </script>
+</body>
+</html>
