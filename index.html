@@ -517,12 +517,17 @@
                 width: 100%;
                 min-width: auto;
             }
+
+            /* Melhorar layout de grid em mobile */
+            .grid[style*="grid-template-columns: 2fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Overlay para fechar sidebar -->
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
     <!-- Toggle button para sidebar mobile -->
     <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
@@ -531,7 +536,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-title">Menu</div>
-            <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
+            <button class="close-sidebar" onclick="closeSidebar()">✕</button>
         </div>
         <ul class="sidebar-menu">
             <li><button class="sidebar-btn active" data-page="dashboard" onclick="changePage('dashboard')">📊 Dashboard</button></li>
@@ -566,13 +571,27 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('hidden');
-            overlay.classList.toggle('visible');
+            const isHidden = sidebar.classList.contains('hidden');
+            
+            if (isHidden) {
+                sidebar.classList.remove('hidden');
+                overlay.classList.add('visible');
+            } else {
+                sidebar.classList.add('hidden');
+                overlay.classList.remove('visible');
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.add('hidden');
+            overlay.classList.remove('visible');
         }
 
         function changePage(page) {
             currentPage = page;
-            toggleSidebar(); // Fechar sidebar ao mudar de página no mobile
+            closeSidebar(); // Fechar sidebar ao mudar de página
             updateSidebarActive();
             render();
         }
