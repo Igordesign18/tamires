@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamires Lima Fashion - Sistema Profissional</title>
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3050/3050155.png">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Tamires Lima - Sistema de Vendas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
         * {
             margin: 0;
             padding: 0;
@@ -16,602 +12,486 @@
         }
 
         :root {
-            --color-primary: #7c3aed;
-            --color-primary-dark: #6d28d9;
-            --color-primary-light: #a78bfa;
-            --color-success: #10b981;
-            --color-danger: #ef4444;
-            --color-warning: #f59e0b;
-            --color-info: #3b82f6;
-            
-            --light-bg: #ffffff;
-            --light-bg-secondary: #f9fafb;
-            --light-border: #e5e7eb;
-            --light-text: #1f2937;
-            --light-text-secondary: #6b7280;
-            
-            --dark-bg: #111827;
-            --dark-bg-secondary: #1f2937;
-            --dark-border: #374151;
-            --dark-text: #f3f4f6;
-            --dark-text-secondary: #9ca3af;
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --primary-color: #7c3aed;
+            --primary-light: #a78bfa;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+        }
+
+        html.dark {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --primary-color: #a78bfa;
+            --primary-light: #ddd6fe;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--light-bg);
-            color: var(--light-text);
-            transition: background 0.3s, color 0.3s;
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        body.dark-mode {
-            background: var(--dark-bg);
-            color: var(--dark-text);
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* Sidebar */
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
             width: 280px;
-            height: 100vh;
-            background: var(--light-bg);
-            border-right: 1px solid var(--light-border);
-            padding: 20px;
+            background-color: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
             overflow-y: auto;
-            z-index: 1000;
-            transition: all 0.3s;
-        }
-
-        body.dark-mode .sidebar {
-            background: var(--dark-bg-secondary);
-            border-right-color: var(--dark-border);
-        }
-
-        .sidebar.hidden {
-            transform: translateX(-100%);
+            transition: transform 0.3s;
         }
 
         .sidebar-header {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--light-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
         }
 
-        body.dark-mode .sidebar-header {
-            border-bottom-color: var(--dark-border);
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--color-primary);
-        }
-
-        .close-sidebar {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--light-text);
-        }
-
-        body.dark-mode .close-sidebar {
-            color: var(--dark-text);
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 8px;
-        }
-
-        .sidebar-menu button {
-            width: 100%;
-            background: transparent;
-            border: none;
-            padding: 12px 15px;
-            text-align: left;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--light-text-secondary);
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        body.dark-mode .sidebar-menu button {
-            color: var(--dark-text-secondary);
-        }
-
-        .sidebar-menu button:hover {
-            background: var(--light-bg-secondary);
-            color: var(--light-text);
-        }
-
-        body.dark-mode .sidebar-menu button:hover {
-            background: var(--dark-bg);
-            color: var(--dark-text);
-        }
-
-        .sidebar-menu button.active {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            color: white;
-        }
-
-        .toggle-sidebar {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 999;
-            background: var(--color-primary);
-            border: none;
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .overlay.visible {
-            display: block;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
+        .store-logo {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
-            background: var(--color-primary);
-            border: none;
-            cursor: pointer;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-weight: bold;
             font-size: 20px;
-            z-index: 500;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+            margin: 0 auto 10px;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1);
+        .store-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .store-tagline {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 15px 0;
+        }
+
+        .nav-item {
+            padding: 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background-color: var(--bg-secondary);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background-color: var(--bg-secondary);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
         }
 
         /* Main Content */
         .main-content {
-            margin-left: 280px;
-            transition: margin-left 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .main-content.full-width {
-            margin-left: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         .top-bar {
-            background: var(--light-bg);
-            border-bottom: 1px solid var(--light-border);
-            padding: 20px 40px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        body.dark-mode .top-bar {
-            background: var(--dark-bg-secondary);
-            border-bottom-color: var(--dark-border);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        .container {
-            padding: 30px 40px;
-            max-width: 1600px;
-        }
-
-        .page-header {
-            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .page-subtitle {
-            color: var(--light-text-secondary);
-            font-size: 14px;
-        }
-
-        body.dark-mode .page-subtitle {
-            color: var(--dark-text-secondary);
-        }
-
-        /* Cards */
-        .card {
-            background: var(--light-bg);
-            border: 1px solid var(--light-border);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            transition: all 0.3s;
-        }
-
-        body.dark-mode .card {
-            background: var(--dark-bg-secondary);
-            border-color: var(--dark-border);
-        }
-
-        .card:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        body.dark-mode .card:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        h1, h2, h3 {
+            font-size: 24px;
             font-weight: 700;
         }
 
-        h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
+        .top-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
-        h3 {
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        /* Forms */
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 14px;
-            margin: 8px 0;
-            border: 1px solid var(--light-border);
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            background: var(--light-bg);
-            color: var(--light-text);
-            transition: all 0.3s;
-        }
-
-        body.dark-mode input,
-        body.dark-mode select,
-        body.dark-mode textarea {
-            background: var(--dark-bg);
-            color: var(--dark-text);
-            border-color: var(--dark-border);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-
-        /* Buttons */
-        button {
-            padding: 12px 24px;
-            border-radius: 8px;
+        .btn {
+            padding: 8px 16px;
             border: none;
+            border-radius: 6px;
+            cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            cursor: pointer;
             transition: all 0.3s;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 8px;
-            font-family: 'Inter', sans-serif;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            background-color: var(--primary-color);
             color: white;
         }
 
         .btn-primary:hover {
+            background-color: var(--primary-light);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
         }
 
-        .btn-success {
-            background: var(--color-success);
-            color: white;
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
         }
 
-        .btn-success:hover {
-            opacity: 0.9;
+        .btn-secondary:hover {
+            background-color: var(--border-color);
         }
 
         .btn-danger {
-            background: var(--color-danger);
+            background-color: var(--danger-color);
             color: white;
         }
 
         .btn-danger:hover {
-            opacity: 0.9;
+            background-color: #dc2626;
         }
 
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 13px;
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
         }
 
-        /* Grid */
-        .grid {
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .grid-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .grid-4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        /* Stats */
         .stat-card {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
             color: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 800;
-            margin: 10px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
         }
 
         .stat-label {
             font-size: 12px;
             opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
-        /* Tabs */
-        .tabs {
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        /* Search and Filter */
+        .search-bar {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--light-border);
         }
 
-        body.dark-mode .tabs {
-            border-bottom-color: var(--dark-border);
+        .search-input {
+            flex: 1;
+            position: relative;
         }
 
-        .tab-btn {
-            background: transparent;
-            border: none;
-            padding: 12px 20px;
+        .search-input input {
+            width: 100%;
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-secondary);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--light-text-secondary);
-            border-bottom: 2px solid transparent;
             transition: all 0.3s;
-            width: auto;
+            font-size: 14px;
         }
 
-        body.dark-mode .tab-btn {
-            color: var(--dark-text-secondary);
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
-        .tab-btn:hover {
-            color: var(--light-text);
-        }
-
-        body.dark-mode .tab-btn:hover {
-            color: var(--dark-text);
-        }
-
-        .tab-btn.active {
-            color: var(--color-primary);
-            border-bottom-color: var(--color-primary);
+        .filter-btn:hover {
+            border-color: var(--primary-color);
         }
 
         /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--light-border);
-        }
-
-        body.dark-mode th,
-        body.dark-mode td {
-            border-bottom-color: var(--dark-border);
+            font-size: 14px;
         }
 
         th {
-            background: var(--light-bg-secondary);
+            background-color: var(--bg-tertiary);
+            padding: 12px;
+            text-align: left;
             font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--light-text-secondary);
+            border-bottom: 2px solid var(--border-color);
         }
 
-        body.dark-mode th {
-            background: var(--dark-bg);
-            color: var(--dark-text-secondary);
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         tr:hover {
-            background: var(--light-bg-secondary);
+            background-color: var(--bg-secondary);
         }
 
-        body.dark-mode tr:hover {
-            background: var(--dark-bg);
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        /* Products */
         .product-card {
-            background: var(--light-bg);
-            border: 2px solid var(--light-border);
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
             transition: all 0.3s;
         }
 
-        body.dark-mode .product-card {
-            background: var(--dark-bg);
-            border-color: var(--dark-border);
-        }
-
         .product-card:hover {
-            border-color: var(--color-primary);
-            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
         }
 
-        .product-card.selected {
-            border-color: var(--color-success);
-            background: rgba(16, 185, 129, 0.05);
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background-color: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
         }
 
-        body.dark-mode .product-card.selected {
-            background: rgba(16, 185, 129, 0.1);
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
         }
 
         .product-name {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .product-category {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
         }
 
         .product-price {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--color-primary);
-            margin: 10px 0;
-        }
-
-        .product-stock {
-            font-size: 12px;
-            color: var(--light-text-secondary);
-        }
-
-        body.dark-mode .product-stock {
-            color: var(--dark-text-secondary);
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge-success {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--color-success);
-        }
-
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--color-warning);
-        }
-
-        .badge-danger {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--color-danger);
-        }
-
-        /* Search */
-        .search-box {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
-        .search-box input {
+        .price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .cost {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .product-actions button {
             flex: 1;
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--light-text-secondary);
-        }
-
-        body.dark-mode .loading {
-            color: var(--dark-text-secondary);
+            padding: 8px;
+            font-size: 12px;
         }
 
         /* Modal */
@@ -622,1424 +502,1842 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
         }
 
-        .modal.visible {
+        .modal.active {
             display: flex;
         }
 
         .modal-content {
-            background: var(--light-bg);
-            border-radius: 12px;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
             padding: 30px;
             width: 90%;
             max-width: 500px;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
-        body.dark-mode .modal-content {
-            background: var(--dark-bg-secondary);
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Upload Preview */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: var(--bg-secondary);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-tertiary);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background-color: rgba(124, 58, 237, 0.1);
+        }
+
+        .image-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: var(--bg-tertiary);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background-color: var(--bg-primary);
+            border-left: 1px solid var(--border-color);
+            box-shadow: -4px 0 12px rgba(0,0,0,0.1);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+        }
+
+        .cart-item-price {
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+
+        .cart-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .cart-profit {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            cursor: pointer;
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
             .sidebar {
-                width: 250px;
+                position: absolute;
+                height: 100%;
+                z-index: 999;
+                transform: translateX(-100%);
             }
 
-            .main-content {
-                margin-left: 250px;
+            .sidebar.active {
+                transform: translateX(0);
             }
 
-            .grid-4 {
-                grid-template-columns: repeat(2, 1fr);
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
 
-            .container {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .cart-sidebar {
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
                 padding: 20px;
             }
-
-            .top-bar {
-                padding: 15px 20px;
-            }
         }
 
-        @media (max-width: 768px) {
-            .toggle-sidebar {
-                display: flex;
-            }
-
-            .close-sidebar {
-                display: block;
-            }
-
-            .sidebar {
-                width: 260px;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .grid-3, .grid-4 {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs {
-                overflow-x: auto;
-            }
-
-            .page-title {
-                font-size: 22px;
-            }
-
-            .user-info {
-                gap: 10px;
-            }
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
         }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-
-            .card {
-                padding: 15px;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            .page-title {
-                font-size: 18px;
-            }
-
-            input, select, button, textarea {
-                font-size: 16px;
-            }
+        .mt-20 {
+            margin-top: 20px;
         }
 
-        .icon {
-            width: 24px;
-            height: 24px;
-            display: inline-block;
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .text-success {
+            color: var(--success-color);
+        }
+
+        .text-danger {
+            color: var(--danger-color);
+        }
+
+        .text-warning {
+            color: var(--warning-color);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .gap-10 {
+            gap: 10px;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .w-full {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
-    <!-- Toggle Button -->
-    <button class="toggle-sidebar" onclick="toggleSidebar()">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-    </button>
-
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                Tamires Lima
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="store-logo" id="storeLogo">TL</div>
+                <div class="store-name" id="storeName">Tamires Lima</div>
+                <div class="store-tagline">Fashion & Style</div>
             </div>
-            <button class="close-sidebar" onclick="closeSidebar()">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="switchPage('dashboard')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('products')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                            Produtos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('sales')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            Vendas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('customers')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('messages')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            Mensagens
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="switchPage('settings')">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m2.96 2.96l4.24 4.24M1 12h6m6 0h6m-15.78 7.78l4.24-4.24m2.96-2.96l4.24-4.24"></path>
+                            </svg>
+                            Configurações
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-secondary w-full flex items-center justify-between" onclick="toggleTheme()">
+                    <span id="themeLabel">Modo Escuro</span>
+                    <span class="theme-toggle" id="themeToggle">🌙</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                <div class="top-actions">
+                    <button class="btn btn-icon btn-secondary" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Dashboard Page -->
+                <div class="page active" id="dashboardPage">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Vendas de Hoje</div>
+                            <div class="stat-value" id="todaySales">R$ 0</div>
+                            <div class="stat-change">+0 pedidos</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--success-color), #34d399);">
+                            <div class="stat-label">Lucro de Hoje</div>
+                            <div class="stat-value" id="todayProfit">R$ 0</div>
+                            <div class="stat-change" id="todayMargin">Margem: 0%</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--info-color), #60a5fa);">
+                            <div class="stat-label">Vendas da Semana</div>
+                            <div class="stat-value" id="weekSales">R$ 0</div>
+                            <div class="stat-change">+0 pedidos</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, var(--warning-color), #fbbf24);">
+                            <div class="stat-label">Vendas do Mês</div>
+                            <div class="stat-value" id="monthSales">R$ 0</div>
+                            <div class="stat-change">+0 pedidos</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Últimas Transações</div>
+                        <div class="table-container">
+                            <table id="recentTransactions">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Produtos</th>
+                                        <th>Total</th>
+                                        <th>Lucro</th>
+                                        <th>Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsBody">
+                                    <tr>
+                                        <td colspan="5" class="text-center" style="color: var(--text-secondary);">Nenhuma transação registrada</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Page -->
+                <div class="page" id="productsPage">
+                    <div class="card">
+                        <div class="card-title">Produtos</div>
+                        <button class="btn btn-primary" onclick="openAddProductModal()">
+                            <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Adicionar Produto
+                        </button>
+
+                        <div class="search-bar mt-20">
+                            <div class="search-input">
+                                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <input type="text" id="productSearch" placeholder="Buscar produto..." onkeyup="filterProducts()">
+                            </div>
+                        </div>
+
+                        <div class="filter-tabs" id="categoryFilter">
+                            <button class="filter-btn active" onclick="filterByCategory('all')">Todas</button>
+                        </div>
+
+                        <div class="products-grid" id="productsGrid">
+                            <div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">
+                                Nenhum produto cadastrado
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sales Page -->
+                <div class="page" id="salesPage">
+                    <div class="card">
+                        <div class="card-title">Nova Venda</div>
+                        
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <div style="display: flex; gap: 10px;">
+                                <select id="customerSelect" style="flex: 1;" onchange="handleCustomerChange()">
+                                    <option value="">Selecione um cliente...</option>
+                                </select>
+                                <button class="btn btn-secondary" onclick="openNewCustomerModal()">
+                                    <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M15 22H1v-7a6 6 0 0 1 12 0v7z"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    </svg>
+                                    Novo
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="search-bar mt-20">
+                            <div class="search-input">
+                                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <input type="text" id="saleProductSearch" placeholder="Buscar produto..." onkeyup="filterSaleProducts()">
+                            </div>
+                        </div>
+
+                        <div class="filter-tabs" id="saleCategoryFilter">
+                            <button class="filter-btn active" onclick="filterSaleByCategory('all')">Todas</button>
+                        </div>
+
+                        <div class="products-grid" id="saleProductsGrid">
+                            <div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">
+                                Nenhum produto disponível
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Histórico de Vendas</div>
+                        <div class="table-container">
+                            <table id="salesHistory">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Produtos</th>
+                                        <th>Total</th>
+                                        <th>Lucro</th>
+                                        <th>Data</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salesHistoryBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center" style="color: var(--text-secondary);">Nenhuma venda registrada</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customers Page -->
+                <div class="page" id="customersPage">
+                    <div class="card">
+                        <div class="card-title">Clientes</div>
+                        <button class="btn btn-primary" onclick="openAddCustomerModal()">
+                            <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Adicionar Cliente
+                        </button>
+
+                        <div class="search-bar mt-20">
+                            <div class="search-input">
+                                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <input type="text" id="customerSearch" placeholder="Buscar cliente..." onkeyup="filterCustomers()">
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="customersTable">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Telefone</th>
+                                        <th>Email</th>
+                                        <th>Aniversário</th>
+                                        <th>Compras</th>
+                                        <th>Total Gasto</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersBody">
+                                    <tr>
+                                        <td colspan="7" class="text-center" style="color: var(--text-secondary);">Nenhum cliente cadastrado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Page -->
+                <div class="page" id="messagesPage">
+                    <div class="card">
+                        <div class="card-title">Mensagens Pré-prontas</div>
+                        <button class="btn btn-primary" onclick="openAddMessageModal()">
+                            <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Nova Mensagem
+                        </button>
+
+                        <div class="filter-tabs" id="messageTypeFilter" style="margin-top: 20px;">
+                            <button class="filter-btn active" onclick="filterMessageType('all')">Todas</button>
+                            <button class="filter-btn" onclick="filterMessageType('birthday')">Aniversário</button>
+                            <button class="filter-btn" onclick="filterMessageType('collection')">Coleção Nova</button>
+                        </div>
+
+                        <div id="messagesContainer" style="margin-top: 20px;">
+                            <div style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                                Nenhuma mensagem cadastrada
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div class="page" id="settingsPage">
+                    <div class="card">
+                        <div class="card-title">Configurações da Loja</div>
+                        
+                        <div class="form-group">
+                            <label>Nome da Loja</label>
+                            <input type="text" id="storeName" placeholder="Ex: Tamires Lima" onchange="updateStoreName()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tagline da Loja</label>
+                            <input type="text" id="storeTagline" placeholder="Ex: Fashion & Style" onchange="updateStoreTagline()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Logo/Favicon (máx 2 caracteres)</label>
+                            <input type="text" id="storeLogo" maxlength="2" placeholder="TL" onchange="updateStoreLogo()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Upload do Favicon</label>
+                            <div class="upload-area" id="faviconUpload" onclick="document.getElementById('faviconFile').click()">
+                                <svg style="width: 40px; height: 40px; margin: 0 auto 10px; display: block; color: var(--text-secondary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <p>Clique para fazer upload ou arraste uma imagem</p>
+                                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">PNG, JPG, GIF até 5MB</p>
+                            </div>
+                            <input type="file" id="faviconFile" accept="image/*" style="display: none;" onchange="handleFaviconUpload(event)">
+                        </div>
+
+                        <button class="btn btn-danger" onclick="clearAllData()" style="margin-top: 20px;">
+                            <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                            Limpar Todos os Dados
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <span style="font-weight: 600;">Carrinho</span>
+            <button class="btn btn-icon btn-secondary" style="width: 30px; height: 30px;" onclick="closeCart()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </button>
         </div>
-
-        <ul class="sidebar-menu">
-            <li>
-                <button class="sidebar-btn active" data-page="dashboard" onclick="changePage('dashboard')">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="14" width="7" height="7"></rect>
-                        <rect x="3" y="14" width="7" height="7"></rect>
-                    </svg>
-                    Dashboard
-                </button>
-            </li>
-            <li>
-                <button class="sidebar-btn" data-page="products" onclick="changePage('products')">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 9l6-6 6 6M5 9h14v12c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1V9z"></path>
-                    </svg>
-                    Produtos
-                </button>
-            </li>
-            <li>
-                <button class="sidebar-btn" data-page="sales" onclick="changePage('sales')">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    Vendas
-                </button>
-            </li>
-            <li>
-                <button class="sidebar-btn" data-page="history" onclick="changePage('history')">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
-                    </svg>
-                    Histórico
-                </button>
-            </li>
-            <li>
-                <button class="sidebar-btn" data-page="customers" onclick="changePage('customers')">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    Clientes
-                </button>
-            </li>
-            <li>
-                <button class="sidebar-btn" data-page="settings" onclick="changePage('settings')">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6m-16.78 7.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
-                    </svg>
-                    Configurações
-                </button>
-            </li>
-        </ul>
-
-        <button class="btn-danger" onclick="handleLogout()" style="width: calc(100% - 30px); margin-top: auto; position: absolute; bottom: 20px; left: 15px;">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h5m7-4l4-4m0 0l-4-4m4 4H9"></path>
-            </svg>
-            Sair
-        </button>
-    </aside>
-
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <div id="app"></div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Subtotal:</span>
+                <span id="cartSubtotal">R$ 0</span>
+            </div>
+            <div class="cart-profit">
+                <span>Lucro Estimado:</span>
+                <span id="cartProfit">R$ 0</span>
+            </div>
+            <button class="btn btn-primary w-full" onclick="completeSale()">Finalizar Venda</button>
+            <button class="btn btn-secondary w-full" style="margin-top: 10px;" onclick="clearCart()">Limpar Carrinho</button>
+        </div>
     </div>
 
-    <!-- Theme Toggle -->
-    <button class="theme-toggle" onclick="toggleTheme()" title="Alternar Tema">
-        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" id="themeIcon">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-    </button>
+    <!-- Modals -->
+    <!-- Add Product Modal -->
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Adicionar Produto</h2>
+                <button class="modal-close" onclick="closeModal('addProductModal')">×</button>
+            </div>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label>Nome do Produto</label>
+                    <input type="text" required id="productName" placeholder="Ex: Vestido Festa">
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input type="text" required id="productCategory" placeholder="Ex: Vestidos">
+                </div>
+                <div class="form-group">
+                    <label>Preço de Custo</label>
+                    <input type="number" required id="productCost" placeholder="0.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Preço de Venda</label>
+                    <input type="number" required id="productPrice" placeholder="0.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Imagens do Produto (até 3)</label>
+                    <div class="upload-area" id="productImageUpload" onclick="document.getElementById('productImages').click()">
+                        <svg style="width: 40px; height: 40px; margin: 0 auto 10px; display: block; color: var(--text-secondary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <p>Clique para fazer upload ou arraste imagens</p>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">PNG, JPG, GIF até 5MB cada (máx 3 imagens)</p>
+                    </div>
+                    <input type="file" id="productImages" accept="image/*" multiple style="display: none;" onchange="handleProductImages(event)">
+                    <div class="image-previews" id="productImagePreviews"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addProductModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal" id="addCustomerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Adicionar Cliente</h2>
+                <button class="modal-close" onclick="closeModal('addCustomerModal')">×</button>
+            </div>
+            <form id="addCustomerForm">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" required id="customerName" placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label>Telefone/WhatsApp</label>
+                    <input type="tel" required id="customerPhone" placeholder="(11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="customerEmail" placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Data de Aniversário</label>
+                    <input type="date" id="customerBirthday">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addCustomerModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Customer in Sale Modal -->
+    <div class="modal" id="newCustomerSaleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Cadastrar Novo Cliente</h2>
+                <button class="modal-close" onclick="closeModal('newCustomerSaleModal')">×</button>
+            </div>
+            <form id="newCustomerSaleForm">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" required id="newSaleCustomerName" placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label>Telefone/WhatsApp</label>
+                    <input type="tel" required id="newSaleCustomerPhone" placeholder="(11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="newSaleCustomerEmail" placeholder="email@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Data de Aniversário</label>
+                    <input type="date" id="newSaleCustomerBirthday">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('newCustomerSaleModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar e Usar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Message Modal -->
+    <div class="modal" id="addMessageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nova Mensagem Pré-pronta</h2>
+                <button class="modal-close" onclick="closeModal('addMessageModal')">×</button>
+            </div>
+            <form id="addMessageForm">
+                <div class="form-group">
+                    <label>Tipo de Mensagem</label>
+                    <select required id="messageType" onchange="updateMessageType()">
+                        <option value="">Selecione um tipo...</option>
+                        <option value="birthday">Felicitação de Aniversário</option>
+                        <option value="collection">Coleção Nova</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Título/Nome</label>
+                    <input type="text" required id="messageTitle" placeholder="Ex: Parabéns especial">
+                </div>
+                <div class="form-group">
+                    <label>Mensagem</label>
+                    <textarea required id="messageContent" placeholder="Escreva a mensagem aqui..." style="min-height: 120px;"></textarea>
+                    <small style="color: var(--text-secondary); display: block; margin-top: 5px;">Dica: Use {{cliente}} para inserir o nome do cliente automaticamente</small>
+                </div>
+                <div id="collectionFields" style="display: none;">
+                    <div class="form-group">
+                        <label>Produto</label>
+                        <select id="messageProduct">
+                            <option value="">Selecione um produto...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMessageModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Mensagem</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer History Modal -->
+    <div class="modal" id="customerHistoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Histórico de Compras</h2>
+                <button class="modal-close" onclick="closeModal('customerHistoryModal')">×</button>
+            </div>
+            <div id="customerHistoryContent">
+                <div style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                    Nenhuma compra registrada
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Message Modal -->
+    <div class="modal" id="sendMessageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Enviar Mensagem</h2>
+                <button class="modal-close" onclick="closeModal('sendMessageModal')">×</button>
+            </div>
+            <div id="sendMessageContent"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('sendMessageModal')">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="sendMessageViaWhatsApp()">
+                    <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.036-5.44 5.034-5.44 8.53 0 3.396 2.076 6.285 5.577 7.431.87.289 1.05.344 1.237.344.093 0 .168.001.236-.004 1.897-.127 3.74-1.055 5.110-2.504.944-1.01 1.649-2.334 1.906-3.764.257-1.434.157-2.889-.301-4.247-.557-1.634-1.734-3.039-3.294-3.952-1.56-.913-3.35-1.211-5.13-.911zm0-1.432c2.062 0 4.062.519 5.834 1.516 3.207 1.85 5.757 5.017 6.052 8.83.297 3.813-1.429 7.523-4.637 9.373-1.772 1.022-3.773 1.542-5.835 1.542h-.008c-1.036 0-2.063-.15-3.063-.446l-3.189.838.86-3.126c-.248-.754-.379-1.551-.379-2.368 0-2.062.519-4.062 1.516-5.834 1.85-3.207 5.017-5.757 8.83-6.052z"/>
+                    </svg>
+                    Enviar via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Product Modal -->
+    <div class="modal" id="viewProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Detalhes do Produto</h2>
+                <button class="modal-close" onclick="closeModal('viewProductModal')">×</button>
+            </div>
+            <div id="productModalContent"></div>
+        </div>
+    </div>
 
     <script>
-        const SUPABASE_URL = 'https://ulykbxvtclrpmikhrbeh.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVseWtieHZ0Y2xycG1pa2hyYmVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTI4MzUsImV4cCI6MjA3Nzc4ODgzNX0.tixzhXBVtPy1S61mhlxAEK4uqcbFqTY7qIheBtAGRUY';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // ===== DATA MANAGEMENT =====
+        const store = {
+            products: [],
+            customers: [],
+            sales: [],
+            messages: [],
+            storeName: 'Tamires Lima',
+            storeTagline: 'Fashion & Style',
+            storeLogo: 'TL',
+            favicon: null
+        };
 
-        let currentUser = null;
-        let currentPage = 'login';
-        let currentDashboardTab = 'daily';
-        let products = [];
-        let sales = [];
-        let customers = [];
-        let cart = [];
-        let searchQuery = '';
-        let selectedCategory = '';
+        let currentCart = [];
+        let currentCustomer = null;
+        let currentMessageFilter = 'all';
 
-        // Theme Management
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                updateThemeIcon(true);
+        // ===== INITIALIZATION =====
+        function initializeApp() {
+            loadFromLocalStorage();
+            renderAllPages();
+            attachEventListeners();
+            loadFaviconIfExists();
+            updateTheme();
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('fashionStoreData');
+            if (saved) {
+                Object.assign(store, JSON.parse(saved));
             }
         }
 
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateThemeIcon(isDark);
+        function saveToLocalStorage() {
+            localStorage.setItem('fashionStoreData', JSON.stringify(store));
         }
 
-        function updateThemeIcon(isDark) {
-            const icon = document.getElementById('themeIcon');
-            if (isDark) {
-                icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-            } else {
-                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-            }
-        }
+        function attachEventListeners() {
+            document.getElementById('addProductForm').onsubmit = handleAddProduct;
+            document.getElementById('addCustomerForm').onsubmit = handleAddCustomer;
+            document.getElementById('newCustomerSaleForm').onsubmit = handleNewCustomerInSale;
+            document.getElementById('addMessageForm').onsubmit = handleAddMessage;
 
-        // Sidebar
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            const isHidden = sidebar.classList.contains('hidden');
-            
-            if (isHidden) {
-                sidebar.classList.remove('hidden');
-                overlay.classList.add('visible');
-            } else {
-                closeSidebar();
-            }
-        }
+            // Drag and drop for product images
+            const productUpload = document.getElementById('productImageUpload');
+            productUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                productUpload.classList.add('dragover');
+            });
+            productUpload.addEventListener('dragleave', () => {
+                productUpload.classList.remove('dragover');
+            });
+            productUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                productUpload.classList.remove('dragover');
+                document.getElementById('productImages').files = e.dataTransfer.files;
+                handleProductImages({ target: { files: e.dataTransfer.files } });
+            });
 
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.add('hidden');
-            overlay.classList.remove('visible');
-        }
-
-        function changePage(page) {
-            currentPage = page;
-            closeSidebar();
-            updateSidebarActive();
-            render();
-        }
-
-        function updateSidebarActive() {
-            document.querySelectorAll('.sidebar-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.page === currentPage) {
-                    btn.classList.add('active');
-                }
+            // Drag and drop for favicon
+            const faviconUpload = document.getElementById('faviconUpload');
+            faviconUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                faviconUpload.classList.add('dragover');
+            });
+            faviconUpload.addEventListener('dragleave', () => {
+                faviconUpload.classList.remove('dragover');
+            });
+            faviconUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                faviconUpload.classList.remove('dragover');
+                document.getElementById('faviconFile').files = e.dataTransfer.files;
+                handleFaviconUpload({ target: { files: e.dataTransfer.files } });
             });
         }
 
-        // Supabase Functions
-        async function loadProducts() {
-            try {
-                const { data, error } = await supabase
-                    .from('tamires_products')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) throw error;
-                products = data || [];
-            } catch (error) {
-                console.error('Erro ao carregar produtos:', error);
-                products = [];
-            }
+        function renderAllPages() {
+            renderDashboard();
+            renderProducts();
+            renderSalesPage();
+            renderCustomers();
+            renderMessages();
+            updateCustomerSelect();
+            updateMessageProductSelect();
+            updateCategoryFilters();
         }
 
-        async function addProduct(name, category, size, color, costPrice, salePrice, stock) {
-            try {
-                const { data, error } = await supabase
-                    .from('tamires_products')
-                    .insert([{
-                        name,
-                        category,
-                        size,
-                        color,
-                        cost_price: parseFloat(costPrice),
-                        sale_price: parseFloat(salePrice),
-                        stock: parseInt(stock),
-                        created_at: new Date().toISOString()
-                    }])
-                    .select();
-                
-                if (error) throw error;
-                return true;
-            } catch (error) {
-                console.error('Erro ao adicionar produto:', error);
-                alert('Erro ao adicionar produto: ' + error.message);
-                return false;
-            }
-        }
-
-        async function updateProduct(id, updates) {
-            try {
-                const { error } = await supabase
-                    .from('tamires_products')
-                    .update(updates)
-                    .eq('id', id);
-                
-                if (error) throw error;
-                return true;
-            } catch (error) {
-                console.error('Erro ao atualizar produto:', error);
-                return false;
-            }
-        }
-
-        async function deleteProduct(id) {
-            try {
-                const { error } = await supabase
-                    .from('tamires_products')
-                    .delete()
-                    .eq('id', id);
-                
-                if (error) throw error;
-                return true;
-            } catch (error) {
-                console.error('Erro ao deletar produto:', error);
-                return false;
-            }
-        }
-
-        async function loadCustomers() {
-            try {
-                const { data, error } = await supabase
-                    .from('tamires_customers')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) throw error;
-                customers = data || [];
-            } catch (error) {
-                console.error('Erro ao carregar clientes:', error);
-                customers = [];
-            }
-        }
-
-        async function addCustomer(name, email, phone, address, city) {
-            try {
-                const { data, error } = await supabase
-                    .from('tamires_customers')
-                    .insert([{
-                        name,
-                        email: email || null,
-                        phone: phone || null,
-                        address: address || null,
-                        city: city || null,
-                        created_at: new Date().toISOString()
-                    }])
-                    .select();
-                
-                if (error) throw error;
-                return data[0];
-            } catch (error) {
-                console.error('Erro ao adicionar cliente:', error);
-                alert('Erro ao adicionar cliente: ' + error.message);
-                return null;
-            }
-        }
-
-        async function deleteCustomer(id) {
-            try {
-                const { error } = await supabase
-                    .from('tamires_customers')
-                    .delete()
-                    .eq('id', id);
-                
-                if (error) throw error;
-                return true;
-            } catch (error) {
-                console.error('Erro ao deletar cliente:', error);
-                return false;
-            }
-        }
-
-        async function loadSales() {
-            try {
-                const { data, error } = await supabase
-                    .from('tamires_sales')
-                    .select('*')
-                    .order('date', { ascending: false });
-                
-                if (error) throw error;
-                sales = data || [];
-            } catch (error) {
-                console.error('Erro ao carregar vendas:', error);
-                sales = [];
-            }
-        }
-
-        async function createSale(items, paymentMethod, customerId = null, customerName = '') {
-            try {
-                const total = items.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
-                const totalCost = items.reduce((sum, item) => sum + (item.cost_price * item.quantity), 0);
-                const profit = total - totalCost;
-
-                const { data: saleData, error: saleError } = await supabase
-                    .from('tamires_sales')
-                    .insert([{
-                        items: JSON.stringify(items),
-                        total,
-                        total_cost: totalCost,
-                        profit,
-                        payment_method: paymentMethod,
-                        customer_id: customerId,
-                        customer_name: customerName,
-                        date: new Date().toISOString()
-                    }])
-                    .select();
-                
-                if (saleError) throw saleError;
-
-                for (const item of items) {
-                    const product = products.find(p => p.id === item.id);
-                    if (product) {
-                        await updateProduct(item.id, { stock: product.stock - item.quantity });
-                    }
-                }
-
-                return saleData[0];
-            } catch (error) {
-                console.error('Erro ao criar venda:', error);
-                alert('Erro ao criar venda: ' + error.message);
-                return null;
-            }
-        }
-
-        async function login(email, password) {
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-                
-                if (error) throw error;
-                
-                currentUser = { 
-                    email: data.user.email, 
-                    name: data.user.user_metadata?.name || 'Tamires Lima',
-                    id: data.user.id
-                };
-                return true;
-            } catch (error) {
-                console.error('Erro no login:', error);
-                alert('Erro ao fazer login: ' + error.message);
-                return false;
-            }
-        }
-
-        async function logout() {
-            try {
-                await supabase.auth.signOut();
-                currentUser = null;
-                cart = [];
-            } catch (error) {
-                console.error('Erro no logout:', error);
-            }
-        }
-
-        async function checkSession() {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    currentUser = { 
-                        email: session.user.email, 
-                        name: session.user.user_metadata?.name || 'Tamires Lima',
-                        id: session.user.id
-                    };
-                    return true;
-                }
-                return false;
-            } catch (error) {
-                console.error('Erro ao verificar sessão:', error);
-                return false;
-            }
-        }
-
-        function addToCart(product, quantity) {
-            const existing = cart.find(item => item.id === product.id);
-            if (existing) {
-                existing.quantity += quantity;
-            } else {
-                cart.push({ ...product, quantity });
-            }
-        }
-
-        function removeFromCart(productId) {
-            cart = cart.filter(item => item.id !== productId);
-        }
-
-        function clearCart() {
-            cart = [];
-        }
-
-        function printReceipt(sale) {
-            const items = typeof sale.items === 'string' ? JSON.parse(sale.items) : sale.items;
+        // ===== NAVIGATION =====
+        function switchPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             
-            const receiptHTML = `
-                <div style="font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.4; max-width: 80mm;">
-                    <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px; margin-bottom: 10px;">
-                        <h2 style="margin: 5px 0;">TAMIRES LIMA FASHION</h2>
-                        <p style="margin: 3px 0;">Moda Feminina</p>
-                        <p style="margin: 3px 0;">Data: ${new Date(sale.date).toLocaleString('pt-BR')}</p>
-                        <p style="margin: 3px 0;">Venda: #${sale.id}</p>
-                        ${sale.customer_name ? `<p style="margin: 3px 0;">Cliente: ${sale.customer_name}</p>` : ''}
-                    </div>
-                    
-                    <div style="margin: 10px 0;">
-                        ${items.map(item => `
-                            <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                                <span>${item.name} (${item.size})</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-left: 10px; margin: 5px 0;">
-                                <span>${item.quantity}x R$ ${item.sale_price.toFixed(2)}</span>
-                                <span>R$ ${(item.quantity * item.sale_price).toFixed(2)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <div style="border-top: 1px dashed #000; padding-top: 10px; margin-top: 10px; font-weight: bold;">
-                        <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                            <span>TOTAL:</span>
-                            <span>R$ ${sale.total.toFixed(2)}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                            <span>PAGAMENTO:</span>
-                            <span>${sale.payment_method}</span>
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 15px; border-top: 1px dashed #000; padding-top: 10px;">
-                        <p style="margin: 3px 0;">Obrigada pela preferência!</p>
-                        <p style="margin: 3px 0;">Volte sempre! ❤️</p>
-                    </div>
-                </div>
-            `;
-
-            const printWindow = window.open('', '', 'width=300,height=600');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Nota Fiscal - ${sale.id}</title>
-                </head>
-                <body onload="window.print(); window.close();">
-                    ${receiptHTML}
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-        }
-
-        // Dashboard Analytics
-        function getDashboardData(period) {
-            const now = new Date();
-            let startDate = new Date();
-            let filteredSales = [];
-
-            if (period === 'daily') {
-                startDate.setHours(0, 0, 0, 0);
-                filteredSales = sales.filter(s => new Date(s.date) >= startDate);
-            } else if (period === 'weekly') {
-                startDate.setDate(now.getDate() - now.getDay());
-                filteredSales = sales.filter(s => new Date(s.date) >= startDate);
-            } else if (period === 'monthly') {
-                startDate.setDate(1);
-                filteredSales = sales.filter(s => {
-                    const sDate = new Date(s.date);
-                    return sDate.getMonth() === now.getMonth() && sDate.getFullYear() === now.getFullYear();
-                });
-            }
-
-            const revenue = filteredSales.reduce((sum, s) => sum + s.total, 0);
-            const profit = filteredSales.reduce((sum, s) => sum + s.profit, 0);
-            const itemsSold = filteredSales.reduce((sum, s) => {
-                const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
-                return sum + items.reduce((itemSum, item) => itemSum + item.quantity, 0);
-            }, 0);
-
-            return {
-                revenue,
-                profit,
-                itemsSold,
-                salesCount: filteredSales.length,
-                transactions: filteredSales.slice(0, 10)
+            const pageId = pageName + 'Page';
+            document.getElementById(pageId).classList.add('active');
+            event.target.closest('.nav-link').classList.add('active');
+            
+            const titles = {
+                dashboard: 'Dashboard',
+                products: 'Produtos',
+                sales: 'Vendas',
+                customers: 'Clientes',
+                messages: 'Mensagens',
+                settings: 'Configurações'
             };
+            document.getElementById('pageTitle').textContent = titles[pageName] || 'Dashboard';
         }
 
-        // Render Functions
-        function renderLoginPage() {
-            return `
-                <div class="main-content full-width">
-                    <div class="container" style="max-width: 500px; margin: 0 auto; padding-top: 60px;">
-                        <div class="page-header" style="text-align: center; margin-bottom: 40px;">
-                            <h1 class="page-title" style="font-size: 32px; margin-bottom: 10px;">Tamires Lima Fashion</h1>
-                            <p class="page-subtitle">Sistema Profissional de Vendas</p>
-                        </div>
+        // ===== PRODUCTS =====
+        function handleAddProduct(e) {
+            e.preventDefault();
+            
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('productName').value,
+                category: document.getElementById('productCategory').value,
+                cost: parseFloat(document.getElementById('productCost').value),
+                price: parseFloat(document.getElementById('productPrice').value),
+                images: productImageStorage || []
+            };
 
-                        <div class="card" id="loginCard">
-                            <h2 style="text-align: center; margin-bottom: 30px;">Acesso Administrativo</h2>
-                            <input type="email" id="loginEmail" placeholder="Email" value="">
-                            <input type="password" id="loginPassword" placeholder="Senha" value="">
-                            <button onclick="handleLogin()" class="btn-primary" style="width: 100%; margin-top: 20px;">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M15 3H9a6 6 0 0 0-6 6v12a6 6 0 0 0 6 6h6a6 6 0 0 0 6-6V9a6 6 0 0 0-6-6z"></path>
-                                    <circle cx="12" cy="16" r="2"></circle>
-                                </svg>
-                                Entrar
-                            </button>
-                            <p style="text-align: center; margin-top: 20px; font-size: 14px;">
-                                Não tem conta? <a href="#" onclick="showRegister(); return false;" style="color: var(--color-primary); font-weight: 600; text-decoration: none;">Cadastre-se</a>
-                            </p>
-                        </div>
-
-                        <div class="card" id="registerCard" style="display: none;">
-                            <h2 style="text-align: center; margin-bottom: 30px;">Criar Conta</h2>
-                            <input type="text" id="registerName" placeholder="Nome Completo" value="">
-                            <input type="email" id="registerEmail" placeholder="Email" value="">
-                            <input type="password" id="registerPassword" placeholder="Senha (mínimo 6 caracteres)" value="">
-                            <button onclick="handleRegister()" class="btn-success" style="width: 100%; margin-top: 20px;">Cadastrar</button>
-                            <p style="text-align: center; margin-top: 20px; font-size: 14px;">
-                                Já tem conta? <a href="#" onclick="showLogin(); return false;" style="color: var(--color-primary); font-weight: 600; text-decoration: none;">Faça login</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            `;
+            store.products.push(product);
+            saveToLocalStorage();
+            renderAllPages();
+            closeModal('addProductModal');
+            document.getElementById('addProductForm').reset();
+            productImageStorage = [];
+            document.getElementById('productImagePreviews').innerHTML = '';
+            alert('Produto adicionado com sucesso!');
         }
 
-        function renderTopBar() {
-            return `
-                <div class="top-bar">
-                    <div></div>
-                    <div class="user-info">
-                        <span style="font-size: 14px;">Bem-vinda, <strong>${currentUser.name}</strong></span>
-                        <div class="user-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
-                    </div>
-                </div>
-            `;
-        }
+        let productImageStorage = [];
 
-        function renderDashboard() {
-            const data = getDashboardData(currentDashboardTab);
-            const avgTicket = data.salesCount > 0 ? (data.revenue / data.salesCount).toFixed(2) : 0;
+        function handleProductImages(e) {
+            const files = Array.from(e.target.files).slice(0, 3);
+            productImageStorage = [];
+            document.getElementById('productImagePreviews').innerHTML = '';
 
-            return `
-                ${renderTopBar()}
-                <div class="container">
-                    <div class="page-header">
-                        <h1 class="page-title">Dashboard</h1>
-                        <p class="page-subtitle">Análise de vendas e desempenho</p>
-                    </div>
-
-                    <div class="tabs">
-                        <button class="tab-btn ${currentDashboardTab === 'daily' ? 'active' : ''}" onclick="setDashboardTab('daily')">Hoje</button>
-                        <button class="tab-btn ${currentDashboardTab === 'weekly' ? 'active' : ''}" onclick="setDashboardTab('weekly')">Esta Semana</button>
-                        <button class="tab-btn ${currentDashboardTab === 'monthly' ? 'active' : ''}" onclick="setDashboardTab('monthly')">Este Mês</button>
-                    </div>
-
-                    <div class="grid grid-4">
-                        <div class="stat-card">
-                            <div class="stat-label">Vendas</div>
-                            <div class="stat-value">${data.salesCount}</div>
-                            <div style="font-size: 12px; opacity: 0.9;">${data.itemsSold} itens</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Faturamento</div>
-                            <div class="stat-value">R$ ${data.revenue.toFixed(0)}</div>
-                            <div style="font-size: 12px; opacity: 0.9;">Ticket: R$ ${avgTicket}</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Lucro</div>
-                            <div class="stat-value">R$ ${data.profit.toFixed(0)}</div>
-                            <div style="font-size: 12px; opacity: 0.9;">Margem: ${data.revenue > 0 ? ((data.profit / data.revenue) * 100).toFixed(1) : 0}%</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Produtos</div>
-                            <div class="stat-value">${products.length}</div>
-                            <div style="font-size: 12px; opacity: 0.9;">Em estoque: ${products.reduce((sum, p) => sum + p.stock, 0)}</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h2>Últimas Vendas</h2>
-                        ${data.transactions.length === 0 ? '<p class="loading">Nenhuma venda neste período</p>' : `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Cliente</th>
-                                        <th>Itens</th>
-                                        <th>Total</th>
-                                        <th>Lucro</th>
-                                        <th>Pagamento</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${data.transactions.map(s => {
-                                        const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
-                                        return `
-                                            <tr>
-                                                <td>${new Date(s.date).toLocaleString('pt-BR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
-                                                <td>${s.customer_name || '-'}</td>
-                                                <td>${items.length}</td>
-                                                <td style="font-weight: 600;">R$ ${s.total.toFixed(2)}</td>
-                                                <td style="color: var(--color-success); font-weight: 600;">R$ ${s.profit.toFixed(2)}</td>
-                                                <td><span class="badge badge-success">${s.payment_method}</span></td>
-                                            </tr>
-                                        `;
-                                    }).join('')}
-                                </tbody>
-                            </table>
-                        `}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderProductsPage() {
-            const filteredProducts = products.filter(p => {
-                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-                const matchesCategory = !selectedCategory || p.category === selectedCategory;
-                return matchesSearch && matchesCategory;
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    productImageStorage.push(event.target.result);
+                    const preview = document.createElement('div');
+                    preview.className = 'image-preview';
+                    preview.innerHTML = `
+                        <img src="${event.target.result}" alt="Preview">
+                        <button type="button" class="image-remove" onclick="removeProductImage(${index})">×</button>
+                    `;
+                    document.getElementById('productImagePreviews').appendChild(preview);
+                };
+                reader.readAsDataURL(file);
             });
+        }
 
-            const categories = [...new Set(products.map(p => p.category))];
+        function removeProductImage(index) {
+            productImageStorage.splice(index, 1);
+            const previews = document.querySelectorAll('.image-preview');
+            if (previews[index]) previews[index].remove();
+        }
 
-            return `
-                ${renderTopBar()}
-                <div class="container">
-                    <div class="page-header">
-                        <h1 class="page-title">Produtos</h1>
-                        <p class="page-subtitle">Gerenciar estoque de peças</p>
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            if (store.products.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">Nenhum produto cadastrado</div>';
+                return;
+            }
+
+            grid.innerHTML = store.products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.images && product.images.length > 0 ? `<img src="${product.images[0]}" alt="${product.name}">` : '<div style="color: var(--text-secondary);">Sem imagem</div>'}
                     </div>
-
-                    <div class="card">
-                        <h2>Cadastrar Nova Peça</h2>
-                        <div class="grid grid-3">
-                            <input type="text" id="productName" placeholder="Nome da Peça">
-                            <select id="productCategory">
-                                <option value="">Categoria</option>
-                                <option value="Vestido">Vestido</option>
-                                <option value="Blusa">Blusa</option>
-                                <option value="Calça">Calça</option>
-                                <option value="Saia">Saia</option>
-                                <option value="Short">Short</option>
-                                <option value="Conjunto">Conjunto</option>
-                                <option value="Acessório">Acessório</option>
-                            </select>
-                            <select id="productSize">
-                                <option value="">Tamanho</option>
-                                <option value="PP">PP</option>
-                                <option value="P">P</option>
-                                <option value="M">M</option>
-                                <option value="G">G</option>
-                                <option value="GG">GG</option>
-                                <option value="Único">Único</option>
-                            </select>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-price">
+                            <span class="price">R$ ${product.price.toFixed(2)}</span>
                         </div>
-                        <div class="grid grid-3">
-                            <input type="text" id="productColor" placeholder="Cor">
-                            <input type="number" id="productCost" placeholder="Preço de Custo (R$)" step="0.01">
-                            <input type="number" id="productSale" placeholder="Preço de Venda (R$)" step="0.01">
+                        <div class="product-actions">
+                            <button class="btn btn-sm btn-primary" onclick="viewProductDetails(${product.id})">Ver</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Del</button>
                         </div>
-                        <div class="grid grid-3">
-                            <input type="number" id="productStock" placeholder="Quantidade em Estoque" min="0">
-                            <button onclick="handleAddProduct()" class="btn-success" style="grid-column: 2 / 4;">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                                Cadastrar Peça
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h2>Estoque de Peças (${filteredProducts.length} de ${products.length})</h2>
-                        <div class="search-box">
-                            <input type="text" id="productSearch" placeholder="Buscar peça..." onchange="searchQuery = this.value; render();" oninput="searchQuery = this.value; render();">
-                            <select id="categoryFilter" onchange="selectedCategory = this.value; render();">
-                                <option value="">Todas as Categorias</option>
-                                ${categories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
-                            </select>
-                        </div>
-                        
-                        ${filteredProducts.length === 0 ? '<p class="loading">Nenhuma peça encontrada</p>' : `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Categoria</th>
-                                        <th>Tam/Cor</th>
-                                        <th>Custo</th>
-                                        <th>Venda</th>
-                                        <th>Lucro</th>
-                                        <th>Estoque</th>
-                                        <th>Ação</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${filteredProducts.map(p => `
-                                        <tr>
-                                            <td>${p.name}</td>
-                                            <td><span class="badge badge-success">${p.category}</span></td>
-                                            <td>${p.size} / ${p.color}</td>
-                                            <td>R$ ${p.cost_price.toFixed(2)}</td>
-                                            <td>R$ ${p.sale_price.toFixed(2)}</td>
-                                            <td style="color: var(--color-success); font-weight: 600;">R$ ${(p.sale_price - p.cost_price).toFixed(2)}</td>
-                                            <td>
-                                                <span class="badge ${p.stock > 5 ? 'badge-success' : p.stock > 0 ? 'badge-warning' : 'badge-danger'}">
-                                                    ${p.stock} un.
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <button onclick="handleDeleteProduct('${p.id}')" class="btn-small btn-danger">
-                                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        `}
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
         function renderSalesPage() {
-            const availableProducts = products.filter(p => p.stock > 0);
-            const cartTotal = cart.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
-            const cartProfit = cart.reduce((sum, item) => sum + ((item.sale_price - item.cost_price) * item.quantity), 0);
-            const salesCategories = [...new Set(availableProducts.map(p => p.category))];
+            const grid = document.getElementById('saleProductsGrid');
+            if (store.products.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">Nenhum produto disponível</div>';
+                return;
+            }
 
-            return `
-                ${renderTopBar()}
-                <div class="container">
-                    <div class="page-header">
-                        <h1 class="page-title">Vendas</h1>
-                        <p class="page-subtitle">Realizar venda de produtos</p>
+            grid.innerHTML = store.products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.images && product.images.length > 0 ? `<img src="${product.images[0]}" alt="${product.name}">` : '<div style="color: var(--text-secondary);">Sem imagem</div>'}
                     </div>
-
-                    <div class="grid grid-3" style="margin-bottom: 20px;">
-                        <div class="card" style="grid-column: 1 / 3;">
-                            <h2>Produtos Disponíveis</h2>
-                            <div class="search-box">
-                                <input type="text" id="saleSearch" placeholder="Buscar produto..." oninput="render();">
-                                <select id="saleCategory" onchange="render();">
-                                    <option value="">Todas as Categorias</option>
-                                    ${salesCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
-                                </select>
-                            </div>
-                            
-                            ${availableProducts.length === 0 ? '<p class="loading">Nenhum produto em estoque</p>' : `
-                                <div class="grid">
-                                    ${availableProducts
-                                        .filter(p => {
-                                            const searchInput = document.getElementById('saleSearch')?.value || '';
-                                            const categoryInput = document.getElementById('saleCategory')?.value || '';
-                                            return p.name.toLowerCase().includes(searchInput.toLowerCase()) && 
-                                                   (!categoryInput || p.category === categoryInput);
-                                        })
-                                        .map(p => `
-                                            <div class="product-card" onclick="handleSelectProduct('${p.id}')">
-                                                <div class="product-name">${p.name}</div>
-                                                <div style="font-size: 12px; color: var(--light-text-secondary); margin: 5px 0;">${p.category} • ${p.size} • ${p.color}</div>
-                                                <div class="product-price">R$ ${p.sale_price.toFixed(2)}</div>
-                                                <div class="product-stock">Estoque: ${p.stock} un.</div>
-                                            </div>
-                                        `).join('')}
-                                </div>
-                            `}
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-price">
+                            <span class="price">R$ ${product.price.toFixed(2)}</span>
                         </div>
-
-                        <div class="card" style="position: sticky; top: 90px; height: fit-content;">
-                            <h2>Carrinho (${cart.length})</h2>
-                            ${cart.length === 0 ? '<p class="loading">Carrinho vazio</p>' : `
-                                <div>
-                                    ${cart.map(item => `
-                                        <div style="background: var(--light-bg-secondary); padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                                            <div>
-                                                <div style="font-weight: 600; margin-bottom: 4px;">${item.name}</div>
-                                                <div style="font-size: 12px; color: var(--light-text-secondary);">${item.quantity}x R$ ${item.sale_price.toFixed(2)}</div>
-                                            </div>
-                                            <div style="text-align: right;">
-                                                <div style="font-weight: 600; margin-bottom: 4px;">R$ ${(item.quantity * item.sale_price).toFixed(2)}</div>
-                                                <button onclick="handleRemoveFromCart('${item.id}')" class="btn-small btn-danger">
-                                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                    
-                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--light-border);">
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                            <strong>Subtotal:</strong>
-                                            <strong>R$ ${cartTotal.toFixed(2)}</strong>
-                                        </div>
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--color-success);">
-                                            <strong>Lucro:</strong>
-                                            <strong>R$ ${cartProfit.toFixed(2)}</strong>
-                                        </div>
-
-                                        <input type="text" id="customerNameField" placeholder="Nome do Cliente (opcional)">
-                                        <select id="paymentMethod" style="margin-top: 10px;">
-                                            <option value="">Forma de Pagamento</option>
-                                            <option value="Dinheiro">Dinheiro</option>
-                                            <option value="Débito">Débito</option>
-                                            <option value="Crédito">Crédito</option>
-                                            <option value="PIX">PIX</option>
-                                        </select>
-                                        
-                                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-direction: column;">
-                                            <button onclick="handleFinalizeSale()" class="btn-success" style="width: 100%;">
-                                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                                </svg>
-                                                Finalizar Venda
-                                            </button>
-                                            <button onclick="clearCart(); render();" class="btn-danger" style="width: 100%;">
-                                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                </svg>
-                                                Limpar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `}
+                        <div class="product-actions">
+                            <button class="btn btn-sm btn-primary" onclick="addToCart(${product.id})">+ Adicionar</button>
                         </div>
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
-        function renderHistoryPage() {
-            const sortedSales = [...sales].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            return `
-                ${renderTopBar()}
-                <div class="container">
-                    <div class="page-header">
-                        <h1 class="page-title">Histórico de Vendas</h1>
-                        <p class="page-subtitle">${sortedSales.length} vendas registradas</p>
-                    </div>
-
-                    <div class="card">
-                        ${sales.length === 0 ? '<p class="loading">Nenhuma venda realizada</p>' : `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Cliente</th>
-                                        <th>Itens</th>
-                                        <th>Total</th>
-                                        <th>Custo</th>
-                                        <th>Lucro</th>
-                                        <th>Pagamento</th>
-                                        <th>Ação</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${sortedSales.map(s => {
-                                        const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
-                                        return `
-                                            <tr>
-                                                <td>${new Date(s.date).toLocaleString('pt-BR')}</td>
-                                                <td>${s.customer_name || '-'}</td>
-                                                <td>${items.length}</td>
-                                                <td style="font-weight: 600; color: var(--color-primary);">R$ ${s.total.toFixed(2)}</td>
-                                                <td>R$ ${s.total_cost.toFixed(2)}</td>
-                                                <td style="font-weight: 600; color: var(--color-success);">R$ ${s.profit.toFixed(2)}</td>
-                                                <td><span class="badge badge-success">${s.payment_method}</span></td>
-                                                <td>
-                                                    <button onclick='printReceipt(${JSON.stringify(s).replace(/'/g, "\\'")})'  class="btn-small btn-primary">
-                                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                                                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                                                        </svg>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        `;
-                                    }).join('')}
-                                </tbody>
-                            </table>
-                        `}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderCustomersPage() {
-            return `
-                ${renderTopBar()}
-                <div class="container">
-                    <div class="page-header">
-                        <h1 class="page-title">Clientes</h1>
-                        <p class="page-subtitle">${customers.length} clientes cadastrados</p>
-                    </div>
-
-                    <div class="card">
-                        <h2>Cadastrar Novo Cliente</h2>
-                        <div class="grid grid-2">
-                            <input type="text" id="customerName" placeholder="Nome Completo *">
-                            <input type="email" id="customerEmail" placeholder="Email (opcional)">
-                        </div>
-                        <div class="grid grid-2">
-                            <input type="tel" id="customerPhone" placeholder="Telefone/WhatsApp (opcional)">
-                            <input type="text" id="customerCity" placeholder="Cidade (opcional)">
-                        </div>
-                        <input type="text" id="customerAddress" placeholder="Endereço (opcional)" style="margin: 8px 0;">
-                        <button onclick="handleAddCustomer()" class="btn-success" style="width: 100%; margin-top: 15px;">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            Cadastrar Cliente
-                        </button>
-                    </div>
-
-                    <div class="card">
-                        ${customers.length === 0 ? '<p class="loading">Nenhum cliente cadastrado</p>' : `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Telefone</th>
-                                        <th>Cidade</th>
-                                        <th>Endereço</th>
-                                        <th>Data</th>
-                                        <th>Ação</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${customers.map(c => `
-                                        <tr>
-                                            <td><strong>${c.name}</strong></td>
-                                            <td>${c.email || '-'}</td>
-                                            <td>${c.phone || '-'}</td>
-                                            <td>${c.city || '-'}</td>
-                                            <td>${c.address || '-'}</td>
-                                            <td>${new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
-                                            <td>
-                                                <button onclick="handleDeleteCustomer('${c.id}')" class="btn-small btn-danger">
-                                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        `}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderSettingsPage() {
-            return `
-                ${renderTopBar()}
-                <div class="container">
-                    <div class="page-header">
-                        <h1 class="page-title">Configurações</h1>
-                        <p class="page-subtitle">Gerenciar conta e preferências</p>
-                    </div>
-
-                    <div class="grid grid-2">
-                        <div class="card">
-                            <h2>Informações da Conta</h2>
-                            <div style="padding: 15px; background: var(--light-bg-secondary); border-radius: 8px; margin-bottom: 20px;">
-                                <p style="margin-bottom: 10px;"><strong>Nome:</strong> ${currentUser.name}</p>
-                                <p><strong>Email:</strong> ${currentUser.email}</p>
-                            </div>
-                            <button onclick="handleLogout()" class="btn-danger" style="width: 100%;">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M10 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h5m7-4l4-4m0 0l-4-4m4 4H9"></path>
-                                </svg>
-                                Fazer Logout
-                            </button>
-                        </div>
-
-                        <div class="card">
-                            <h2>Estatísticas Gerais</h2>
-                            <div style="display: grid; gap: 10px;">
-                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
-                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Total de Produtos</div>
-                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-primary);">${products.length}</div>
-                                </div>
-                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
-                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Total de Vendas</div>
-                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-primary);">${sales.length}</div>
-                                </div>
-                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
-                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Total de Clientes</div>
-                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-primary);">${customers.length}</div>
-                                </div>
-                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
-                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Receita Total</div>
-                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-success);">R$ ${sales.reduce((sum, s) => sum + s.total, 0).toFixed(0)}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Handlers
-        function setDashboardTab(tab) {
-            currentDashboardTab = tab;
-            render();
-        }
-
-        async function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-
-            const success = await login(email, password);
-            if (success) {
-                await loadProducts();
-                await loadSales();
-                await loadCustomers();
-                currentPage = 'dashboard';
-                render();
-            }
-        }
-
-        async function handleRegister() {
-            const name = document.getElementById('registerName').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const password = document.getElementById('registerPassword').value;
-
-            if (!name || !email || !password) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-
-            if (password.length < 6) {
-                alert('A senha deve ter no mínimo 6 caracteres!');
-                return;
-            }
-
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: { name: name }
-                    }
-                });
-
-                if (error) throw error;
-                alert('✅ Conta criada! Verifique seu email e faça login.');
-                showLogin();
-            } catch (error) {
-                console.error('Erro no registro:', error);
-                alert('Erro: ' + error.message);
-            }
-        }
-
-        function showLogin() {
-            document.getElementById('loginCard').style.display = 'block';
-            document.getElementById('registerCard').style.display = 'none';
-        }
-
-        function showRegister() {
-            document.getElementById('loginCard').style.display = 'none';
-            document.getElementById('registerCard').style.display = 'block';
-        }
-
-        function handleLogout() {
-            if (confirm('Deseja realmente sair?')) {
-                logout();
-                currentPage = 'login';
-                render();
-            }
-        }
-
-        async function handleAddProduct() {
-            const name = document.getElementById('productName').value.trim();
-            const category = document.getElementById('productCategory').value;
-            const size = document.getElementById('productSize').value;
-            const color = document.getElementById('productColor').value.trim();
-            const cost = document.getElementById('productCost').value;
-            const sale = document.getElementById('productSale').value;
-            const stock = document.getElementById('productStock').value;
-
-            if (!name || !category || !size || !color || !cost || !sale || !stock) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-
-            if (parseFloat(cost) >= parseFloat(sale)) {
-                alert('O preço de venda deve ser maior que o custo!');
-                return;
-            }
-
-            const success = await addProduct(name, category, size, color, cost, sale, stock);
-            if (success) {
-                alert('✅ Peça cadastrada com sucesso!');
-                document.getElementById('productName').value = '';
-                document.getElementById('productCategory').value = '';
-                document.getElementById('productSize').value = '';
-                document.getElementById('productColor').value = '';
-                document.getElementById('productCost').value = '';
-                document.getElementById('productSale').value = '';
-                document.getElementById('productStock').value = '';
-                await loadProducts();
-                render();
-            }
-        }
-
-        async function handleDeleteProduct(id) {
-            if (confirm('Excluir esta peça?')) {
-                const success = await deleteProduct(id);
-                if (success) {
-                    await loadProducts();
-                    render();
-                }
-            }
-        }
-
-        async function handleAddCustomer() {
-            const name = document.getElementById('customerName').value.trim();
-            const email = document.getElementById('customerEmail').value.trim();
-            const phone = document.getElementById('customerPhone').value.trim();
-            const address = document.getElementById('customerAddress').value.trim();
-            const city = document.getElementById('customerCity').value.trim();
-
-            if (!name) {
-                alert('Preencha o nome do cliente!');
-                return;
-            }
-
-            const success = await addCustomer(name, email, phone, address, city);
-            if (success) {
-                alert('✅ Cliente cadastrado com sucesso!');
-                document.getElementById('customerName').value = '';
-                document.getElementById('customerEmail').value = '';
-                document.getElementById('customerPhone').value = '';
-                document.getElementById('customerAddress').value = '';
-                document.getElementById('customerCity').value = '';
-                await loadCustomers();
-                render();
-            }
-        }
-
-        async function handleDeleteCustomer(id) {
-            if (confirm('Excluir este cliente?')) {
-                const success = await deleteCustomer(id);
-                if (success) {
-                    await loadCustomers();
-                    render();
-                }
-            }
-        }
-
-        function handleSelectProduct(id) {
-            const product = products.find(p => p.id === id);
+        function viewProductDetails(productId) {
+            const product = store.products.find(p => p.id === productId);
             if (!product) return;
 
-            const quantity = prompt(`Quantas unidades de "${product.name}"?\n\nDisponível: ${product.stock} un.`, '1');
-            if (!quantity) return;
-
-            const qty = parseInt(quantity);
-            if (isNaN(qty) || qty <= 0) {
-                alert('Quantidade inválida!');
-                return;
-            }
-
-            if (qty > product.stock) {
-                alert(`Estoque insuficiente! Disponível: ${product.stock} un.`);
-                return;
-            }
-
-            addToCart(product, qty);
-            render();
-        }
-
-        function handleRemoveFromCart(id) {
-            removeFromCart(id);
-            render();
-        }
-
-        async function handleFinalizeSale() {
-            if (cart.length === 0) {
-                alert('Adicione produtos ao carrinho!');
-                return;
-            }
-
-            const paymentMethod = document.getElementById('paymentMethod').value;
-            if (!paymentMethod) {
-                alert('Selecione a forma de pagamento!');
-                return;
-            }
-
-            const customerName = document.getElementById('customerNameField').value.trim();
-
-            if (confirm('Confirmar a venda?')) {
-                const sale = await createSale(cart, paymentMethod, null, customerName);
-                
-                if (sale) {
-                    clearCart();
-                    await loadProducts();
-                    await loadSales();
+            const content = document.getElementById('productModalContent');
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    ${product.images && product.images.length > 0 ? `
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px;">
+                            ${product.images.map(img => `<img src="${img}" style="width: 100%; border-radius: 6px;" alt="${product.name}">`).join('')}
+                        </div>
+                    ` : '<p style="color: var(--text-secondary);">Sem imagens</p>'}
                     
-                    if (confirm('Venda realizada! Imprimir comprovante?')) {
-                        printReceipt(sale);
-                    }
-                    
-                    render();
-                }
-            }
+                    <div style="margin-bottom: 15px;">
+                        <strong>Nome:</strong> ${product.name}
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Categoria:</strong> ${product.category}
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Custo:</strong> R$ ${product.cost.toFixed(2)}
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Preço:</strong> R$ ${product.price.toFixed(2)}
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Margem:</strong> ${(((product.price - product.cost) / product.price) * 100).toFixed(1)}%
+                    </div>
+                </div>
+            `;
+            openModal('viewProductModal');
         }
 
-        function render() {
-            const app = document.getElementById('app');
+        function deleteProduct(productId) {
+            if (!confirm('Tem certeza que deseja deletar este produto?')) return;
+            store.products = store.products.filter(p => p.id !== productId);
+            saveToLocalStorage();
+            renderAllPages();
+        }
+
+        function filterProducts() {
+            const search = document.getElementById('productSearch').value.toLowerCase();
+            const products = store.products.filter(p => p.name.toLowerCase().includes(search));
             
-            if (currentPage === 'login') {
-                app.innerHTML = renderLoginPage();
+            const grid = document.getElementById('productsGrid');
+            if (products.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">Nenhum produto encontrado</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.images && product.images.length > 0 ? `<img src="${product.images[0]}" alt="${product.name}">` : '<div style="color: var(--text-secondary);">Sem imagem</div>'}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-price">
+                            <span class="price">R$ ${product.price.toFixed(2)}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-sm btn-primary" onclick="viewProductDetails(${product.id})">Ver</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Del</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterSaleProducts() {
+            const search = document.getElementById('saleProductSearch').value.toLowerCase();
+            const products = store.products.filter(p => p.name.toLowerCase().includes(search));
+            
+            const grid = document.getElementById('saleProductsGrid');
+            if (products.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">Nenhum produto encontrado</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.images && product.images.length > 0 ? `<img src="${product.images[0]}" alt="${product.name}">` : '<div style="color: var(--text-secondary);">Sem imagem</div>'}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-price">
+                            <span class="price">R$ ${product.price.toFixed(2)}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-sm btn-primary" onclick="addToCart(${product.id})">+ Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCategoryFilters() {
+            const categories = ['all', ...new Set(store.products.map(p => p.category))];
+            const filter = document.getElementById('categoryFilter');
+            const saleFilter = document.getElementById('saleCategoryFilter');
+            
+            const html = categories.map(cat => 
+                `<button class="filter-btn ${cat === 'all' ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat === 'all' ? 'Todas' : cat}</button>`
+            ).join('');
+            
+            filter.innerHTML = html;
+            saleFilter.innerHTML = html.replace(/filterByCategory/g, 'filterSaleByCategory');
+        }
+
+        function filterByCategory(category) {
+            document.querySelectorAll('#categoryFilter .filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const products = category === 'all' ? store.products : store.products.filter(p => p.category === category);
+            const grid = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">Nenhum produto nesta categoria</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.images && product.images.length > 0 ? `<img src="${product.images[0]}" alt="${product.name}">` : '<div style="color: var(--text-secondary);">Sem imagem</div>'}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-price">
+                            <span class="price">R$ ${product.price.toFixed(2)}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-sm btn-primary" onclick="viewProductDetails(${product.id})">Ver</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Del</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterSaleByCategory(category) {
+            document.querySelectorAll('#saleCategoryFilter .filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const products = category === 'all' ? store.products : store.products.filter(p => p.category === category);
+            const grid = document.getElementById('saleProductsGrid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 40px;">Nenhum produto nesta categoria</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.images && product.images.length > 0 ? `<img src="${product.images[0]}" alt="${product.name}">` : '<div style="color: var(--text-secondary);">Sem imagem</div>'}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-price">
+                            <span class="price">R$ ${product.price.toFixed(2)}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-sm btn-primary" onclick="addToCart(${product.id})">+ Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== CUSTOMERS =====
+        function handleAddCustomer(e) {
+            e.preventDefault();
+            
+            const customer = {
+                id: Date.now(),
+                name: document.getElementById('customerName').value,
+                phone: document.getElementById('customerPhone').value,
+                email: document.getElementById('customerEmail').value,
+                birthday: document.getElementById('customerBirthday').value,
+                purchases: [],
+                totalSpent: 0
+            };
+
+            store.customers.push(customer);
+            saveToLocalStorage();
+            renderAllPages();
+            closeModal('addCustomerModal');
+            document.getElementById('addCustomerForm').reset();
+            alert('Cliente adicionado com sucesso!');
+        }
+
+        function handleNewCustomerInSale(e) {
+            e.preventDefault();
+            
+            const customer = {
+                id: Date.now(),
+                name: document.getElementById('newSaleCustomerName').value,
+                phone: document.getElementById('newSaleCustomerPhone').value,
+                email: document.getElementById('newSaleCustomerEmail').value,
+                birthday: document.getElementById('newSaleCustomerBirthday').value,
+                purchases: [],
+                totalSpent: 0
+            };
+
+            store.customers.push(customer);
+            currentCustomer = customer;
+            saveToLocalStorage();
+            updateCustomerSelect();
+            closeModal('newCustomerSaleModal');
+            document.getElementById('newCustomerSaleForm').reset();
+            document.getElementById('customerSelect').value = customer.id;
+            openCart();
+        }
+
+        function renderCustomers() {
+            const tbody = document.getElementById('customersBody');
+            if (store.customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="color: var(--text-secondary);">Nenhum cliente cadastrado</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = store.customers.map(customer => `
+                <tr>
+                    <td>${customer.name}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.email || '-'}</td>
+                    <td>${customer.birthday ? new Date(customer.birthday).toLocaleDateString('pt-BR') : '-'}</td>
+                    <td>${customer.purchases.length}</td>
+                    <td>R$ ${customer.totalSpent.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="viewCustomerHistory(${customer.id})">Histórico</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${customer.id})">Del</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateCustomerSelect() {
+            const select = document.getElementById('customerSelect');
+            select.innerHTML = '<option value="">Selecione um cliente...</option>' +
+                store.customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        function handleCustomerChange() {
+            const customerId = document.getElementById('customerSelect').value;
+            if (customerId) {
+                currentCustomer = store.customers.find(c => c.id == customerId);
+                openCart();
+            }
+        }
+
+        function viewCustomerHistory(customerId) {
+            const customer = store.customers.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const content = document.getElementById('customerHistoryContent');
+            if (customer.purchases.length === 0) {
+                content.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 40px;">Nenhuma compra registrada</div>';
             } else {
-                if (currentPage === 'dashboard') {
-                    app.innerHTML = renderDashboard();
-                } else if (currentPage === 'products') {
-                    app.innerHTML = renderProductsPage();
-                } else if (currentPage === 'sales') {
-                    app.innerHTML = renderSalesPage();
-                } else if (currentPage === 'history') {
-                    app.innerHTML = renderHistoryPage();
-                } else if (currentPage === 'customers') {
-                    app.innerHTML = renderCustomersPage();
-                } else if (currentPage === 'settings') {
-                    app.innerHTML = renderSettingsPage();
+                content.innerHTML = `
+                    <div style="padding: 20px;">
+                        <h3 style="margin-bottom: 15px;">${customer.name}</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: var(--bg-tertiary);">
+                                    <th style="padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color);">Data</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color);">Produtos</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color);">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${customer.purchases.map(purchase => `
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 10px;">${new Date(purchase.date).toLocaleDateString('pt-BR')}</td>
+                                        <td style="padding: 10px;">${purchase.items.map(item => item.name).join(', ')}</td>
+                                        <td style="padding: 10px;">R$ ${purchase.total.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                            <strong>Total de Compras:</strong> R$ ${customer.totalSpent.toFixed(2)}
+                        </div>
+                    </div>
+                `;
+            }
+            openModal('customerHistoryModal');
+        }
+
+        function deleteCustomer(customerId) {
+            if (!confirm('Tem certeza que deseja deletar este cliente?')) return;
+            store.customers = store.customers.filter(c => c.id !== customerId);
+            saveToLocalStorage();
+            renderAllPages();
+        }
+
+        function filterCustomers() {
+            const search = document.getElementById('customerSearch').value.toLowerCase();
+            const filtered = store.customers.filter(c => c.name.toLowerCase().includes(search));
+            
+            const tbody = document.getElementById('customersBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="color: var(--text-secondary);">Nenhum cliente encontrado</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(customer => `
+                <tr>
+                    <td>${customer.name}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.email || '-'}</td>
+                    <td>${customer.birthday ? new Date(customer.birthday).toLocaleDateString('pt-BR') : '-'}</td>
+                    <td>${customer.purchases.length}</td>
+                    <td>R$ ${customer.totalSpent.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="viewCustomerHistory(${customer.id})">Histórico</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${customer.id})">Del</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== SALES & CART =====
+        function addToCart(productId) {
+            if (!currentCustomer && document.getElementById('customerSelect').value === '') {
+                alert('Selecione um cliente primeiro');
+                return;
+            }
+
+            if (!currentCustomer) {
+                const customerId = document.getElementById('customerSelect').value;
+                currentCustomer = store.customers.find(c => c.id == customerId);
+            }
+
+            const product = store.products.find(p => p.id === productId);
+            const existingItem = currentCart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                currentCart.push({ ...product, quantity: 1 });
+            }
+
+            renderCart();
+            openCart();
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            if (currentCart.length === 0) {
+                cartItems.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 30px;">Carrinho vazio</div>';
+                document.getElementById('cartSubtotal').textContent = 'R$ 0';
+                document.getElementById('cartProfit').textContent = 'R$ 0';
+                return;
+            }
+
+            let subtotal = 0;
+            let profit = 0;
+
+            const html = currentCart.map((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                const itemProfit = (item.price - item.cost) * item.quantity;
+                subtotal += itemTotal;
+                profit += itemProfit;
+
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${item.quantity}x R$ ${item.price.toFixed(2)}</div>
+                            <div class="cart-item-price">R$ ${itemTotal.toFixed(2)}</div>
+                        </div>
+                        <button class="btn btn-sm btn-danger" style="width: 30px; padding: 0;" onclick="removeFromCart(${index})">-</button>
+                    </div>
+                `;
+            }).join('');
+
+            cartItems.innerHTML = html;
+            document.getElementById('cartSubtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+            document.getElementById('cartProfit').textContent = `R$ ${profit.toFixed(2)}`;
+        }
+
+        function removeFromCart(index) {
+            currentCart.splice(index, 1);
+            renderCart();
+        }
+
+        function clearCart() {
+            if (!confirm('Deseja limpar o carrinho?')) return;
+            currentCart = [];
+            renderCart();
+        }
+
+        function openCart() {
+            if (!currentCustomer) {
+                alert('Selecione um cliente primeiro');
+                return;
+            }
+            document.getElementById('cartSidebar').classList.add('active');
+        }
+
+        function closeCart() {
+            document.getElementById('cartSidebar').classList.remove('active');
+        }
+
+        function completeSale() {
+            if (currentCart.length === 0) {
+                alert('Carrinho vazio');
+                return;
+            }
+
+            if (!currentCustomer) {
+                alert('Selecione um cliente');
+                return;
+            }
+
+            const total = currentCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const profit = currentCart.reduce((sum, item) => sum + ((item.price - item.cost) * item.quantity), 0);
+
+            const sale = {
+                id: Date.now(),
+                customerId: currentCustomer.id,
+                customerName: currentCustomer.name,
+                items: currentCart.map(item => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })),
+                total: total,
+                profit: profit,
+                date: new Date().toISOString()
+            };
+
+            store.sales.push(sale);
+            currentCustomer.purchases.push(sale);
+            currentCustomer.totalSpent += total;
+
+            const customerIndex = store.customers.findIndex(c => c.id === currentCustomer.id);
+            if (customerIndex !== -1) {
+                store.customers[customerIndex] = currentCustomer;
+            }
+
+            saveToLocalStorage();
+            renderAllPages();
+            currentCart = [];
+            currentCustomer = null;
+            closeCart();
+            alert('Venda realizada com sucesso!');
+        }
+
+        function renderDashboard() {
+            const today = new Date().toDateString();
+            const todaySales = store.sales.filter(s => new Date(s.date).toDateString() === today);
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - 7);
+            const weekSales = store.sales.filter(s => new Date(s.date) >= weekStart);
+            const monthStart = new Date();
+            monthStart.setDate(1);
+            const monthSales = store.sales.filter(s => new Date(s.date) >= monthStart);
+
+            const todayTotal = todaySales.reduce((sum, s) => sum + s.total, 0);
+            const todayProfit = todaySales.reduce((sum, s) => sum + s.profit, 0);
+            const weekTotal = weekSales.reduce((sum, s) => sum + s.total, 0);
+            const monthTotal = monthSales.reduce((sum, s) => sum + s.total, 0);
+
+            document.getElementById('todaySales').textContent = `R$ ${todayTotal.toFixed(2)}`;
+            document.getElementById('todayProfit').textContent = `R$ ${todayProfit.toFixed(2)}`;
+            document.getElementById('todayMargin').textContent = `Margem: ${todayTotal > 0 ? ((todayProfit / todayTotal) * 100).toFixed(1) : 0}%`;
+            document.getElementById('weekSales').textContent = `R$ ${weekTotal.toFixed(2)}`;
+            document.getElementById('monthSales').textContent = `R$ ${monthTotal.toFixed(2)}`;
+
+            const tbody = document.getElementById('transactionsBody');
+            if (store.sales.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="color: var(--text-secondary);">Nenhuma transação registrada</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = store.sales.slice(-10).reverse().map(sale => `
+                <tr>
+                    <td>${sale.customerName}</td>
+                    <td>${sale.items.length} item(ns)</td>
+                    <td>R$ ${sale.total.toFixed(2)}</td>
+                    <td style="color: var(--success-color);">R$ ${sale.profit.toFixed(2)}</td>
+                    <td>${new Date(sale.date).toLocaleDateString('pt-BR')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== MESSAGES =====
+        function updateMessageType() {
+            const type = document.getElementById('messageType').value;
+            document.getElementById('collectionFields').style.display = type === 'collection' ? 'block' : 'none';
+        }
+
+        function updateMessageProductSelect() {
+            const select = document.getElementById('messageProduct');
+            select.innerHTML = '<option value="">Selecione um produto...</option>' +
+                store.products.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
+        function handleAddMessage(e) {
+            e.preventDefault();
+            
+            const message = {
+                id: Date.now(),
+                type: document.getElementById('messageType').value,
+                title: document.getElementById('messageTitle').value,
+                content: document.getElementById('messageContent').value,
+                productId: document.getElementById('messageProduct').value || null
+            };
+
+            store.messages.push(message);
+            saveToLocalStorage();
+            renderAllPages();
+            closeModal('addMessageModal');
+            document.getElementById('addMessageForm').reset();
+            alert('Mensagem adicionada com sucesso!');
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('messagesContainer');
+            if (store.messages.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 40px;">Nenhuma mensagem cadastrada</div>';
+                return;
+            }
+
+            const filtered = currentMessageFilter === 'all' ? store.messages : store.messages.filter(m => m.type === currentMessageFilter);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 40px;">Nenhuma mensagem neste tipo</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(message => `
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">${message.title}</div>
+                            <span style="display: inline-block; background-color: var(--primary-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">
+                                ${message.type === 'birthday' ? 'Aniversário' : 'Coleção Nova'}
+                            </span>
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="deleteMessage(${message.id})">Del</button>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6;">${message.content}</p>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="openSendMessageModal(${message.id})">
+                        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/>
+                        </svg>
+                        Enviar via WhatsApp
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function filterMessageType(type) {
+            document.querySelectorAll('#messageTypeFilter .filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            currentMessageFilter = type;
+            renderMessages();
+        }
+
+        function openSendMessageModal(messageId) {
+            const message = store.messages.find(m => m.id === messageId);
+            if (!message) return;
+
+            const content = document.getElementById('sendMessageContent');
+            
+            if (message.type === 'birthday') {
+                const customers = store.customers.filter(c => c.birthday);
+                if (customers.length === 0) {
+                    content.innerHTML = '<p style="color: var(--text-secondary); padding: 20px;">Nenhum cliente com data de aniversário cadastrada</p>';
+                } else {
+                    content.innerHTML = `
+                        <div style="padding: 20px;">
+                            <p style="margin-bottom: 15px;">Selecione os clientes para enviar a mensagem:</p>
+                            <div id="customerBirthdayCheckboxes">
+                                ${customers.map(c => `
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                        <input type="checkbox" id="customer_${c.id}" value="${c.id}" style="width: 16px; height: 16px; cursor: pointer;">
+                                        <label for="customer_${c.id}" style="cursor: pointer; flex: 1;">${c.name}</label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else if (message.type === 'collection') {
+                const product = message.productId ? store.products.find(p => p.id == message.productId) : null;
+                content.innerHTML = `
+                    <div style="padding: 20px;">
+                        <p style="margin-bottom: 15px;">Selecione os clientes para enviar a coleção nova:</p>
+                        <div id="customerCollectionCheckboxes">
+                            ${store.customers.map(c => `
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                    <input type="checkbox" id="customer_${c.id}" value="${c.id}" style="width: 16px; height: 16px; cursor: pointer;">
+                                    <label for="customer_${c.id}" style="cursor: pointer; flex: 1;">${c.name}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${product ? `
+                            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Produto:</p>
+                                <div style="background-color: var(--bg-secondary); padding: 10px; border-radius: 6px;">
+                                    <strong>${product.name}</strong> - R$ ${product.price.toFixed(2)}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            window.currentMessageToSend = { ...message };
+            openModal('sendMessageModal');
+        }
+
+        function sendMessageViaWhatsApp() {
+            const checkboxes = document.querySelectorAll('#customerBirthdayCheckboxes input[type="checkbox"]:checked, #customerCollectionCheckboxes input[type="checkbox"]:checked');
+            if (checkboxes.length === 0) {
+                alert('Selecione pelo menos um cliente');
+                return;
+            }
+
+            checkboxes.forEach(checkbox => {
+                const customerId = parseInt(checkbox.value);
+                const customer = store.customers.find(c => c.id === customerId);
+                if (!customer) return;
+
+                let messageText = window.currentMessageToSend.content.replace('{{cliente}}', customer.name);
+
+                if (window.currentMessageToSend.type === 'collection' && window.currentMessageToSend.productId) {
+                    const product = store.products.find(p => p.id == window.currentMessageToSend.productId);
+                    if (product) {
+                        messageText += `\n\n🔗 Confira o produto: ${window.location.origin}?product=${product.id}`;
+                    }
+                }
+
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=${customer.phone.replace(/\D/g, '')}&text=${encodeURIComponent(messageText)}`;
+                window.open(whatsappUrl, '_blank');
+            });
+
+            closeModal('sendMessageModal');
+        }
+
+        function deleteMessage(messageId) {
+            if (!confirm('Tem certeza que deseja deletar esta mensagem?')) return;
+            store.messages = store.messages.filter(m => m.id !== messageId);
+            saveToLocalStorage();
+            renderMessages();
+        }
+
+        // ===== SETTINGS =====
+        function updateStoreName() {
+            store.storeName = document.getElementById('storeName').value;
+            document.getElementById('storeName').value = store.storeName;
+            saveToLocalStorage();
+            location.reload();
+        }
+
+        function updateStoreTagline() {
+            store.storeTagline = document.getElementById('storeTagline').value;
+            saveToLocalStorage();
+        }
+
+        function updateStoreLogo() {
+            const logo = document.getElementById('storeLogo').value.toUpperCase().slice(0, 2);
+            store.storeLogo = logo;
+            document.querySelector('.store-logo').textContent = logo;
+            saveToLocalStorage();
+        }
+
+        function handleFaviconUpload(event) {
+            const files = event.target.files;
+            if (files.length === 0) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                store.favicon = e.target.result;
+                saveToLocalStorage();
+                loadFaviconIfExists();
+            };
+            reader.readAsDataURL(files[0]);
+        }
+
+        function loadFaviconIfExists() {
+            if (store.favicon) {
+                const link = document.querySelector("link[rel='icon']") || document.createElement('link');
+                link.rel = 'icon';
+                link.href = store.favicon;
+                if (!document.querySelector("link[rel='icon']")) {
+                    document.head.appendChild(link);
                 }
             }
         }
 
-        async function init() {
-            initTheme();
-            const hasSession = await checkSession();
-            if (hasSession) {
-                await loadProducts();
-                await loadSales();
-                await loadCustomers();
-                currentPage = 'dashboard';
-            }
-            render();
+        // ===== MODALS =====
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
         }
 
-        init();
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function openAddProductModal() {
+            openModal('addProductModal');
+        }
+
+        function openAddCustomerModal() {
+            openModal('addCustomerModal');
+        }
+
+        function openNewCustomerModal() {
+            openModal('newCustomerSaleModal');
+        }
+
+        function openAddMessageModal() {
+            openModal('addMessageModal');
+            updateMessageProductSelect();
+        }
+
+        // ===== THEME =====
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeLabel();
+        }
+
+        function updateTheme() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+            updateThemeLabel();
+        }
+
+        function updateThemeLabel() {
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('themeLabel').textContent = isDark ? 'Modo Claro' : 'Modo Escuro';
+            document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+        }
+
+        // ===== UTILITIES =====
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
+        function clearAllData() {
+            if (!confirm('⚠️ Isso vai deletar TODOS os dados! Tem certeza?')) return;
+            if (!confirm('Tem certeza mesmo? Esta ação é IRREVERSÍVEL!')) return;
+            
+            localStorage.clear();
+            location.reload();
+        }
+
+        // ===== INIT =====
+        window.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
