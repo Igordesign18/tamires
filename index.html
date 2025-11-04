@@ -3,54 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamires Lima Fashion - Sistema de Vendas</title>
+    <title>Tamires Lima Fashion - Sistema Profissional</title>
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3050/3050155.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-        
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        
-        body { 
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
-            z-index: 0;
-            pointer-events: none;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Sidebar responsivo */
+        :root {
+            --color-primary: #7c3aed;
+            --color-primary-dark: #6d28d9;
+            --color-primary-light: #a78bfa;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --color-warning: #f59e0b;
+            --color-info: #3b82f6;
+            
+            --light-bg: #ffffff;
+            --light-bg-secondary: #f9fafb;
+            --light-border: #e5e7eb;
+            --light-text: #1f2937;
+            --light-text-secondary: #6b7280;
+            
+            --dark-bg: #111827;
+            --dark-bg-secondary: #1f2937;
+            --dark-border: #374151;
+            --dark-text: #f3f4f6;
+            --dark-text-secondary: #9ca3af;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light-bg);
+            color: var(--light-text);
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        /* Sidebar */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             width: 280px;
             height: 100vh;
-            background: rgba(45, 55, 72, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--light-bg);
+            border-right: 1px solid var(--light-border);
             padding: 20px;
             overflow-y: auto;
             z-index: 1000;
-            transition: transform 0.3s ease;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .sidebar {
+            background: var(--dark-bg-secondary);
+            border-right-color: var(--dark-border);
         }
 
         .sidebar.hidden {
@@ -58,29 +75,38 @@
         }
 
         .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 30px;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--light-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .sidebar-title {
-            font-size: 18px;
+        body.dark-mode .sidebar-header {
+            border-bottom-color: var(--dark-border);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-weight: 700;
-            color: #fff;
+            font-size: 16px;
+            color: var(--color-primary);
         }
 
         .close-sidebar {
             display: none;
-            background: transparent;
+            background: none;
             border: none;
-            color: #fff;
             font-size: 24px;
             cursor: pointer;
-            width: auto;
-            padding: 0;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .close-sidebar {
+            color: var(--dark-text);
         }
 
         .sidebar-menu {
@@ -88,32 +114,43 @@
         }
 
         .sidebar-menu li {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .sidebar-menu button {
             width: 100%;
             background: transparent;
-            color: #cbd5e0;
             border: none;
             padding: 12px 15px;
             text-align: left;
             cursor: pointer;
             border-radius: 8px;
-            transition: all 0.3s;
             font-size: 14px;
             font-weight: 500;
+            color: var(--light-text-secondary);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .sidebar-menu button {
+            color: var(--dark-text-secondary);
         }
 
         .sidebar-menu button:hover {
-            background: rgba(102, 126, 234, 0.2);
-            color: #fff;
-            transform: none;
+            background: var(--light-bg-secondary);
+            color: var(--light-text);
+        }
+
+        body.dark-mode .sidebar-menu button:hover {
+            background: var(--dark-bg);
+            color: var(--dark-text);
         }
 
         .sidebar-menu button.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
         }
 
         .toggle-sidebar {
@@ -122,14 +159,17 @@
             top: 20px;
             left: 20px;
             z-index: 999;
-            width: auto;
-            padding: 10px 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--color-primary);
             border: none;
-            color: #fff;
+            color: white;
+            padding: 10px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .overlay {
@@ -147,9 +187,34 @@
             display: block;
         }
 
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            z-index: 500;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Main Content */
         .main-content {
             margin-left: 280px;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s;
             position: relative;
             z-index: 1;
         }
@@ -158,219 +223,352 @@
             margin-left: 0;
         }
 
-        .container { 
-            max-width: 1400px; 
-            margin: 0 auto; 
-            padding: 40px 20px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero-section {
-            text-align: center;
-            padding: 60px 20px 40px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .hero-title {
-            font-size: 56px;
-            font-weight: 900;
-            margin-bottom: 16px;
-            line-height: 1.1;
-            text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .hero-subtitle {
-            font-size: 20px;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .card { 
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px; 
-            padding: 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            color: #2d3748;
-        }
-        
-        h1, h2, h3 { 
-            color: #2d3748;
-            font-weight: 700;
-        }
-        h1 { font-size: 32px; margin-bottom: 20px; }
-        h2 { font-size: 24px; margin-bottom: 16px; }
-        h3 { font-size: 18px; margin-bottom: 12px; }
-        
-        input, select, button, textarea { 
-            width: 100%; 
-            padding: 14px 18px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: 2px solid #e2e8f0;
-            font-size: 15px;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s;
-        }
-        
-        input, select, textarea { 
-            background: #fff;
-            color: #2d3748;
-        }
-        
-        input:focus, select:focus, textarea:focus { 
-            outline: none; 
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        button { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff; 
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        button:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-        
-        button:disabled { 
-            background: #cbd5e0;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-        }
-        
-        .btn-warning {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #667eea;
-            color: #667eea;
-        }
-        
-        .grid { 
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        
-        .stat-card { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        
-        .stat-value { 
-            font-size: 42px;
-            font-weight: 800;
-            margin: 12px 0;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        table { 
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th, td { 
-            padding: 14px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        th { 
-            background: #f7fafc;
-            color: #667eea;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
-        
-        tr:hover {
-            background: #f7fafc;
-        }
-        
-        .product-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .product-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-        }
-        
-        .product-card.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-        
-        .cart-item {
-            background: #f7fafc;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+        .top-bar {
+            background: var(--light-bg);
+            border-bottom: 1px solid var(--light-border);
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+        body.dark-mode .top-bar {
+            background: var(--dark-bg-secondary);
+            border-bottom-color: var(--dark-border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
             gap: 15px;
         }
-        
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .container {
+            padding: 30px 40px;
+            max-width: 1600px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .page-subtitle {
+            color: var(--light-text-secondary);
+            font-size: 14px;
+        }
+
+        body.dark-mode .page-subtitle {
+            color: var(--dark-text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--light-bg);
+            border: 1px solid var(--light-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .card {
+            background: var(--dark-bg-secondary);
+            border-color: var(--dark-border);
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        /* Forms */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            margin: 8px 0;
+            border: 1px solid var(--light-border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--light-bg);
+            color: var(--light-text);
+            transition: all 0.3s;
+        }
+
+        body.dark-mode input,
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            border-color: var(--dark-border);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        /* Buttons */
+        button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Stats */
+        .stat-card {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        body.dark-mode .tabs {
+            border-bottom-color: var(--dark-border);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--light-text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            width: auto;
+        }
+
+        body.dark-mode .tab-btn {
+            color: var(--dark-text-secondary);
+        }
+
+        .tab-btn:hover {
+            color: var(--light-text);
+        }
+
+        body.dark-mode .tab-btn:hover {
+            color: var(--dark-text);
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        body.dark-mode th,
+        body.dark-mode td {
+            border-bottom-color: var(--dark-border);
+        }
+
+        th {
+            background: var(--light-bg-secondary);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--light-text-secondary);
+        }
+
+        body.dark-mode th {
+            background: var(--dark-bg);
+            color: var(--dark-text-secondary);
+        }
+
+        tr:hover {
+            background: var(--light-bg-secondary);
+        }
+
+        body.dark-mode tr:hover {
+            background: var(--dark-bg);
+        }
+
+        /* Products */
+        .product-card {
+            background: var(--light-bg);
+            border: 2px solid var(--light-border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .product-card {
+            background: var(--dark-bg);
+            border-color: var(--dark-border);
+        }
+
+        .product-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2);
+        }
+
+        .product-card.selected {
+            border-color: var(--color-success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        body.dark-mode .product-card.selected {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 10px 0;
+        }
+
+        .product-stock {
+            font-size: 12px;
+            color: var(--light-text-secondary);
+        }
+
+        body.dark-mode .product-stock {
+            color: var(--dark-text-secondary);
+        }
+
+        /* Badge */
         .badge {
             display: inline-block;
             padding: 4px 12px;
@@ -378,77 +576,102 @@
             font-size: 12px;
             font-weight: 600;
         }
-        
+
         .badge-success {
-            background: #c6f6d5;
-            color: #22543d;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--color-success);
         }
-        
+
         .badge-warning {
-            background: #fed7d7;
-            color: #742a2a;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
         }
-        
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            .print-area, .print-area * {
-                visibility: visible;
-            }
-            .print-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 80mm;
-            }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
         }
-        
-        .tab-buttons {
+
+        /* Search */
+        .search-box {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
-        
-        .tab-btn {
+
+        .search-box input {
             flex: 1;
-            min-width: 150px;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border: 2px solid rgba(102, 126, 234, 0.3);
         }
-        
-        .tab-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .logout-btn {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            width: calc(100% - 40px);
-            padding: 12px 24px;
-            z-index: 100;
-        }
-        
+
+        /* Loading */
         .loading {
             text-align: center;
             padding: 40px;
-            opacity: 0.6;
+            color: var(--light-text-secondary);
         }
 
-        /* Responsividade Mobile */
+        body.dark-mode .loading {
+            color: var(--dark-text-secondary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.visible {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--dark-bg-secondary);
+        }
+
+        /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 width: 250px;
+            }
+
+            .main-content {
+                margin-left: 250px;
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .top-bar {
+                padding: 15px 20px;
             }
         }
 
         @media (max-width: 768px) {
             .toggle-sidebar {
-                display: block;
+                display: flex;
             }
 
             .close-sidebar {
@@ -463,96 +686,165 @@
                 margin-left: 0;
             }
 
-            .hero-title { font-size: 36px; }
-            .hero-subtitle { font-size: 16px; }
-            .card { padding: 20px; }
-            .grid { grid-template-columns: 1fr; }
-            .form-row { grid-template-columns: 1fr; }
-            .stat-value { font-size: 32px; }
-            
-            table {
-                font-size: 12px;
-            }
-            
-            th, td {
-                padding: 8px;
+            .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
             }
 
-            .tab-btn {
-                min-width: 120px;
-                padding: 10px;
-                font-size: 13px;
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .user-info {
+                gap: 10px;
             }
         }
 
         @media (max-width: 480px) {
-            .hero-title { font-size: 28px; }
-            .hero-subtitle { font-size: 14px; }
-            .container { padding: 20px 15px; }
-            .card { padding: 15px; }
-            .stat-value { font-size: 24px; }
+            .container {
+                padding: 15px;
+            }
 
-            .form-row {
-                grid-template-columns: 1fr;
+            .card {
+                padding: 15px;
             }
 
             .grid {
                 grid-template-columns: 1fr;
             }
 
+            .page-title {
+                font-size: 18px;
+            }
+
             input, select, button, textarea {
-                padding: 12px 15px;
-                font-size: 14px;
+                font-size: 16px;
             }
+        }
 
-            button {
-                width: 100%;
-            }
-
-            .tab-buttons {
-                flex-direction: column;
-            }
-
-            .tab-btn {
-                width: 100%;
-                min-width: auto;
-            }
-
-            /* Melhorar layout de grid em mobile */
-            .grid[style*="grid-template-columns: 2fr 1fr"] {
-                grid-template-columns: 1fr !important;
-            }
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <!-- Overlay para fechar sidebar -->
+    <!-- Overlay -->
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-    <!-- Toggle button para sidebar mobile -->
-    <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+    <!-- Toggle Button -->
+    <button class="toggle-sidebar" onclick="toggleSidebar()">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
 
-    <!-- Sidebar responsiva -->
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-title">Menu</div>
-            <button class="close-sidebar" onclick="closeSidebar()">✕</button>
+            <div class="sidebar-logo">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Tamires Lima
+            </div>
+            <button class="close-sidebar" onclick="closeSidebar()">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
+
         <ul class="sidebar-menu">
-            <li><button class="sidebar-btn active" data-page="dashboard" onclick="changePage('dashboard')">📊 Dashboard</button></li>
-            <li><button class="sidebar-btn" data-page="products" onclick="changePage('products')">📦 Produtos</button></li>
-            <li><button class="sidebar-btn" data-page="sales" onclick="changePage('sales')">🛒 Vendas</button></li>
-            <li><button class="sidebar-btn" data-page="history" onclick="changePage('history')">📋 Histórico</button></li>
-            <li><button class="sidebar-btn" data-page="customers" onclick="changePage('customers')">👥 Clientes</button></li>
-            <li><button class="sidebar-btn" data-page="settings" onclick="changePage('settings')">⚙️ Configurações</button></li>
+            <li>
+                <button class="sidebar-btn active" data-page="dashboard" onclick="changePage('dashboard')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </button>
+            </li>
+            <li>
+                <button class="sidebar-btn" data-page="products" onclick="changePage('products')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6-6 6 6M5 9h14v12c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1V9z"></path>
+                    </svg>
+                    Produtos
+                </button>
+            </li>
+            <li>
+                <button class="sidebar-btn" data-page="sales" onclick="changePage('sales')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    Vendas
+                </button>
+            </li>
+            <li>
+                <button class="sidebar-btn" data-page="history" onclick="changePage('history')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
+                    </svg>
+                    Histórico
+                </button>
+            </li>
+            <li>
+                <button class="sidebar-btn" data-page="customers" onclick="changePage('customers')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Clientes
+                </button>
+            </li>
+            <li>
+                <button class="sidebar-btn" data-page="settings" onclick="changePage('settings')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6m-16.78 7.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
+                    </svg>
+                    Configurações
+                </button>
+            </li>
         </ul>
-        <button class="logout-btn btn-danger" onclick="handleLogout()">🚪 Sair</button>
+
+        <button class="btn-danger" onclick="handleLogout()" style="width: calc(100% - 30px); margin-top: auto; position: absolute; bottom: 20px; left: 15px;">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h5m7-4l4-4m0 0l-4-4m4 4H9"></path>
+            </svg>
+            Sair
+        </button>
     </aside>
 
-    <!-- Main content com classe responsiva -->
+    <!-- Main Content -->
     <div class="main-content" id="mainContent">
         <div id="app"></div>
     </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Alternar Tema">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" id="themeIcon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
 
     <script>
         const SUPABASE_URL = 'https://ulykbxvtclrpmikhrbeh.supabase.co';
@@ -562,12 +854,40 @@
 
         let currentUser = null;
         let currentPage = 'login';
-        let currentTab = 'products';
+        let currentDashboardTab = 'daily';
         let products = [];
         let sales = [];
         let customers = [];
         let cart = [];
+        let searchQuery = '';
+        let selectedCategory = '';
 
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                updateThemeIcon(true);
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('themeIcon');
+            if (isDark) {
+                icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+            } else {
+                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+            }
+        }
+
+        // Sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -577,8 +897,7 @@
                 sidebar.classList.remove('hidden');
                 overlay.classList.add('visible');
             } else {
-                sidebar.classList.add('hidden');
-                overlay.classList.remove('visible');
+                closeSidebar();
             }
         }
 
@@ -591,7 +910,7 @@
 
         function changePage(page) {
             currentPage = page;
-            closeSidebar(); // Fechar sidebar ao mudar de página
+            closeSidebar();
             updateSidebarActive();
             render();
         }
@@ -605,7 +924,7 @@
             });
         }
 
-        // Funções do Supabase - Produtos
+        // Supabase Functions
         async function loadProducts() {
             try {
                 const { data, error } = await supabase
@@ -706,11 +1025,11 @@
                     .select();
                 
                 if (error) throw error;
-                return true;
+                return data[0];
             } catch (error) {
                 console.error('Erro ao adicionar cliente:', error);
                 alert('Erro ao adicionar cliente: ' + error.message);
-                return false;
+                return null;
             }
         }
 
@@ -729,7 +1048,6 @@
             }
         }
 
-        // Funções do Supabase - Vendas
         async function loadSales() {
             try {
                 const { data, error } = await supabase
@@ -745,7 +1063,7 @@
             }
         }
 
-        async function createSale(items, paymentMethod, customerName = '', customerId = null) {
+        async function createSale(items, paymentMethod, customerId = null, customerName = '') {
             try {
                 const total = items.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
                 const totalCost = items.reduce((sum, item) => sum + (item.cost_price * item.quantity), 0);
@@ -759,8 +1077,8 @@
                         total_cost: totalCost,
                         profit,
                         payment_method: paymentMethod,
-                        customer_name: customerName,
                         customer_id: customerId,
+                        customer_name: customerName,
                         date: new Date().toISOString()
                     }])
                     .select();
@@ -876,22 +1194,18 @@
                     
                     <div style="border-top: 1px dashed #000; padding-top: 10px; margin-top: 10px; font-weight: bold;">
                         <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                            <span>SUBTOTAL:</span>
+                            <span>TOTAL:</span>
                             <span>R$ ${sale.total.toFixed(2)}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 5px 0;">
                             <span>PAGAMENTO:</span>
                             <span>${sale.payment_method}</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 5px; margin: 5px 0;">
-                            <span>TOTAL:</span>
-                            <span>R$ ${sale.total.toFixed(2)}</span>
-                        </div>
                     </div>
                     
                     <div style="text-align: center; margin-top: 15px; border-top: 1px dashed #000; padding-top: 10px;">
                         <p style="margin: 3px 0;">Obrigada pela preferência!</p>
-                        <p style="margin: 3px 0;">Volte sempre!</p>
+                        <p style="margin: 3px 0;">Volte sempre! ❤️</p>
                     </div>
                 </div>
             `;
@@ -910,104 +1224,192 @@
             printWindow.document.close();
         }
 
+        // Dashboard Analytics
+        function getDashboardData(period) {
+            const now = new Date();
+            let startDate = new Date();
+            let filteredSales = [];
+
+            if (period === 'daily') {
+                startDate.setHours(0, 0, 0, 0);
+                filteredSales = sales.filter(s => new Date(s.date) >= startDate);
+            } else if (period === 'weekly') {
+                startDate.setDate(now.getDate() - now.getDay());
+                filteredSales = sales.filter(s => new Date(s.date) >= startDate);
+            } else if (period === 'monthly') {
+                startDate.setDate(1);
+                filteredSales = sales.filter(s => {
+                    const sDate = new Date(s.date);
+                    return sDate.getMonth() === now.getMonth() && sDate.getFullYear() === now.getFullYear();
+                });
+            }
+
+            const revenue = filteredSales.reduce((sum, s) => sum + s.total, 0);
+            const profit = filteredSales.reduce((sum, s) => sum + s.profit, 0);
+            const itemsSold = filteredSales.reduce((sum, s) => {
+                const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
+                return sum + items.reduce((itemSum, item) => itemSum + item.quantity, 0);
+            }, 0);
+
+            return {
+                revenue,
+                profit,
+                itemsSold,
+                salesCount: filteredSales.length,
+                transactions: filteredSales.slice(0, 10)
+            };
+        }
+
+        // Render Functions
         function renderLoginPage() {
             return `
-                <div class="hero-section">
-                    <div class="hero-badge">
-                        👗 Sistema Exclusivo
-                    </div>
-                    <h1 class="hero-title">Tamires Lima Fashion</h1>
-                    <p class="hero-subtitle">Sistema de Gerenciamento de Vendas</p>
-                </div>
-                
-                <div class="container">
-                    <div style="max-width: 450px; margin: 0 auto;">
+                <div class="main-content full-width">
+                    <div class="container" style="max-width: 500px; margin: 0 auto; padding-top: 60px;">
+                        <div class="page-header" style="text-align: center; margin-bottom: 40px;">
+                            <h1 class="page-title" style="font-size: 32px; margin-bottom: 10px;">Tamires Lima Fashion</h1>
+                            <p class="page-subtitle">Sistema Profissional de Vendas</p>
+                        </div>
+
                         <div class="card" id="loginCard">
                             <h2 style="text-align: center; margin-bottom: 30px;">Acesso Administrativo</h2>
-                            <div style="background: rgba(102, 126, 234, 0.1); border: 2px solid rgba(102, 126, 234, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                                <p style="text-align: center; color: #667eea; font-weight: 600; margin-bottom: 10px;">ℹ️ Instruções:</p>
-                                <p style="text-align: center; color: #2d3748; font-size: 14px;">1. Crie uma conta no Supabase Authentication</p>
-                                <p style="text-align: center; color: #2d3748; font-size: 14px;">2. Use as credenciais cadastradas para fazer login</p>
-                            </div>
-                            <input type="email" id="loginEmail" placeholder="Email do Administrador" value="">
+                            <input type="email" id="loginEmail" placeholder="Email" value="">
                             <input type="password" id="loginPassword" placeholder="Senha" value="">
-                            <button onclick="handleLogin()">🔐 Entrar</button>
-                            <p style="text-align: center; margin-top: 20px; color: #718096; font-size: 14px;">
-                                Não tem conta? 
-                                <a href="#" onclick="showRegister(); return false;" style="color: #667eea; font-weight: 600; text-decoration: none;">Cadastre-se aqui</a>
+                            <button onclick="handleLogin()" class="btn-primary" style="width: 100%; margin-top: 20px;">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 3H9a6 6 0 0 0-6 6v12a6 6 0 0 0 6 6h6a6 6 0 0 0 6-6V9a6 6 0 0 0-6-6z"></path>
+                                    <circle cx="12" cy="16" r="2"></circle>
+                                </svg>
+                                Entrar
+                            </button>
+                            <p style="text-align: center; margin-top: 20px; font-size: 14px;">
+                                Não tem conta? <a href="#" onclick="showRegister(); return false;" style="color: var(--color-primary); font-weight: 600; text-decoration: none;">Cadastre-se</a>
                             </p>
                         </div>
-                        
+
                         <div class="card" id="registerCard" style="display: none;">
                             <h2 style="text-align: center; margin-bottom: 30px;">Criar Conta</h2>
                             <input type="text" id="registerName" placeholder="Nome Completo" value="">
                             <input type="email" id="registerEmail" placeholder="Email" value="">
                             <input type="password" id="registerPassword" placeholder="Senha (mínimo 6 caracteres)" value="">
-                            <button onclick="handleRegister()" class="btn-success">✅ Cadastrar</button>
-                            <p style="text-align: center; margin-top: 20px; color: #718096; font-size: 14px;">
-                                Já tem conta? 
-                                <a href="#" onclick="showLogin(); return false;" style="color: #667eea; font-weight: 600; text-decoration: none;">Faça login</a>
+                            <button onclick="handleRegister()" class="btn-success" style="width: 100%; margin-top: 20px;">Cadastrar</button>
+                            <p style="text-align: center; margin-top: 20px; font-size: 14px;">
+                                Já tem conta? <a href="#" onclick="showLogin(); return false;" style="color: var(--color-primary); font-weight: 600; text-decoration: none;">Faça login</a>
                             </p>
                         </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTopBar() {
+            return `
+                <div class="top-bar">
+                    <div></div>
+                    <div class="user-info">
+                        <span style="font-size: 14px;">Bem-vinda, <strong>${currentUser.name}</strong></span>
+                        <div class="user-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
                     </div>
                 </div>
             `;
         }
 
         function renderDashboard() {
-            const totalProducts = products.length;
-            const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
-            const todaySales = sales.filter(s => {
-                const saleDate = new Date(s.date).toDateString();
-                return saleDate === new Date().toDateString();
-            });
-            const todayRevenue = todaySales.reduce((sum, s) => sum + s.total, 0);
-            const todayProfit = todaySales.reduce((sum, s) => sum + s.profit, 0);
-            const totalRevenue = sales.reduce((sum, s) => sum + s.total, 0);
-            const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
+            const data = getDashboardData(currentDashboardTab);
+            const avgTicket = data.salesCount > 0 ? (data.revenue / data.salesCount).toFixed(2) : 0;
 
             return `
-                <div class="hero-section" style="padding: 60px 20px 40px;">
-                    <div class="hero-badge">
-                        👗 Bem-vinda, ${currentUser.name}
-                    </div>
-                    <h1 class="hero-title" style="font-size: 42px;">Tamires Lima Fashion</h1>
-                    <p class="hero-subtitle">Sistema de Gerenciamento Completo</p>
-                </div>
-
+                ${renderTopBar()}
                 <div class="container">
-                    <div class="grid">
+                    <div class="page-header">
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Análise de vendas e desempenho</p>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn ${currentDashboardTab === 'daily' ? 'active' : ''}" onclick="setDashboardTab('daily')">Hoje</button>
+                        <button class="tab-btn ${currentDashboardTab === 'weekly' ? 'active' : ''}" onclick="setDashboardTab('weekly')">Esta Semana</button>
+                        <button class="tab-btn ${currentDashboardTab === 'monthly' ? 'active' : ''}" onclick="setDashboardTab('monthly')">Este Mês</button>
+                    </div>
+
+                    <div class="grid grid-4">
                         <div class="stat-card">
-                            <div class="stat-label">📦 Produtos</div>
-                            <div class="stat-value">${totalProducts}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">${totalStock} unidades em estoque</p>
+                            <div class="stat-label">Vendas</div>
+                            <div class="stat-value">${data.salesCount}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">${data.itemsSold} itens</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">💰 Vendas Hoje</div>
-                            <div class="stat-value">R$ ${todayRevenue.toFixed(2)}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">${todaySales.length} vendas realizadas</p>
+                            <div class="stat-label">Faturamento</div>
+                            <div class="stat-value">R$ ${data.revenue.toFixed(0)}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Ticket: R$ ${avgTicket}</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">📈 Lucro Hoje</div>
-                            <div class="stat-value">R$ ${todayProfit.toFixed(2)}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">Margem diária</p>
+                            <div class="stat-label">Lucro</div>
+                            <div class="stat-value">R$ ${data.profit.toFixed(0)}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Margem: ${data.revenue > 0 ? ((data.profit / data.revenue) * 100).toFixed(1) : 0}%</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">👥 Clientes</div>
-                            <div class="stat-value">${customers.length}</div>
-                            <p style="opacity: 0.9; font-size: 14px;">Clientes cadastrados</p>
+                            <div class="stat-label">Produtos</div>
+                            <div class="stat-value">${products.length}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Em estoque: ${products.reduce((sum, p) => sum + p.stock, 0)}</div>
                         </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Últimas Vendas</h2>
+                        ${data.transactions.length === 0 ? '<p class="loading">Nenhuma venda neste período</p>' : `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Cliente</th>
+                                        <th>Itens</th>
+                                        <th>Total</th>
+                                        <th>Lucro</th>
+                                        <th>Pagamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.transactions.map(s => {
+                                        const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
+                                        return `
+                                            <tr>
+                                                <td>${new Date(s.date).toLocaleString('pt-BR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+                                                <td>${s.customer_name || '-'}</td>
+                                                <td>${items.length}</td>
+                                                <td style="font-weight: 600;">R$ ${s.total.toFixed(2)}</td>
+                                                <td style="color: var(--color-success); font-weight: 600;">R$ ${s.profit.toFixed(2)}</td>
+                                                <td><span class="badge badge-success">${s.payment_method}</span></td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        `}
                     </div>
                 </div>
             `;
         }
 
         function renderProductsPage() {
+            const filteredProducts = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCategory = !selectedCategory || p.category === selectedCategory;
+                return matchesSearch && matchesCategory;
+            });
+
+            const categories = [...new Set(products.map(p => p.category))];
+
             return `
+                ${renderTopBar()}
                 <div class="container">
+                    <div class="page-header">
+                        <h1 class="page-title">Produtos</h1>
+                        <p class="page-subtitle">Gerenciar estoque de peças</p>
+                    </div>
+
                     <div class="card">
                         <h2>Cadastrar Nova Peça</h2>
-                        <div class="form-row">
+                        <div class="grid grid-3">
                             <input type="text" id="productName" placeholder="Nome da Peça">
                             <select id="productCategory">
                                 <option value="">Categoria</option>
@@ -1019,8 +1421,6 @@
                                 <option value="Conjunto">Conjunto</option>
                                 <option value="Acessório">Acessório</option>
                             </select>
-                        </div>
-                        <div class="form-row">
                             <select id="productSize">
                                 <option value="">Tamanho</option>
                                 <option value="PP">PP</option>
@@ -1030,55 +1430,74 @@
                                 <option value="GG">GG</option>
                                 <option value="Único">Único</option>
                             </select>
-                            <input type="text" id="productColor" placeholder="Cor">
                         </div>
-                        <div class="form-row">
+                        <div class="grid grid-3">
+                            <input type="text" id="productColor" placeholder="Cor">
                             <input type="number" id="productCost" placeholder="Preço de Custo (R$)" step="0.01">
                             <input type="number" id="productSale" placeholder="Preço de Venda (R$)" step="0.01">
-                            <input type="number" id="productStock" placeholder="Quantidade em Estoque" min="0">
                         </div>
-                        <button onclick="handleAddProduct()" class="btn-success">➕ Cadastrar Peça</button>
+                        <div class="grid grid-3">
+                            <input type="number" id="productStock" placeholder="Quantidade em Estoque" min="0">
+                            <button onclick="handleAddProduct()" class="btn-success" style="grid-column: 2 / 4;">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Cadastrar Peça
+                            </button>
+                        </div>
                     </div>
 
                     <div class="card">
-                        <h2>Estoque de Peças (${products.length} itens)</h2>
-                        ${products.length === 0 ? '<p class="loading">Nenhuma peça cadastrada</p>' : `
-                            <div style="overflow-x: auto;">
-                                <table>
-                                    <thead>
+                        <h2>Estoque de Peças (${filteredProducts.length} de ${products.length})</h2>
+                        <div class="search-box">
+                            <input type="text" id="productSearch" placeholder="Buscar peça..." onchange="searchQuery = this.value; render();" oninput="searchQuery = this.value; render();">
+                            <select id="categoryFilter" onchange="selectedCategory = this.value; render();">
+                                <option value="">Todas as Categorias</option>
+                                ${categories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                            </select>
+                        </div>
+                        
+                        ${filteredProducts.length === 0 ? '<p class="loading">Nenhuma peça encontrada</p>' : `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Categoria</th>
+                                        <th>Tam/Cor</th>
+                                        <th>Custo</th>
+                                        <th>Venda</th>
+                                        <th>Lucro</th>
+                                        <th>Estoque</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${filteredProducts.map(p => `
                                         <tr>
-                                            <th>Nome</th>
-                                            <th>Categoria</th>
-                                            <th>Tam/Cor</th>
-                                            <th>Custo</th>
-                                            <th>Venda</th>
-                                            <th>Lucro</th>
-                                            <th>Estoque</th>
-                                            <th>Ações</th>
+                                            <td>${p.name}</td>
+                                            <td><span class="badge badge-success">${p.category}</span></td>
+                                            <td>${p.size} / ${p.color}</td>
+                                            <td>R$ ${p.cost_price.toFixed(2)}</td>
+                                            <td>R$ ${p.sale_price.toFixed(2)}</td>
+                                            <td style="color: var(--color-success); font-weight: 600;">R$ ${(p.sale_price - p.cost_price).toFixed(2)}</td>
+                                            <td>
+                                                <span class="badge ${p.stock > 5 ? 'badge-success' : p.stock > 0 ? 'badge-warning' : 'badge-danger'}">
+                                                    ${p.stock} un.
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button onclick="handleDeleteProduct('${p.id}')" class="btn-small btn-danger">
+                                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    </svg>
+                                                </button>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${products.map(p => `
-                                            <tr>
-                                                <td>${p.name}</td>
-                                                <td>${p.category}</td>
-                                                <td>${p.size} / ${p.color}</td>
-                                                <td>R$ ${p.cost_price.toFixed(2)}</td>
-                                                <td>R$ ${p.sale_price.toFixed(2)}</td>
-                                                <td style="color: #38a169; font-weight: 600;">R$ ${(p.sale_price - p.cost_price).toFixed(2)}</td>
-                                                <td>
-                                                    <span class="badge ${p.stock > 5 ? 'badge-success' : 'badge-warning'}">
-                                                        ${p.stock} un.
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <button onclick="handleDeleteProduct('${p.id}')" class="btn-danger" style="width: auto; padding: 8px 16px; margin: 0;">🗑️</button>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
+                                    `).join('')}
+                                </tbody>
+                            </table>
                         `}
                     </div>
                 </div>
@@ -1089,65 +1508,105 @@
             const availableProducts = products.filter(p => p.stock > 0);
             const cartTotal = cart.reduce((sum, item) => sum + (item.sale_price * item.quantity), 0);
             const cartProfit = cart.reduce((sum, item) => sum + ((item.sale_price - item.cost_price) * item.quantity), 0);
+            const salesCategories = [...new Set(availableProducts.map(p => p.category))];
 
             return `
+                ${renderTopBar()}
                 <div class="container">
-                    <div class="grid" style="grid-template-columns: 2fr 1fr;">
-                        <div class="card">
+                    <div class="page-header">
+                        <h1 class="page-title">Vendas</h1>
+                        <p class="page-subtitle">Realizar venda de produtos</p>
+                    </div>
+
+                    <div class="grid grid-3" style="margin-bottom: 20px;">
+                        <div class="card" style="grid-column: 1 / 3;">
                             <h2>Produtos Disponíveis</h2>
+                            <div class="search-box">
+                                <input type="text" id="saleSearch" placeholder="Buscar produto..." oninput="render();">
+                                <select id="saleCategory" onchange="render();">
+                                    <option value="">Todas as Categorias</option>
+                                    ${salesCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                                </select>
+                            </div>
+                            
                             ${availableProducts.length === 0 ? '<p class="loading">Nenhum produto em estoque</p>' : `
                                 <div class="grid">
-                                    ${availableProducts.map(p => `
-                                        <div class="product-card" onclick="handleSelectProduct('${p.id}')">
-                                            <h3>${p.name}</h3>
-                                            <p style="color: #718096; font-size: 14px; margin: 5px 0;">${p.category} | ${p.size} | ${p.color}</p>
-                                            <p style="font-weight: 700; color: #667eea; font-size: 18px; margin: 8px 0;">R$ ${p.sale_price.toFixed(2)}</p>
-                                            <p style="font-size: 13px; color: #718096;">Estoque: ${p.stock} un.</p>
-                                        </div>
-                                    `).join('')}
+                                    ${availableProducts
+                                        .filter(p => {
+                                            const searchInput = document.getElementById('saleSearch')?.value || '';
+                                            const categoryInput = document.getElementById('saleCategory')?.value || '';
+                                            return p.name.toLowerCase().includes(searchInput.toLowerCase()) && 
+                                                   (!categoryInput || p.category === categoryInput);
+                                        })
+                                        .map(p => `
+                                            <div class="product-card" onclick="handleSelectProduct('${p.id}')">
+                                                <div class="product-name">${p.name}</div>
+                                                <div style="font-size: 12px; color: var(--light-text-secondary); margin: 5px 0;">${p.category} • ${p.size} • ${p.color}</div>
+                                                <div class="product-price">R$ ${p.sale_price.toFixed(2)}</div>
+                                                <div class="product-stock">Estoque: ${p.stock} un.</div>
+                                            </div>
+                                        `).join('')}
                                 </div>
                             `}
                         </div>
 
-                        <div class="card" style="position: sticky; top: 20px;">
+                        <div class="card" style="position: sticky; top: 90px; height: fit-content;">
                             <h2>Carrinho (${cart.length})</h2>
                             ${cart.length === 0 ? '<p class="loading">Carrinho vazio</p>' : `
                                 <div>
                                     ${cart.map(item => `
-                                        <div class="cart-item">
+                                        <div style="background: var(--light-bg-secondary); padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                                             <div>
-                                                <strong>${item.name}</strong>
-                                                <p style="font-size: 12px; color: #718096;">${item.quantity}x R$ ${item.sale_price.toFixed(2)}</p>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">${item.name}</div>
+                                                <div style="font-size: 12px; color: var(--light-text-secondary);">${item.quantity}x R$ ${item.sale_price.toFixed(2)}</div>
                                             </div>
                                             <div style="text-align: right;">
-                                                <strong>R$ ${(item.quantity * item.sale_price).toFixed(2)}</strong>
-                                                <button onclick="handleRemoveFromCart('${item.id}')" class="btn-danger" style="width: auto; padding: 4px 8px; font-size: 12px; margin-top: 5px;">❌</button>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">R$ ${(item.quantity * item.sale_price).toFixed(2)}</div>
+                                                <button onclick="handleRemoveFromCart('${item.id}')" class="btn-small btn-danger">
+                                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    </svg>
+                                                </button>
                                             </div>
                                         </div>
                                     `).join('')}
                                     
-                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
-                                        <div style="display: flex; justify-content: space-between; margin: 8px 0;">
+                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--light-border);">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                                             <strong>Subtotal:</strong>
                                             <strong>R$ ${cartTotal.toFixed(2)}</strong>
                                         </div>
-                                        <div style="display: flex; justify-content: space-between; margin: 8px 0; color: #38a169;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--color-success);">
                                             <strong>Lucro:</strong>
                                             <strong>R$ ${cartProfit.toFixed(2)}</strong>
                                         </div>
+
+                                        <input type="text" id="customerNameField" placeholder="Nome do Cliente (opcional)">
+                                        <select id="paymentMethod" style="margin-top: 10px;">
+                                            <option value="">Forma de Pagamento</option>
+                                            <option value="Dinheiro">Dinheiro</option>
+                                            <option value="Débito">Débito</option>
+                                            <option value="Crédito">Crédito</option>
+                                            <option value="PIX">PIX</option>
+                                        </select>
+                                        
+                                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-direction: column;">
+                                            <button onclick="handleFinalizeSale()" class="btn-success" style="width: 100%;">
+                                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                </svg>
+                                                Finalizar Venda
+                                            </button>
+                                            <button onclick="clearCart(); render();" class="btn-danger" style="width: 100%;">
+                                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                </svg>
+                                                Limpar
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <input type="text" id="customerName" placeholder="Nome do Cliente (opcional)" style="margin-top: 15px;">
-                                    <select id="paymentMethod" style="margin-top: 10px;">
-                                        <option value="">Forma de Pagamento</option>
-                                        <option value="Dinheiro">Dinheiro</option>
-                                        <option value="Cartão Débito">Cartão Débito</option>
-                                        <option value="Cartão Crédito">Cartão Crédito</option>
-                                        <option value="PIX">PIX</option>
-                                    </select>
-
-                                    <button onclick="handleFinalizeSale()" class="btn-success" style="margin-top: 15px;">✅ Finalizar Venda</button>
-                                    <button onclick="clearCart(); render();" class="btn-danger" style="margin-top: 10px;">🗑️ Limpar Carrinho</button>
                                 </div>
                             `}
                         </div>
@@ -1160,45 +1619,53 @@
             const sortedSales = [...sales].sort((a, b) => new Date(b.date) - new Date(a.date));
             
             return `
+                ${renderTopBar()}
                 <div class="container">
+                    <div class="page-header">
+                        <h1 class="page-title">Histórico de Vendas</h1>
+                        <p class="page-subtitle">${sortedSales.length} vendas registradas</p>
+                    </div>
+
                     <div class="card">
-                        <h2>Histórico de Vendas (${sales.length} vendas)</h2>
                         ${sales.length === 0 ? '<p class="loading">Nenhuma venda realizada</p>' : `
-                            <div style="overflow-x: auto;">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Data</th>
-                                            <th>Cliente</th>
-                                            <th>Itens</th>
-                                            <th>Total</th>
-                                            <th>Custo</th>
-                                            <th>Lucro</th>
-                                            <th>Pagamento</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${sortedSales.map(s => {
-                                            const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
-                                            return `
-                                                <tr>
-                                                    <td>${new Date(s.date).toLocaleString('pt-BR')}</td>
-                                                    <td>${s.customer_name || '-'}</td>
-                                                    <td>${items.length} itens</td>
-                                                    <td style="font-weight: 600; color: #667eea;">R$ ${s.total.toFixed(2)}</td>
-                                                    <td>R$ ${s.total_cost.toFixed(2)}</td>
-                                                    <td style="font-weight: 600; color: #38a169;">R$ ${s.profit.toFixed(2)}</td>
-                                                    <td>${s.payment_method}</td>
-                                                    <td>
-                                                        <button onclick='printReceipt(${JSON.stringify(s).replace(/'/g, "\\'")})'  class="btn-success" style="width: auto; padding: 8px 16px; margin: 0;">🖨️</button>
-                                                    </td>
-                                                </tr>
-                                            `;
-                                        }).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Cliente</th>
+                                        <th>Itens</th>
+                                        <th>Total</th>
+                                        <th>Custo</th>
+                                        <th>Lucro</th>
+                                        <th>Pagamento</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${sortedSales.map(s => {
+                                        const items = typeof s.items === 'string' ? JSON.parse(s.items) : s.items;
+                                        return `
+                                            <tr>
+                                                <td>${new Date(s.date).toLocaleString('pt-BR')}</td>
+                                                <td>${s.customer_name || '-'}</td>
+                                                <td>${items.length}</td>
+                                                <td style="font-weight: 600; color: var(--color-primary);">R$ ${s.total.toFixed(2)}</td>
+                                                <td>R$ ${s.total_cost.toFixed(2)}</td>
+                                                <td style="font-weight: 600; color: var(--color-success);">R$ ${s.profit.toFixed(2)}</td>
+                                                <td><span class="badge badge-success">${s.payment_method}</span></td>
+                                                <td>
+                                                    <button onclick='printReceipt(${JSON.stringify(s).replace(/'/g, "\\'")})'  class="btn-small btn-primary">
+                                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
                         `}
                     </div>
                 </div>
@@ -1207,56 +1674,68 @@
 
         function renderCustomersPage() {
             return `
+                ${renderTopBar()}
                 <div class="container">
-                    <div class="card">
-                        <h2>Cadastrar Novo Cliente</h2>
-                        <div class="form-row">
-                            <input type="text" id="customerName" placeholder="Nome Completo*" required>
-                            <input type="email" id="customerEmail" placeholder="Email (opcional)">
-                        </div>
-                        <div class="form-row">
-                            <input type="tel" id="customerPhone" placeholder="Telefone/WhatsApp (opcional)">
-                            <input type="text" id="customerCity" placeholder="Cidade (opcional)">
-                        </div>
-                        <div class="form-row">
-                            <input type="text" id="customerAddress" placeholder="Endereço (opcional)" style="grid-column: 1 / -1;">
-                        </div>
-                        <button onclick="handleAddCustomer()" class="btn-success">➕ Cadastrar Cliente</button>
+                    <div class="page-header">
+                        <h1 class="page-title">Clientes</h1>
+                        <p class="page-subtitle">${customers.length} clientes cadastrados</p>
                     </div>
 
                     <div class="card">
-                        <h2>Lista de Clientes (${customers.length} clientes)</h2>
+                        <h2>Cadastrar Novo Cliente</h2>
+                        <div class="grid grid-2">
+                            <input type="text" id="customerName" placeholder="Nome Completo *">
+                            <input type="email" id="customerEmail" placeholder="Email (opcional)">
+                        </div>
+                        <div class="grid grid-2">
+                            <input type="tel" id="customerPhone" placeholder="Telefone/WhatsApp (opcional)">
+                            <input type="text" id="customerCity" placeholder="Cidade (opcional)">
+                        </div>
+                        <input type="text" id="customerAddress" placeholder="Endereço (opcional)" style="margin: 8px 0;">
+                        <button onclick="handleAddCustomer()" class="btn-success" style="width: 100%; margin-top: 15px;">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Cadastrar Cliente
+                        </button>
+                    </div>
+
+                    <div class="card">
                         ${customers.length === 0 ? '<p class="loading">Nenhum cliente cadastrado</p>' : `
-                            <div style="overflow-x: auto;">
-                                <table>
-                                    <thead>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Telefone</th>
+                                        <th>Cidade</th>
+                                        <th>Endereço</th>
+                                        <th>Data</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${customers.map(c => `
                                         <tr>
-                                            <th>Nome</th>
-                                            <th>Email</th>
-                                            <th>Telefone</th>
-                                            <th>Cidade</th>
-                                            <th>Endereço</th>
-                                            <th>Data</th>
-                                            <th>Ações</th>
+                                            <td><strong>${c.name}</strong></td>
+                                            <td>${c.email || '-'}</td>
+                                            <td>${c.phone || '-'}</td>
+                                            <td>${c.city || '-'}</td>
+                                            <td>${c.address || '-'}</td>
+                                            <td>${new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
+                                            <td>
+                                                <button onclick="handleDeleteCustomer('${c.id}')" class="btn-small btn-danger">
+                                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    </svg>
+                                                </button>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${customers.map(c => `
-                                            <tr>
-                                                <td><strong>${c.name}</strong></td>
-                                                <td>${c.email || '-'}</td>
-                                                <td>${c.phone || '-'}</td>
-                                                <td>${c.city || '-'}</td>
-                                                <td>${c.address || '-'}</td>
-                                                <td>${new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
-                                                <td>
-                                                    <button onclick="handleDeleteCustomer('${c.id}')" class="btn-danger" style="width: auto; padding: 8px 16px; margin: 0;">🗑️</button>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
+                                    `).join('')}
+                                </tbody>
+                            </table>
                         `}
                     </div>
                 </div>
@@ -1265,35 +1744,47 @@
 
         function renderSettingsPage() {
             return `
+                ${renderTopBar()}
                 <div class="container">
-                    <div class="card">
-                        <h2>⚙️ Configurações</h2>
-                        <div style="padding: 20px; background: rgba(102, 126, 234, 0.1); border-radius: 12px; margin-bottom: 20px;">
-                            <h3>Conta do Administrador</h3>
-                            <p style="color: #2d3748; margin-top: 10px;"><strong>Email:</strong> ${currentUser.email}</p>
-                            <p style="color: #2d3748;"><strong>Nome:</strong> ${currentUser.name}</p>
-                        </div>
-                        <button onclick="handleLogout()" class="btn-danger" style="width: 100%;">🚪 Fazer Logout</button>
+                    <div class="page-header">
+                        <h1 class="page-title">Configurações</h1>
+                        <p class="page-subtitle">Gerenciar conta e preferências</p>
                     </div>
 
-                    <div class="card">
-                        <h2>📊 Estatísticas Gerais</h2>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
-                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Total de Produtos</p>
-                                <p style="font-size: 24px; font-weight: 700; color: #667eea;">${products.length}</p>
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <h2>Informações da Conta</h2>
+                            <div style="padding: 15px; background: var(--light-bg-secondary); border-radius: 8px; margin-bottom: 20px;">
+                                <p style="margin-bottom: 10px;"><strong>Nome:</strong> ${currentUser.name}</p>
+                                <p><strong>Email:</strong> ${currentUser.email}</p>
                             </div>
-                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
-                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Total de Vendas</p>
-                                <p style="font-size: 24px; font-weight: 700; color: #667eea;">${sales.length}</p>
-                            </div>
-                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
-                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Total de Clientes</p>
-                                <p style="font-size: 24px; font-weight: 700; color: #667eea;">${customers.length}</p>
-                            </div>
-                            <div style="padding: 15px; background: #f7fafc; border-radius: 8px;">
-                                <p style="color: #718096; font-size: 12px; margin-bottom: 5px;">Receita Total</p>
-                                <p style="font-size: 24px; font-weight: 700; color: #38a169;">R$ ${sales.reduce((sum, s) => sum + s.total, 0).toFixed(2)}</p>
+                            <button onclick="handleLogout()" class="btn-danger" style="width: 100%;">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h5m7-4l4-4m0 0l-4-4m4 4H9"></path>
+                                </svg>
+                                Fazer Logout
+                            </button>
+                        </div>
+
+                        <div class="card">
+                            <h2>Estatísticas Gerais</h2>
+                            <div style="display: grid; gap: 10px;">
+                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
+                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Total de Produtos</div>
+                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-primary);">${products.length}</div>
+                                </div>
+                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
+                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Total de Vendas</div>
+                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-primary);">${sales.length}</div>
+                                </div>
+                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
+                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Total de Clientes</div>
+                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-primary);">${customers.length}</div>
+                                </div>
+                                <div style="padding: 12px; background: var(--light-bg-secondary); border-radius: 8px;">
+                                    <div style="font-size: 12px; color: var(--light-text-secondary); margin-bottom: 5px;">Receita Total</div>
+                                    <div style="font-size: 22px; font-weight: 700; color: var(--color-success);">R$ ${sales.reduce((sum, s) => sum + s.total, 0).toFixed(0)}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1302,6 +1793,11 @@
         }
 
         // Handlers
+        function setDashboardTab(tab) {
+            currentDashboardTab = tab;
+            render();
+        }
+
         async function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
@@ -1341,19 +1837,16 @@
                     email: email,
                     password: password,
                     options: {
-                        data: {
-                            name: name
-                        }
+                        data: { name: name }
                     }
                 });
 
                 if (error) throw error;
-
-                alert('✅ Conta criada com sucesso! Verifique seu email para confirmar o cadastro e depois faça login.');
+                alert('✅ Conta criada! Verifique seu email e faça login.');
                 showLogin();
             } catch (error) {
                 console.error('Erro no registro:', error);
-                alert('Erro ao criar conta: ' + error.message);
+                alert('Erro: ' + error.message);
             }
         }
 
@@ -1371,7 +1864,6 @@
             if (confirm('Deseja realmente sair?')) {
                 logout();
                 currentPage = 'login';
-                currentTab = 'products';
                 render();
             }
         }
@@ -1391,20 +1883,27 @@
             }
 
             if (parseFloat(cost) >= parseFloat(sale)) {
-                alert('O preço de venda deve ser maior que o preço de custo!');
+                alert('O preço de venda deve ser maior que o custo!');
                 return;
             }
 
             const success = await addProduct(name, category, size, color, cost, sale, stock);
             if (success) {
                 alert('✅ Peça cadastrada com sucesso!');
+                document.getElementById('productName').value = '';
+                document.getElementById('productCategory').value = '';
+                document.getElementById('productSize').value = '';
+                document.getElementById('productColor').value = '';
+                document.getElementById('productCost').value = '';
+                document.getElementById('productSale').value = '';
+                document.getElementById('productStock').value = '';
                 await loadProducts();
                 render();
             }
         }
 
         async function handleDeleteProduct(id) {
-            if (confirm('Deseja realmente excluir esta peça?')) {
+            if (confirm('Excluir esta peça?')) {
                 const success = await deleteProduct(id);
                 if (success) {
                     await loadProducts();
@@ -1439,7 +1938,7 @@
         }
 
         async function handleDeleteCustomer(id) {
-            if (confirm('Deseja realmente excluir este cliente?')) {
+            if (confirm('Excluir este cliente?')) {
                 const success = await deleteCustomer(id);
                 if (success) {
                     await loadCustomers();
@@ -1452,7 +1951,7 @@
             const product = products.find(p => p.id === id);
             if (!product) return;
 
-            const quantity = prompt(`Quantas unidades de "${product.name}" deseja adicionar?\n\nDisponível: ${product.stock} unidades`, '1');
+            const quantity = prompt(`Quantas unidades de "${product.name}"?\n\nDisponível: ${product.stock} un.`, '1');
             if (!quantity) return;
 
             const qty = parseInt(quantity);
@@ -1462,7 +1961,7 @@
             }
 
             if (qty > product.stock) {
-                alert(`Estoque insuficiente! Disponível: ${product.stock} unidades`);
+                alert(`Estoque insuficiente! Disponível: ${product.stock} un.`);
                 return;
             }
 
@@ -1487,17 +1986,17 @@
                 return;
             }
 
-            const customerName = document.getElementById('customerName').value.trim();
+            const customerName = document.getElementById('customerNameField').value.trim();
 
             if (confirm('Confirmar a venda?')) {
-                const sale = await createSale(cart, paymentMethod, customerName);
+                const sale = await createSale(cart, paymentMethod, null, customerName);
                 
                 if (sale) {
                     clearCart();
                     await loadProducts();
                     await loadSales();
                     
-                    if (confirm('Venda finalizada com sucesso! Deseja imprimir a nota fiscal?')) {
+                    if (confirm('Venda realizada! Imprimir comprovante?')) {
                         printReceipt(sale);
                     }
                     
@@ -1510,14 +2009,8 @@
             const app = document.getElementById('app');
             
             if (currentPage === 'login') {
-                const mainContent = document.getElementById('mainContent');
-                mainContent.classList.add('full-width');
                 app.innerHTML = renderLoginPage();
             } else {
-                const mainContent = document.getElementById('mainContent');
-                mainContent.classList.remove('full-width');
-                updateSidebarActive();
-
                 if (currentPage === 'dashboard') {
                     app.innerHTML = renderDashboard();
                 } else if (currentPage === 'products') {
@@ -1535,6 +2028,7 @@
         }
 
         async function init() {
+            initTheme();
             const hasSession = await checkSession();
             if (hasSession) {
                 await loadProducts();
