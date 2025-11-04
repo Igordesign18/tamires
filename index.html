@@ -338,7 +338,7 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const ADMIN_EMAIL = 'admin@tamireslima.com';
-        const ADMIN_PASSWORD = 'TamiresLima2025';
+        const ADMIN_PASSWORD = 'tamires2025';
 
         let currentUser = null;
         let currentPage = 'login';
@@ -472,19 +472,55 @@
             }
         }
 
-        // Funções de Login/Logout
+        // Funções de Login/Logout com Supabase Auth
         async function login(email, password) {
-            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-                currentUser = { email: ADMIN_EMAIL, name: 'Tamires Lima' };
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) throw error;
+                
+                currentUser = { 
+                    email: data.user.email, 
+                    name: data.user.user_metadata?.name || 'Tamires Lima',
+                    id: data.user.id
+                };
                 return true;
+            } catch (error) {
+                console.error('Erro no login:', error);
+                alert('Erro ao fazer login: ' + error.message);
+                return false;
             }
-            alert('Credenciais inválidas! Apenas o administrador pode acessar.');
-            return false;
         }
 
-        function logout() {
-            currentUser = null;
-            cart = [];
+        async function logout() {
+            try {
+                await supabase.auth.signOut();
+                currentUser = null;
+                cart = [];
+            } catch (error) {
+                console.error('Erro no logout:', error);
+            }
+        }
+
+        async function checkSession() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    currentUser = { 
+                        email: session.user.email, 
+                        name: session.user.user_metadata?.name || 'Tamires Lima',
+                        id: session.user.id
+                    };
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Erro ao verificar sessão:', error);
+                return false;
+            }
         }
 
         // Funções do Carrinho
@@ -580,11 +616,32 @@
                 
                 <div class="container">
                     <div style="max-width: 450px; margin: 0 auto;">
-                        <div class="card">
+                        <div class="card" id="loginCard">
                             <h2 style="text-align: center; margin-bottom: 30px;">Acesso Administrativo</h2>
+                            <div style="background: rgba(102, 126, 234, 0.1); border: 2px solid rgba(102, 126, 234, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                                <p style="text-align: center; color: #667eea; font-weight: 600; margin-bottom: 10px;">ℹ️ Instruções:</p>
+                                <p style="text-align: center; color: #2d3748; font-size: 14px;">1. Crie uma conta no Supabase Authentication</p>
+                                <p style="text-align: center; color: #2d3748; font-size: 14px;">2. Use as credenciais cadastradas para fazer login</p>
+                            </div>
                             <input type="email" id="loginEmail" placeholder="Email do Administrador" value="">
                             <input type="password" id="loginPassword" placeholder="Senha" value="">
                             <button onclick="handleLogin()">🔐 Entrar</button>
+                            <p style="text-align: center; margin-top: 20px; color: #718096; font-size: 14px;">
+                                Não tem conta? 
+                                <a href="#" onclick="showRegister(); return false;" style="color: #667eea; font-weight: 600; text-decoration: none;">Cadastre-se aqui</a>
+                            </p>
+                        </div>
+                        
+                        <div class="card" id="registerCard" style="display: none;">
+                            <h2 style="text-align: center; margin-bottom: 30px;">Criar Conta</h2>
+                            <input type="text" id="registerName" placeholder="Nome Completo" value="">
+                            <input type="email" id="registerEmail" placeholder="Email" value="">
+                            <input type="password" id="registerPassword" placeholder="Senha (mínimo 6 caracteres)" value="">
+                            <button onclick="handleRegister()" class="btn-success">✅ Cadastrar</button>
+                            <p style="text-align: center; margin-top: 20px; color: #718096; font-size: 14px;">
+                                Já tem conta? 
+                                <a href="#" onclick="showLogin(); return false;" style="color: #667eea; font-weight: 600; text-decoration: none;">Faça login</a>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -871,6 +928,52 @@
             }
         }
 
+        async function handleRegister() {
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+
+            if (!name || !email || !password) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('A senha deve ter no mínimo 6 caracteres!');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            name: name
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                alert('✅ Conta criada com sucesso! Verifique seu email para confirmar o cadastro e depois faça login.');
+                showLogin();
+            } catch (error) {
+                console.error('Erro no registro:', error);
+                alert('Erro ao criar conta: ' + error.message);
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginCard').style.display = 'block';
+            document.getElementById('registerCard').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('registerCard').style.display = 'block';
+        }
+
         function handleLogout() {
             if (confirm('Deseja realmente sair?')) {
                 logout();
@@ -992,6 +1095,13 @@
 
         // Inicialização
         async function init() {
+            // Verificar se já existe sessão ativa
+            const hasSession = await checkSession();
+            if (hasSession) {
+                await loadProducts();
+                await loadSales();
+                currentPage = 'dashboard';
+            }
             render();
         }
 
