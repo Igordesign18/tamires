@@ -24,6 +24,7 @@
             --danger: #ef4444;
             --success: #10b981;
             --warning: #f59e0b;
+            --sidebar-width: 260px;
         }
 
         body {
@@ -39,13 +40,54 @@
         }
 
         .sidebar {
-            width: 260px;
+            width: var(--sidebar-width);
             background: var(--bg-secondary);
             border-right: 1px solid var(--border);
             padding: 20px 0;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--gold);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--bg-primary);
         }
 
         .logo {
@@ -93,10 +135,135 @@
         }
 
         .main-content {
-            margin-left: 260px;
+            margin-left: var(--sidebar-width);
             flex: 1;
             padding: 20px;
-            width: calc(100% - 260px);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 80px 15px 15px 15px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-visible {
+                transform: translateX(0);
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            table th,
+            table td {
+                padding: 8px 4px;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .popup {
+                max-width: 90%;
+                right: 5%;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .notification-btn {
+                padding: 8px;
+            }
+
+            .logo h1 {
+                font-size: 20px;
+            }
+
+            .menu-item {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+
+            .menu-item svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 70px 10px 10px 10px;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stat-info p {
+                font-size: 24px;
+            }
+
+            .product-card {
+                padding: 12px;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            .sale-item {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            #pdvPage > div {
+                grid-template-columns: 1fr !important;
+            }
         }
 
         .header {
@@ -562,7 +729,15 @@
 </head>
 <body>
     <div class="container">
-        <aside class="sidebar">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <div class="mobile-overlay" onclick="toggleMobileMenu()"></div>
+
+        <aside class="sidebar mobile-hidden" id="sidebar">
             <div class="logo">
                 <h1>LABELLA WOMAN</h1>
                 <p>Sistema de Gestão</p>
