@@ -2693,8 +2693,22 @@
                 if (page === 'sales') await loadSalesPage();
                 if (page === 'cash') await renderCashStatus();
                 if (page === 'reports') await loadReportsPage();
+
+                // Fechar menu mobile após selecionar
+                if (window.innerWidth <= 768) {
+                    toggleMobileMenu();
+                }
             });
         });
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.mobile-overlay');
+            
+            sidebar.classList.toggle('mobile-hidden');
+            sidebar.classList.toggle('mobile-visible');
+            overlay.classList.toggle('active');
+        }
 
         // Search products
         document.getElementById('productSearch').addEventListener('input', renderProductResults);
