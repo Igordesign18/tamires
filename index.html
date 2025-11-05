@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LABELLA WOMAN - Sistema de Gestão</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -561,8 +562,8 @@
         </div>
 
         <div class="content">
-            <!-- DASHBOARD -->
-            <div id="dashboard" class="section active">
+            <!-- PDV -->
+            <div id="pdv" class="section active">
                 <h2 style="margin-bottom: 25px; color: var(--dark);">Dashboard - Visão Geral</h2>
                 
                 <div class="cards-grid">
@@ -659,7 +660,7 @@
                     <div>
                         <div class="search-box">
                             <span class="search-icon">🔍</span>
-                            <input type="text" class="form-input" placeholder="Buscar produto ou escanear código..." id="pdvSearch">
+                            <input type="text" class="form-input" placeholder="Buscar por nome, código de barras ou SKU..." id="pdvSearch">
                         </div>
                         <div id="pdvProductsList"></div>
                     </div>
@@ -792,6 +793,11 @@
                         <label class="form-label">Preço (R$) *</label>
                         <input type="number" class="form-input" id="productPrice" step="0.01" required>
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Código de Barras</label>
+                        <input type="text" class="form-input" id="productBarcode" placeholder="EAN-13, EAN-8, UPC...">
+                    </div>
                 </div>
 
                 <div class="variants-container">
@@ -844,7 +850,23 @@
 
                 <div class="form-group">
                     <label class="form-label">CPF</label>
-                    <input type="text" class="form-input" id="customerCpf">
+                    <input type="text" class="form-input" id="customerCpf" placeholder="000.000.000-00">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Data de Nascimento</label>
+                        <input type="date" class="form-input" id="customerBirthday">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" value="+55" style="width: 60px; padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 14px;" readonly>
+                            <input type="tel" class="form-input" id="customerWhatsapp" placeholder="75988888888" style="flex: 1;">
+                        </div>
+                        <small style="color: #6b7280; font-size: 12px;">Digite apenas números: DDD + número</small>
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -881,12 +903,103 @@
         let cart = [];
         let currentCashRegister = null;
 
+        // Verificar aniversariantes do dia
+        async function checkBirthdays() {
+            try {
+                const { data: customers, error } = await supabase
+                    .from('customers')
+                    .select('*')
+                    .not('birthday', 'is', null);
+
+                if (error) throw error;
+
+                const today = new Date();
+                const todayMonth = today.getMonth() + 1;
+                const todayDay = today.getDate();
+
+                const birthdayCustomers = customers?.filter(customer => {
+                    if (!customer.birthday) return false;
+                    const birthday = new Date(customer.birthday + 'T00:00:00');
+                    return birthday.getMonth() + 1 === todayMonth && birthday.getDate() === todayDay;
+                }) || [];
+
+                if (birthdayCustomers.length > 0) {
+                    birthdayCustomers.forEach(customer => {
+                        showBirthdayNotification(customer);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao verificar aniversariantes:', error);
+            }
+        }
+
+        function showBirthdayNotification(customer) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                z-index: 3000;
+                min-width: 350px;
+                max-width: 400px;
+                animation: slideInRight 0.3s;
+                border-left: 4px solid var(--primary);
+            `;
+            
+            const whatsappBtn = customer.whatsapp ? `
+                <button class="btn btn-success" style="margin-right: 10px;" onclick="sendBirthdayWhatsApp('${customer.name}', '${customer.whatsapp}')">
+                    <i class="fab fa-whatsapp"></i> Enviar WhatsApp
+                </button>
+            ` : '';
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: bold; font-size: 16px;">
+                    <i class="fas fa-birthday-cake" style="color: var(--primary); font-size: 24px;"></i>
+                    Aniversário Hoje!
+                </div>
+                <div style="color: #6b7280; line-height: 1.5; margin-bottom: 15px;">
+                    <strong>${customer.name}</strong> está fazendo aniversário hoje! 
+                    ${customer.whatsapp ? 'Envie uma mensagem de felicitações.' : ''}
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    ${whatsappBtn}
+                    <button class="btn btn-secondary" onclick="this.closest('div').parentElement.remove()">
+                        Fechar
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 15000);
+        }
+
+        function sendBirthdayWhatsApp(name, whatsapp) {
+            const message = encodeURIComponent(`Olá ${name}! 🎉🎂\n\nA equipe da LABELLA WOMAN deseja um Feliz Aniversário! Que este dia seja repleto de alegrias e realizações.\n\nVenha nos visitar e aproveite nossas novidades! 💝`);
+            const url = `https://wa.me/55${whatsapp}?text=${message}`;
+            window.open(url, '_blank');
+            
+            document.querySelectorAll('div[style*="position: fixed"]').forEach(n => {
+                if (n.innerHTML.includes('Aniversário Hoje')) {
+                    n.remove();
+                }
+            });
+        }
+
         // Inicialização
         document.addEventListener('DOMContentLoaded', async () => {
             await initializeDatabase();
-            await loadDashboard();
-            await loadCustomersForPDV();
             await loadCashierStatus();
+            await loadCustomersForPDV();
+            await checkBirthdays();
             setDefaultDates();
         });
 
@@ -1236,6 +1349,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 document.getElementById('productDescription').value = product.description || '';
                 document.getElementById('productCategory').value = product.category;
                 document.getElementById('productPrice').value = product.price;
+                document.getElementById('productBarcode').value = product.barcode || '';
 
                 document.getElementById('variantsContainer').innerHTML = '';
                 product.product_variants.forEach(variant => {
@@ -1303,7 +1417,8 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 name: document.getElementById('productName').value,
                 description: document.getElementById('productDescription').value,
                 category: document.getElementById('productCategory').value,
-                price: parseFloat(document.getElementById('productPrice').value)
+                price: parseFloat(document.getElementById('productPrice').value),
+                barcode: document.getElementById('productBarcode').value || null
             };
 
             const variants = [];
@@ -1552,7 +1667,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                         color,
                         sku,
                         stock_quantity,
-                        products (id, name, price, category)
+                        products (id, name, price, category, barcode)
                     `)
                     .gt('stock_quantity', 0);
 
@@ -1565,7 +1680,8 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                     filteredVariants = variants.filter(v => 
                         v.products.name.toLowerCase().includes(search.toLowerCase()) ||
                         v.color.toLowerCase().includes(search.toLowerCase()) ||
-                        v.sku?.toLowerCase().includes(search.toLowerCase())
+                        v.sku?.toLowerCase().includes(search.toLowerCase()) ||
+                        v.products.barcode?.toLowerCase().includes(search.toLowerCase())
                     );
                 }
 
@@ -1577,8 +1693,9 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <div>
                                             <strong>${variant.products.name}</strong><br>
-                                            <small>${variant.size} - ${variant.color}</small><br>
-                                            <span class="badge badge-info">${variant.stock_quantity} disponíveis</span>
+                                            <small>${variant.size} - ${variant.color}</small>
+                                            ${variant.products.barcode ? `<br><small style="color: #6b7280;"><i class="fas fa-barcode"></i> ${variant.products.barcode}</small>` : ''}
+                                            <br><span class="badge badge-info"><i class="fas fa-box"></i> ${variant.stock_quantity} disponíveis</span>
                                         </div>
                                         <div style="text-align: right;">
                                             <div style="font-size: 20px; font-weight: bold; color: var(--primary);">
@@ -1593,7 +1710,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 } else {
                     document.getElementById('pdvProductsList').innerHTML = `
                         <div class="empty-state">
-                            <div class="empty-state-icon">🔍</div>
+                            <div class="empty-state-icon"><i class="fas fa-search"></i></div>
                             <p>Nenhum produto encontrado</p>
                         </div>
                     `;
@@ -1907,6 +2024,8 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 document.getElementById('customerEmail').value = customer.email || '';
                 document.getElementById('customerPhone').value = customer.phone;
                 document.getElementById('customerCpf').value = customer.cpf || '';
+                document.getElementById('customerBirthday').value = customer.birthday || '';
+                document.getElementById('customerWhatsapp').value = customer.whatsapp || '';
 
             } catch (error) {
                 console.error('Erro ao carregar cliente:', error);
@@ -1922,7 +2041,9 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 name: document.getElementById('customerName').value,
                 email: document.getElementById('customerEmail').value || null,
                 phone: document.getElementById('customerPhone').value,
-                cpf: document.getElementById('customerCpf').value || null
+                cpf: document.getElementById('customerCpf').value || null,
+                birthday: document.getElementById('customerBirthday').value || null,
+                whatsapp: document.getElementById('customerWhatsapp').value || null
             };
 
             try {
@@ -2152,7 +2273,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
             document.getElementById('saleDetailsModal').classList.remove('active');
         }
 
-        // Caixa
+        // Status do Caixa
         async function loadCashierStatus() {
             try {
                 const { data: cashRegister, error } = await supabase
@@ -2168,27 +2289,32 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 const statusDiv = document.getElementById('cashierStatus');
                 
                 if (cashRegister) {
+                    const openedTime = new Date(cashRegister.opened_at).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+                    
                     statusDiv.innerHTML = `
                         <div class="alert alert-success">
-                            <span>✓</span>
+                            <i class="fas fa-lock-open"></i>
                             <div>
                                 <strong>Caixa Aberto</strong><br>
-                                Aberto em: ${formatDateTime(cashRegister.opened_at)}<br>
+                                Aberto em: ${openedTime} (Horário de Brasília)<br>
                                 Valor inicial: ${formatCurrency(cashRegister.initial_amount)}
                             </div>
                         </div>
                     `;
+                    
+                    showAlert(`✓ Caixa aberto desde ${openedTime}`, 'success');
                     await loadCashierMovements();
                 } else {
                     statusDiv.innerHTML = `
                         <div class="alert alert-warning">
-                            <span>⚠️</span>
+                            <i class="fas fa-lock"></i>
                             <div>
                                 <strong>Caixa Fechado</strong><br>
                                 Por favor, abra o caixa para começar a realizar vendas.
                             </div>
                         </div>
                     `;
+                    showAlert('⚠ Caixa está fechado. Abra o caixa para realizar vendas.', 'warning');
                     showOpenCashierForm();
                 }
 
@@ -2198,13 +2324,14 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                     currentCashRegister = null;
                     document.getElementById('cashierStatus').innerHTML = `
                         <div class="alert alert-warning">
-                            <span>⚠️</span>
+                            <i class="fas fa-lock"></i>
                             <div>
                                 <strong>Caixa Fechado</strong><br>
                                 Por favor, abra o caixa para começar a realizar vendas.
                             </div>
                         </div>
                     `;
+                    showAlert('⚠ Caixa está fechado. Abra o caixa para realizar vendas.', 'warning');
                     showOpenCashierForm();
                 } else {
                     console.error('Erro ao carregar status do caixa:', error);
@@ -2388,11 +2515,13 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
         }
 
         function formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString('pt-BR');
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
         }
 
         function formatDateTime(dateString) {
-            return new Date(dateString).toLocaleString('pt-BR');
+            const date = new Date(dateString);
+            return date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
         }
 
         function formatPaymentMethod(method) {
