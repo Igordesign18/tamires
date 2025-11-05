@@ -1032,7 +1032,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 document.getElementById('dashTotalStock').textContent = totalStock;
 
                 // Alertas de estoque baixo
-                const { data: lowStockData } = await supabase
+                const { data: allVariants } = await supabase
                     .from('product_variants')
                     .select(`
                         id,
@@ -1041,8 +1041,10 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                         stock_quantity,
                         min_stock,
                         products (name)
-                    `)
-                    .lte('stock_quantity', supabase.raw('min_stock'));
+                    `);
+                
+                // Filtrar variações com estoque baixo no JavaScript
+                const lowStockData = allVariants?.filter(v => v.stock_quantity <= v.min_stock) || [];
 
                 document.getElementById('dashLowStock').textContent = lowStockData?.length || 0;
 
@@ -1109,7 +1111,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao carregar dashboard:', error);
-                showAlert('Erro ao carregar dashboard', 'danger');
+                showAlert('Erro ao carregar dashboard: ' + formatError(error), 'danger');
             }
         }
 
@@ -1193,7 +1195,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 }
             } catch (error) {
                 console.error('Erro ao carregar produtos:', error);
-                showAlert('Erro ao carregar produtos', 'danger');
+                showAlert('Erro ao carregar produtos: ' + formatError(error), 'danger');
             }
         }
 
@@ -1242,7 +1244,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao carregar produto:', error);
-                showAlert('Erro ao carregar produto', 'danger');
+                showAlert('Erro ao carregar produto: ' + formatError(error), 'danger');
             }
         }
 
@@ -1306,15 +1308,26 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             const variants = [];
             document.querySelectorAll('.variant-item').forEach(item => {
-                variants.push({
-                    id: item.dataset.variantId || null,
-                    size: item.querySelector('.variant-size').value,
-                    color: item.querySelector('.variant-color').value,
-                    sku: item.querySelector('.variant-sku').value,
-                    stock_quantity: parseInt(item.querySelector('.variant-stock').value),
-                    min_stock: parseInt(item.querySelector('.variant-min-stock').value)
-                });
+                const size = item.querySelector('.variant-size').value;
+                const color = item.querySelector('.variant-color').value;
+                
+                if (size && color) { // Só adiciona se tiver tamanho e cor
+                    variants.push({
+                        id: item.dataset.variantId || null,
+                        size: size,
+                        color: color,
+                        sku: item.querySelector('.variant-sku').value,
+                        stock_quantity: parseInt(item.querySelector('.variant-stock').value) || 0,
+                        min_stock: parseInt(item.querySelector('.variant-min-stock').value) || 5
+                    });
+                }
             });
+
+            // Validar se há pelo menos uma variação
+            if (variants.length === 0) {
+                showAlert('Adicione pelo menos uma variação (tamanho e cor) para o produto', 'warning');
+                return;
+            }
 
             try {
                 if (productId) {
@@ -1333,11 +1346,13 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                         .eq('product_id', productId);
 
                     // Inserir novas variações
-                    const variantsToInsert = variants.map(v => ({
-                        ...v,
-                        id: undefined,
-                        product_id: productId
-                    }));
+                    const variantsToInsert = variants.map(v => {
+                        const { id, ...variantData } = v; // Remove o campo id
+                        return {
+                            ...variantData,
+                            product_id: productId
+                        };
+                    });
 
                     const { error: variantsError } = await supabase
                         .from('product_variants')
@@ -1357,11 +1372,13 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                     if (insertError) throw insertError;
 
                     // Inserir variações
-                    const variantsToInsert = variants.map(v => ({
-                        ...v,
-                        id: undefined,
-                        product_id: newProduct.id
-                    }));
+                    const variantsToInsert = variants.map(v => {
+                        const { id, ...variantData } = v; // Remove o campo id
+                        return {
+                            ...variantData,
+                            product_id: newProduct.id
+                        };
+                    });
 
                     const { error: variantsError } = await supabase
                         .from('product_variants')
@@ -1378,7 +1395,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao salvar produto:', error);
-                showAlert('Erro ao salvar produto: ' + error.message, 'danger');
+                showAlert('Erro ao salvar produto: ' + formatError(error), 'danger');
             }
         });
 
@@ -1399,7 +1416,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao excluir produto:', error);
-                showAlert('Erro ao excluir produto', 'danger');
+                showAlert('Erro ao excluir produto: ' + formatError(error), 'danger');
             }
         }
 
@@ -1486,7 +1503,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 }
             } catch (error) {
                 console.error('Erro ao carregar estoque:', error);
-                showAlert('Erro ao carregar estoque', 'danger');
+                showAlert('Erro ao carregar estoque: ' + formatError(error), 'danger');
             }
         }
 
@@ -1514,7 +1531,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao ajustar estoque:', error);
-                showAlert('Erro ao ajustar estoque', 'danger');
+                showAlert('Erro ao ajustar estoque: ' + formatError(error), 'danger');
             }
         }
 
@@ -1586,7 +1603,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao carregar produtos PDV:', error);
-                showAlert('Erro ao carregar produtos', 'danger');
+                showAlert('Erro ao carregar produtos: ' + formatError(error), 'danger');
             }
         }
 
@@ -1763,7 +1780,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao finalizar venda:', error);
-                showAlert('Erro ao finalizar venda: ' + error.message, 'danger');
+                showAlert('Erro ao finalizar venda: ' + formatError(error), 'danger');
             }
         }
 
@@ -1831,7 +1848,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 }
             } catch (error) {
                 console.error('Erro ao carregar clientes:', error);
-                showAlert('Erro ao carregar clientes', 'danger');
+                showAlert('Erro ao carregar clientes: ' + formatError(error), 'danger');
             }
         }
 
@@ -1893,7 +1910,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao carregar cliente:', error);
-                showAlert('Erro ao carregar cliente', 'danger');
+                showAlert('Erro ao carregar cliente: ' + formatError(error), 'danger');
             }
         }
 
@@ -1934,7 +1951,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao salvar cliente:', error);
-                showAlert('Erro ao salvar cliente: ' + error.message, 'danger');
+                showAlert('Erro ao salvar cliente: ' + formatError(error), 'danger');
             }
         });
 
@@ -1955,7 +1972,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao excluir cliente:', error);
-                showAlert('Erro ao excluir cliente', 'danger');
+                showAlert('Erro ao excluir cliente: ' + formatError(error), 'danger');
             }
         }
 
@@ -2053,7 +2070,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 }
             } catch (error) {
                 console.error('Erro ao carregar vendas:', error);
-                showAlert('Erro ao carregar vendas', 'danger');
+                showAlert('Erro ao carregar vendas: ' + formatError(error), 'danger');
             }
         }
 
@@ -2127,7 +2144,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao carregar detalhes da venda:', error);
-                showAlert('Erro ao carregar detalhes da venda', 'danger');
+                showAlert('Erro ao carregar detalhes da venda: ' + formatError(error), 'danger');
             }
         }
 
@@ -2235,7 +2252,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao abrir caixa:', error);
-                showAlert('Erro ao abrir caixa', 'danger');
+                showAlert('Erro ao abrir caixa: ' + formatError(error), 'danger');
             }
         }
 
@@ -2324,7 +2341,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao carregar movimentações:', error);
-                showAlert('Erro ao carregar movimentações', 'danger');
+                showAlert('Erro ao carregar movimentações: ' + formatError(error), 'danger');
             }
         }
 
@@ -2358,7 +2375,7 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
 
             } catch (error) {
                 console.error('Erro ao fechar caixa:', error);
-                showAlert('Erro ao fechar caixa', 'danger');
+                showAlert('Erro ao fechar caixa: ' + formatError(error), 'danger');
             }
         }
 
@@ -2386,6 +2403,31 @@ CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
                 'pix': '📱 PIX'
             };
             return methods[method] || method;
+        }
+
+        function formatError(error) {
+            console.error('Erro detalhado:', error);
+            
+            let message = 'Erro desconhecido';
+            
+            if (typeof error === 'string') {
+                message = error;
+            } else if (error.message) {
+                message = error.message;
+            } else if (error.error) {
+                message = error.error;
+            } else if (error.error_description) {
+                message = error.error_description;
+            }
+            
+            if (error.hint) {
+                message += ` (${error.hint})`;
+            }
+            if (error.details) {
+                message += ` - ${error.details}`;
+            }
+            
+            return message;
         }
 
         function showAlert(message, type) {
