@@ -264,6 +264,54 @@
             gap: 1rem;
         }
 
+        /* Search Field Styles */
+        .search-container {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            background: var(--secondary-black);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            color: var(--text-white);
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold-hover);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+            pointer-events: none;
+        }
+
+        /* Phone Input Container */
+        .phone-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .country-code {
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .phone-number {
+            flex: 1;
+        }
+
         /* Buttons */
         .btn {
             padding: 0.8rem 1.5rem;
@@ -692,6 +740,14 @@
             .filtros-relatorio {
                 justify-content: center;
             }
+
+            .phone-container {
+                flex-direction: column;
+            }
+
+            .country-code {
+                width: 100%;
+            }
         }
 
         /* Loading */
@@ -1057,6 +1113,12 @@
                         </button>
                     </div>
                     
+                    <!-- Campo de Pesquisa -->
+                    <div class="search-container">
+                        <svg class="icon search-icon"><use href="#icon-search"></use></svg>
+                        <input type="text" id="searchCliente" class="search-input" placeholder="Pesquisar clientes por nome, telefone ou CPF...">
+                    </div>
+                    
                     <div class="table-container">
                         <table>
                             <thead>
@@ -1065,6 +1127,7 @@
                                     <th>Telefone</th>
                                     <th>CPF</th>
                                     <th>Email</th>
+                                    <th>Endereço</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
@@ -1300,18 +1363,32 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Telefone *</label>
-                        <input type="tel" id="clienteTelefone" class="form-control" required>
+                        <div class="phone-container">
+                            <select id="codigoPais" class="form-control country-code">
+                                <option value="+55" selected>+55</option>
+                                <option value="+1">+1</option>
+                                <option value="+44">+44</option>
+                                <option value="+49">+49</option>
+                                <option value="+33">+33</option>
+                            </select>
+                            <input type="tel" id="clienteTelefone" class="form-control phone-number" required placeholder="(11) 99999-9999">
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">CPF</label>
-                        <input type="text" id="clienteCpf" class="form-control">
+                        <input type="text" id="clienteCpf" class="form-control" placeholder="000.000.000-00">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" id="clienteEmail" class="form-control">
+                    <input type="email" id="clienteEmail" class="form-control" placeholder="cliente@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Endereço</label>
+                    <textarea id="clienteEndereco" class="form-control" rows="3" placeholder="Rua, número, bairro, cidade, estado, CEP"></textarea>
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
@@ -1344,7 +1421,16 @@
 
                 <div class="form-group">
                     <label class="form-label">Telefone *</label>
-                    <input type="tel" id="clienteRapidoTelefone" class="form-control" required>
+                    <div class="phone-container">
+                        <select id="codigoPaisRapido" class="form-control country-code">
+                            <option value="+55" selected>+55</option>
+                            <option value="+1">+1</option>
+                            <option value="+44">+44</option>
+                            <option value="+49">+49</option>
+                            <option value="+33">+33</option>
+                        </select>
+                        <input type="tel" id="clienteRapidoTelefone" class="form-control phone-number" required placeholder="(11) 99999-9999">
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
@@ -1459,6 +1545,12 @@
             await carregarMovimentacoes();
             await carregarRelatorios();
             iniciarRelogio();
+            
+            // Adicionar event listener para pesquisa de clientes
+            document.getElementById('searchCliente').addEventListener('input', filtrarClientes);
+            
+            // Adicionar formatação de telefone
+            adicionarFormatacaoTelefone();
         }
 
         // Relógio
@@ -1530,6 +1622,28 @@
             });
         }
 
+        // Formatação de telefone
+        function adicionarFormatacaoTelefone() {
+            const telefoneInputs = ['clienteTelefone', 'clienteRapidoTelefone'];
+            
+            telefoneInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.addEventListener('input', function(e) {
+                        let value = e.target.value.replace(/\D/g, '');
+                        if (value.length <= 11) {
+                            if (value.length > 6) {
+                                value = value.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
+                            } else if (value.length > 2) {
+                                value = value.replace(/(\d{2})(\d+)/, '($1) $2');
+                            }
+                        }
+                        e.target.value = value;
+                    });
+                }
+            });
+        }
+
         // Loading
         function mostrarLoading() {
             document.getElementById('loading').classList.add('active');
@@ -1556,6 +1670,28 @@
             if (confirm('Deseja realmente sair do sistema?')) {
                 location.reload();
             }
+        }
+
+        // ==================== FILTRO DE CLIENTES ====================
+        function filtrarClientes() {
+            const searchTerm = document.getElementById('searchCliente').value.toLowerCase();
+            const rows = document.querySelectorAll('#tabelaClientes tr');
+            
+            rows.forEach(row => {
+                const nome = row.cells[0]?.textContent.toLowerCase() || '';
+                const telefone = row.cells[1]?.textContent.toLowerCase() || '';
+                const cpf = row.cells[2]?.textContent.toLowerCase() || '';
+                const email = row.cells[3]?.textContent.toLowerCase() || '';
+                const endereco = row.cells[4]?.textContent.toLowerCase() || '';
+                
+                const matches = nome.includes(searchTerm) || 
+                               telefone.includes(searchTerm) || 
+                               cpf.includes(searchTerm) || 
+                               email.includes(searchTerm) || 
+                               endereco.includes(searchTerm);
+                
+                row.style.display = matches ? '' : 'none';
+            });
         }
 
         // ==================== PAGAMENTO DINHEIRO ====================
@@ -1637,6 +1773,7 @@
         // ==================== CADASTRO RÁPIDO CLIENTE ====================
         function abrirCadastroRapidoCliente() {
             document.getElementById('formCadastroRapido').reset();
+            document.getElementById('codigoPaisRapido').value = '+55';
             document.getElementById('modalCadastroRapido').classList.add('active');
         }
 
@@ -1647,9 +1784,13 @@
         async function salvarClienteRapido(event) {
             event.preventDefault();
             
+            const codigoPais = document.getElementById('codigoPaisRapido').value;
+            const telefoneNumero = document.getElementById('clienteRapidoTelefone').value;
+            const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
+            
             const cliente = {
                 nome: document.getElementById('clienteRapidoNome').value,
-                telefone: document.getElementById('clienteRapidoTelefone').value
+                telefone: telefoneCompleto
             };
 
             try {
@@ -2021,6 +2162,7 @@
                         <td>${cliente.telefone}</td>
                         <td>${cliente.cpf || '-'}</td>
                         <td>${cliente.email || '-'}</td>
+                        <td>${cliente.endereco || '-'}</td>
                         <td>
                             <button class="btn btn-primary btn-icon" onclick='editarCliente(${JSON.stringify(cliente)})'>
                                 <svg class="icon"><use href="#icon-edit"></use></svg>
@@ -2052,6 +2194,7 @@
             document.getElementById('modalClienteTitulo').textContent = 'Novo Cliente';
             document.getElementById('formCliente').reset();
             document.getElementById('clienteId').value = '';
+            document.getElementById('codigoPais').value = '+55';
             document.getElementById('modalCliente').classList.add('active');
         }
 
@@ -2063,9 +2206,24 @@
             document.getElementById('modalClienteTitulo').textContent = 'Editar Cliente';
             document.getElementById('clienteId').value = cliente.id;
             document.getElementById('clienteNome').value = cliente.nome;
-            document.getElementById('clienteTelefone').value = cliente.telefone;
+            
+            // Separar código do país e número de telefone
+            const telefoneCompleto = cliente.telefone || '';
+            if (telefoneCompleto.startsWith('+55')) {
+                document.getElementById('codigoPais').value = '+55';
+                document.getElementById('clienteTelefone').value = telefoneCompleto.substring(3).trim();
+            } else if (telefoneCompleto.startsWith('+')) {
+                const codigoPais = telefoneCompleto.substring(0, 3);
+                document.getElementById('codigoPais').value = codigoPais;
+                document.getElementById('clienteTelefone').value = telefoneCompleto.substring(3).trim();
+            } else {
+                document.getElementById('codigoPais').value = '+55';
+                document.getElementById('clienteTelefone').value = telefoneCompleto;
+            }
+            
             document.getElementById('clienteCpf').value = cliente.cpf || '';
             document.getElementById('clienteEmail').value = cliente.email || '';
+            document.getElementById('clienteEndereco').value = cliente.endereco || '';
             document.getElementById('modalCliente').classList.add('active');
         }
 
@@ -2073,11 +2231,16 @@
             event.preventDefault();
             
             const id = document.getElementById('clienteId').value;
+            const codigoPais = document.getElementById('codigoPais').value;
+            const telefoneNumero = document.getElementById('clienteTelefone').value;
+            const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
+            
             const cliente = {
                 nome: document.getElementById('clienteNome').value,
-                telefone: document.getElementById('clienteTelefone').value,
+                telefone: telefoneCompleto,
                 cpf: document.getElementById('clienteCpf').value,
-                email: document.getElementById('clienteEmail').value
+                email: document.getElementById('clienteEmail').value,
+                endereco: document.getElementById('clienteEndereco').value
             };
 
             try {
