@@ -1177,6 +1177,101 @@
             padding: 20px;
             margin-top: 20px;
         }
+    
+        /* Estilos para o sistema de pedidos */
+        .client-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .client-card:hover {
+            border-color: var(--gold);
+            background: var(--bg-hover);
+            transform: translateX(5px);
+        }
+
+        .client-card h4 {
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .client-card p {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .client-orders {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .client-orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .order-item {
+            background: var(--bg-card);
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .order-item-name {
+            color: var(--text-primary);
+        }
+
+        .order-item-quantity {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .variation-option {
+            background: var(--bg-secondary);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .variation-option:hover {
+            border-color: var(--gold);
+            background: var(--bg-hover);
+        }
+
+        .variation-option.selected {
+            border-color: var(--gold);
+            background: var(--bg-hover);
+        }
+
+        .variation-option p {
+            margin: 4px 0;
+            color: var(--text-primary);
+        }
+
+        .variation-option small {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 1024px) {
+            #pdvPage > div:first-of-type {
+                grid-template-columns: 1fr !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1259,72 +1354,41 @@
 
             <!-- PDV Page -->
             <div id="pdvPage" class="page">
-                <div style="display: grid; grid-template-columns: 1fr 400px; gap: 20px;">
-                    <div>
-                        <div class="card">
-                            <h3>Buscar Produto</h3>
-                            <div class="search-box">
-                                <input type="text" id="productSearch" placeholder="Buscar por nome, código de barras ou código...">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                            </div>
-                            <div id="productResults" class="product-grid"></div>
-                        </div>
+                <div id="cashAlert"></div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;">
+                    <!-- Carrinho de Peças -->
+                    <div class="card">
+                        <h3>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            Carrinho de Peças
+                        </h3>
+                        <div id="cartItems" style="min-height: 200px;"></div>
+                        <button class="btn btn-primary" onclick="openProductSelection()" style="width: 100%; margin-top: 20px; padding: 16px; font-size: 16px;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Adicionar Peça ao Pedido
+                        </button>
                     </div>
-                    <div>
-                        <div class="card">
-                            <h3>Carrinho de Compras</h3>
-                            <div id="saleItems"></div>
-                            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--gold);">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                    <span>Subtotal:</span>
-                                    <strong id="subtotal">R$ 0,00</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 20px;">
-                                    <strong style="color: var(--gold);">Total:</strong>
-                                    <strong id="total" style="color: var(--gold);">R$ 0,00</strong>
-                                </div>
-                                <div class="form-group">
-                                    <label>Cliente</label>
-                                    <div class="search-box" style="margin-bottom: 10px;">
-                                        <input type="text" id="clientSearchInput" placeholder="Digite para buscar cliente..." onfocus="showClientDropdown()" oninput="filterClients()">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                        </svg>
-                                    </div>
-                                    <div id="clientDropdown" class="hidden" style="background: var(--bg-hover); border: 2px solid var(--border); border-radius: 10px; max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
-                                        <div id="clientDropdownList"></div>
-                                    </div>
-                                    <div id="selectedClientDisplay" style="display: none; padding: 12px; background: var(--bg-hover); border: 2px solid var(--gold); border-radius: 10px; margin-bottom: 10px;">
-                                        <span id="selectedClientName"></span>
-                                        <button onclick="clearClientSelection()" style="float: right; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px;">&times;</button>
-                                    </div>
-                                    <input type="hidden" id="saleClient">
-                                    <button class="btn btn-secondary" style="margin-top: 10px; width: 100%;" onclick="showNewClientModal()">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                        </svg>
-                                        Cadastrar Novo Cliente
-                                    </button>
-                                </div>
-                                <div class="form-group">
-                                    <label>Forma de Pagamento</label>
-                                    <select id="paymentMethod">
-                                        <option value="dinheiro">Dinheiro</option>
-                                        <option value="cartao_credito">Cartão de Crédito</option>
-                                        <option value="cartao_debito">Cartão de Débito</option>
-                                        <option value="pix">PIX</option>
-                                    </select>
-                                </div>
-                                <button class="btn btn-primary" style="width: 100%;" onclick="finalizeSale()">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    Finalizar Venda
-                                </button>
-                            </div>
+
+                    <!-- Clientes com Pedidos -->
+                    <div class="card">
+                        <h3>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            Clientes com Pedidos
+                        </h3>
+                        <div class="search-box">
+                            <input type="text" id="clientOrderSearch" placeholder="Buscar cliente..." oninput="filterClientOrders()">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
                         </div>
+                        <div id="clientOrdersList" style="max-height: 600px; overflow-y: auto;"></div>
                     </div>
                 </div>
             </div>
@@ -1606,7 +1670,52 @@
                     <div id="paymentMethodChart"></div>
                 </div>
             </div>
-        </main>
+        
+            <!-- Modal de Seleção de Produto -->
+            <div id="productSelectionModal" class="modal">
+                <div class="modal-content" style="max-width: 900px;">
+                    <div class="modal-header">
+                        <h3>Selecione o Produto</h3>
+                        <button class="close-btn" onclick="closeProductSelection()">×</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="productSelectionSearch" placeholder="Buscar produto..." oninput="filterProductSelection()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <div id="productSelectionGrid" class="product-grid" style="margin-top: 20px;"></div>
+                </div>
+            </div>
+
+            <!-- Modal de Seleção de Variação -->
+            <div id="variationSelectionModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Selecione a Variação</h3>
+                        <button class="close-btn" onclick="closeVariationSelection()">×</button>
+                    </div>
+                    <div id="variationsList"></div>
+                </div>
+            </div>
+
+            <!-- Modal de Seleção de Cliente -->
+            <div id="clientSelectionModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Selecione o Cliente</h3>
+                        <button class="close-btn" onclick="closeClientSelection()">×</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="clientSelectionSearch" placeholder="Buscar cliente..." oninput="filterClientSelection()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <div id="clientSelectionList" style="max-height: 500px; overflow-y: auto; margin-top: 20px;"></div>
+                </div>
+            </div>
+</main>
     </div>
 
     <!-- Modals -->
@@ -1781,6 +1890,10 @@
         let products = [];
         let clients = [];
         let sentBirthdayMessages = new Set();
+
+        let clientOrders = [];
+        let selectedProduct = null;
+        let selectedVariation = null;
 
         function getBrasiliaTime() {
             const now = new Date();
@@ -3377,6 +3490,339 @@
             await initDatabase();
             await loadData();
         });
-    </script>
+    
+        // === NOVO SISTEMA DE GERENCIAMENTO DE PEDIDOS ===
+        
+        function openProductSelection() {
+            const modal = document.getElementById('productSelectionModal');
+            modal.classList.add('active');
+            renderProductSelectionGrid();
+        }
+
+        function closeProductSelection() {
+            const modal = document.getElementById('productSelectionModal');
+            modal.classList.remove('active');
+        }
+
+        function renderProductSelectionGrid() {
+            const grid = document.getElementById('productSelectionGrid');
+            
+            if (!products || products.length === 0) {
+                grid.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">Nenhum produto disponível</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => {
+                const totalStock = product.product_variations ? 
+                    product.product_variations.reduce((sum, v) => sum + v.quantity, 0) : 0;
+                
+                return `
+                    <div class="product-card" onclick="selectProduct(${product.id})">
+                        <h4>${product.name}</h4>
+                        <p class="category">${product.category}</p>
+                        <p class="price">${formatCurrency(product.sale_price)}</p>
+                        <p class="stock">${product.product_variations ? product.product_variations.length : 0} variações</p>
+                        <span class="stock-badge ${totalStock > 10 ? 'stock-ok' : totalStock > 0 ? 'stock-low' : 'stock-out'}">
+                            ${totalStock} em estoque
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterProductSelection() {
+            const searchTerm = document.getElementById('productSelectionSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('#productSelectionGrid .product-card');
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function selectProduct(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            
+            if (!selectedProduct.product_variations || selectedProduct.product_variations.length === 0) {
+                showPopup('Este produto não possui variações disponíveis', 'danger');
+                return;
+            }
+
+            closeProductSelection();
+            openVariationSelection();
+        }
+
+        function openVariationSelection() {
+            const modal = document.getElementById('variationSelectionModal');
+            modal.classList.add('active');
+            renderVariationsList();
+        }
+
+        function closeVariationSelection() {
+            const modal = document.getElementById('variationSelectionModal');
+            modal.classList.remove('active');
+        }
+
+        function renderVariationsList() {
+            const container = document.getElementById('variationsList');
+            const variations = selectedProduct.product_variations;
+
+            container.innerHTML = variations.map(variation => `
+                <div class="variation-option" onclick="selectVariation(${variation.id})">
+                    <p><strong>${selectedProduct.name}</strong></p>
+                    <p>Tamanho: ${variation.size || 'N/A'} | Cor: ${variation.color || 'N/A'}</p>
+                    <p><strong>${formatCurrency(selectedProduct.sale_price)}</strong></p>
+                    <small>Estoque: ${variation.quantity} unidades</small>
+                </div>
+            `).join('');
+        }
+
+        function selectVariation(variationId) {
+            selectedVariation = selectedProduct.product_variations.find(v => v.id === variationId);
+            
+            if (selectedVariation.quantity <= 0) {
+                showPopup('Esta variação está sem estoque', 'danger');
+                return;
+            }
+
+            closeVariationSelection();
+            openClientSelection();
+        }
+
+        function openClientSelection() {
+            const modal = document.getElementById('clientSelectionModal');
+            modal.classList.add('active');
+            renderClientSelectionList();
+        }
+
+        function closeClientSelection() {
+            const modal = document.getElementById('clientSelectionModal');
+            modal.classList.remove('active');
+        }
+
+        function renderClientSelectionList() {
+            const container = document.getElementById('clientSelectionList');
+            
+            if (!clients || clients.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">Nenhum cliente cadastrado</div>';
+                return;
+            }
+
+            container.innerHTML = clients.map(client => `
+                <div class="client-card" onclick="addPieceToClient(${client.id})">
+                    <h4>${client.name}</h4>
+                    <p>${client.phone}</p>
+                    ${client.email ? `<p>${client.email}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function filterClientSelection() {
+            const searchTerm = document.getElementById('clientSelectionSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('#clientSelectionList .client-card');
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function addPieceToClient(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            
+            const orderItem = {
+                clientId: clientId,
+                clientName: client.name,
+                clientPhone: client.phone,
+                productId: selectedProduct.id,
+                productName: selectedProduct.name,
+                variationId: selectedVariation.id,
+                variationDetails: `${selectedVariation.size || 'N/A'} | ${selectedVariation.color || 'N/A'}`,
+                price: selectedProduct.sale_price,
+                quantity: 1
+            };
+
+            const existingOrderIndex = clientOrders.findIndex(order => order.clientId === clientId);
+            
+            if (existingOrderIndex >= 0) {
+                const existingItemIndex = clientOrders[existingOrderIndex].items.findIndex(
+                    item => item.variationId === selectedVariation.id
+                );
+
+                if (existingItemIndex >= 0) {
+                    clientOrders[existingOrderIndex].items[existingItemIndex].quantity++;
+                } else {
+                    clientOrders[existingOrderIndex].items.push(orderItem);
+                }
+            } else {
+                clientOrders.push({
+                    clientId: clientId,
+                    clientName: client.name,
+                    clientPhone: client.phone,
+                    items: [orderItem]
+                });
+            }
+
+            closeClientSelection();
+            renderClientOrders();
+            showPopup(`Peça adicionada ao pedido de ${client.name}`, 'success');
+
+            selectedProduct = null;
+            selectedVariation = null;
+        }
+
+        function renderClientOrders() {
+            const container = document.getElementById('clientOrdersList');
+            
+            if (!clientOrders || clientOrders.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">Nenhum pedido iniciado.<br>Clique em "Adicionar Peça ao Pedido" para começar.</div>';
+                return;
+            }
+
+            container.innerHTML = clientOrders.map((order, index) => {
+                const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
+                const totalValue = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+                return `
+                    <div class="client-card" style="cursor: default;">
+                        <h4>${order.clientName}</h4>
+                        <p>${order.clientPhone}</p>
+                        <div class="client-orders">
+                            <p style="color: var(--gold); font-weight: 600; margin-bottom: 8px;">
+                                ${totalItems} peça(s) - ${formatCurrency(totalValue)}
+                            </p>
+                            <div class="client-orders-list">
+                                ${order.items.map(item => `
+                                    <div class="order-item">
+                                        <div>
+                                            <div class="order-item-name">${item.productName}</div>
+                                            <small style="color: var(--text-secondary);">${item.variationDetails}</small>
+                                        </div>
+                                        <div class="order-item-quantity">${item.quantity}x ${formatCurrency(item.price)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="margin-top: 12px; display: flex; gap: 8px;">
+                                <button class="btn btn-primary" onclick="finalizeSale(${index})" style="flex: 1; padding: 10px; font-size: 14px;">
+                                    Finalizar Venda
+                                </button>
+                                <button class="btn btn-danger" onclick="removeClientOrder(${index})" style="padding: 10px;">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterClientOrders() {
+            const searchTerm = document.getElementById('clientOrderSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('#clientOrdersList .client-card');
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function removeClientOrder(index) {
+            if (confirm('Deseja realmente remover este pedido?')) {
+                clientOrders.splice(index, 1);
+                renderClientOrders();
+                showPopup('Pedido removido', 'warning');
+            }
+        }
+
+        async function finalizeSale(orderIndex) {
+            if (!currentCash) {
+                showPopup('Abra o caixa antes de realizar vendas!', 'danger');
+                return;
+            }
+
+            const order = clientOrders[orderIndex];
+            const totalValue = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            const paymentMethod = prompt('Método de pagamento:\n1 - Dinheiro\n2 - Cartão de Crédito\n3 - Cartão de Débito\n4 - PIX\n\nDigite o número:');
+            
+            const paymentMethods = {
+                '1': 'Dinheiro',
+                '2': 'Cartão de Crédito',
+                '3': 'Cartão de Débito',
+                '4': 'PIX'
+            };
+
+            const selectedPayment = paymentMethods[paymentMethod];
+            
+            if (!selectedPayment) {
+                showPopup('Método de pagamento inválido', 'danger');
+                return;
+            }
+
+            try {
+                const brasiliaTime = formatBrasiliaDateTime(new Date());
+
+                const { data: sale, error: saleError } = await supabase
+                    .from('sales')
+                    .insert([{
+                        client_id: order.clientId,
+                        cash_register_id: currentCash.id,
+                        total: totalValue,
+                        payment_method: selectedPayment,
+                        created_at: brasiliaTime
+                    }])
+                    .select()
+                    .single();
+
+                if (saleError) throw saleError;
+
+                const saleItems = order.items.map(item => ({
+                    sale_id: sale.id,
+                    product_variation_id: item.variationId,
+                    quantity: item.quantity,
+                    unit_price: item.price,
+                    subtotal: item.price * item.quantity,
+                    created_at: brasiliaTime
+                }));
+
+                const { error: itemsError } = await supabase
+                    .from('sale_items')
+                    .insert(saleItems);
+
+                if (itemsError) throw itemsError;
+
+                for (const item of order.items) {
+                    const variation = selectedProduct ? selectedProduct.product_variations.find(v => v.id === item.variationId) : null;
+                    const newQuantity = variation ? Math.max(0, variation.quantity - item.quantity) : 0;
+
+                    const { error: stockError } = await supabase
+                        .from('product_variations')
+                        .update({ quantity: newQuantity })
+                        .eq('id', item.variationId);
+
+                    if (stockError) throw stockError;
+                }
+
+                showPopup('Venda finalizada com sucesso!', 'success');
+                
+                clientOrders.splice(orderIndex, 1);
+                renderClientOrders();
+                
+                await loadData();
+
+            } catch (error) {
+                console.error('Error finalizing sale:', error);
+                showPopup('Erro ao finalizar venda: ' + error.message, 'danger');
+            }
+        }
+        
+        // Inicializar renderização dos pedidos no carregamento
+        document.addEventListener('DOMContentLoaded', function() {
+            renderClientOrders();
+        });
+
+        </script>
 </body>
 </html>
