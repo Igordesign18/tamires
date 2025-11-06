@@ -13,31 +13,31 @@
         }
 
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #14141f;
-            --bg-card: #1a1a2e;
-            --bg-hover: #252542;
-            --gold: #f4c430;
-            --gold-dark: #d4a017;
-            --gold-light: #ffd966;
-            --accent: #6c63ff;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0b8;
-            --border: #2a2a42;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FBFF;
+            --bg-card: #FFFFFF;
+            --bg-hover: #E8F4FF;
+            --gold: #85C1E9;
+            --gold-dark: #5B9BD5;
+            --gold-light: #B4D7FF;
+            --accent: #6FA8DC;
+            --text-primary: #2C3E50;
+            --text-secondary: #6B7280;
+            --border: #D1E8FF;
             --danger: #ff4757;
             --success: #2ed573;
             --warning: #ffa502;
             --sidebar-width: 280px;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.5);
-            --glow-gold: 0 0 20px rgba(244, 196, 48, 0.3);
+            --shadow-sm: 0 2px 8px rgba(133, 193, 233, 0.1);
+            --shadow-md: 0 4px 16px rgba(133, 193, 233, 0.15);
+            --shadow-lg: 0 8px 32px rgba(133, 193, 233, 0.2);
+            --shadow-xl: 0 12px 48px rgba(133, 193, 233, 0.25);
+            --glow-gold: 0 0 20px rgba(133, 193, 233, 0.3);
         }
 
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, #0f0f1a 100%);
+            background: linear-gradient(135deg, #F8FBFF 0%, #FFFFFF 100%);
             color: var(--text-primary);
             overflow-x: hidden;
         }
@@ -69,9 +69,9 @@
 
         .sidebar {
             width: var(--sidebar-width);
-            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+            background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
             backdrop-filter: blur(10px);
-            border-right: 1px solid var(--border);
+            border-right: 2px solid var(--border);
             padding: 20px 0;
             position: fixed;
             height: 100vh;
@@ -2284,6 +2284,8 @@
         }
 
         function showProductSearchModal() {
+            console.log('Products loaded:', products ? products.length : 'not loaded');
+            
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.id = 'productSearchModal';
@@ -2303,16 +2305,41 @@
                 </div>
             `;
             document.body.appendChild(modal);
-            document.getElementById('modalProductSearch').focus();
-            renderModalProductResults();
+            
+            // Wait a bit for DOM to be ready
+            setTimeout(() => {
+                const searchInput = document.getElementById('modalProductSearch');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+                renderModalProductResults();
+            }, 100);
         }
 
         function renderModalProductResults() {
             const container = document.getElementById('modalProductResults');
-            const searchTerm = document.getElementById('modalProductSearch').value.toLowerCase();
+            if (!container) {
+                console.error('Container modalProductResults não encontrado');
+                return;
+            }
+            
+            const searchInput = document.getElementById('modalProductSearch');
+            if (!searchInput) {
+                console.error('Input modalProductSearch não encontrado');
+                return;
+            }
+            
+            const searchTerm = searchInput.value.toLowerCase();
+            console.log('Search term:', searchTerm);
+            console.log('Products available:', products ? products.length : 0);
 
             if (!searchTerm) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Digite para buscar produtos...</p>';
+                return;
+            }
+
+            if (!products || products.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Carregando produtos...</p>';
                 return;
             }
 
@@ -2321,6 +2348,8 @@
                 (p.barcode && p.barcode.toLowerCase().includes(searchTerm)) ||
                 p.id.toString().includes(searchTerm)
             );
+
+            console.log('Filtered products:', filtered.length);
 
             if (filtered.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Nenhum produto encontrado</p>';
