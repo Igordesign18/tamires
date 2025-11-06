@@ -2172,13 +2172,21 @@
             const container = document.getElementById('productResults');
             const searchTerm = document.getElementById('productSearch').value.toLowerCase();
 
-            let filtered = products;
-            if (searchTerm) {
-                filtered = products.filter(p => 
-                    p.name.toLowerCase().includes(searchTerm) ||
-                    (p.barcode && p.barcode.toLowerCase().includes(searchTerm)) ||
-                    p.id.toString().includes(searchTerm)
-                );
+            // Only show products if there's a search term
+            if (!searchTerm) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Digite para buscar produtos...</p>';
+                return;
+            }
+
+            let filtered = products.filter(p => 
+                p.name.toLowerCase().includes(searchTerm) ||
+                (p.barcode && p.barcode.toLowerCase().includes(searchTerm)) ||
+                p.id.toString().includes(searchTerm)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Nenhum produto encontrado</p>';
+                return;
             }
 
             container.innerHTML = filtered.map(product => {
@@ -2276,6 +2284,11 @@
 
             renderCart();
             showPopup('Produto adicionado ao carrinho', 'success');
+            
+            // Clear search and focus on client selection
+            document.getElementById('productSearch').value = '';
+            renderProductResults();
+            document.getElementById('clientSearchInput').focus();
         }
 
         function renderCart() {
