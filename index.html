@@ -264,6 +264,19 @@
             gap: 1rem;
         }
 
+        /* Address Form Styles */
+        .address-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+        }
+
+        .address-row-full {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
         /* Search Field Styles */
         .search-container {
             margin-bottom: 1.5rem;
@@ -515,6 +528,33 @@
             box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4);
         }
 
+        /* Discount Field Styles */
+        .discount-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--secondary-black);
+            border-radius: 8px;
+            border: 1px solid var(--gold);
+        }
+
+        .discount-input {
+            width: 100px;
+            padding: 0.5rem;
+            background: var(--card-black);
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            color: var(--text-white);
+            text-align: center;
+        }
+
+        .discount-info {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
         /* Stats Cards */
         .stats-grid {
             display: grid;
@@ -715,6 +755,14 @@
             }
 
             .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .address-row {
+                grid-template-columns: 1fr;
+            }
+
+            .address-row-full {
                 grid-template-columns: 1fr;
             }
 
@@ -1030,6 +1078,13 @@
                             </div>
                             
                             <div id="carrinhoItens"></div>
+                            
+                            <!-- Campo de Desconto -->
+                            <div class="discount-container">
+                                <label class="form-label" style="margin: 0;">Desconto (%):</label>
+                                <input type="number" id="descontoPercentual" class="discount-input" min="0" max="100" step="0.01" placeholder="0" onchange="aplicarDesconto()">
+                                <span class="discount-info" id="descontoInfo">R$ 0,00</span>
+                            </div>
                             
                             <div class="carrinho-total" id="carrinhoTotal">
                                 R$ 0,00
@@ -1386,9 +1441,34 @@
                     <input type="email" id="clienteEmail" class="form-control" placeholder="cliente@email.com">
                 </div>
 
+                <!-- Campos de Endereço Completo -->
                 <div class="form-group">
-                    <label class="form-label">Endereço</label>
-                    <textarea id="clienteEndereco" class="form-control" rows="3" placeholder="Rua, número, bairro, cidade, estado, CEP"></textarea>
+                    <label class="form-label">Endereço Completo</label>
+                    
+                    <div class="address-row" style="margin-bottom: 1rem;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" id="clienteRua" class="form-control" placeholder="Rua/Avenida">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" id="clienteNumero" class="form-control" placeholder="Número">
+                        </div>
+                    </div>
+                    
+                    <div class="address-row-full" style="margin-bottom: 1rem;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" id="clienteBairro" class="form-control" placeholder="Bairro">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" id="clienteCidade" class="form-control" placeholder="Cidade">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" id="clienteEstado" class="form-control" placeholder="Estado">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="clienteCep" class="form-control" placeholder="CEP">
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
@@ -1516,28 +1596,27 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script>
-        // Configuração Supabase
-        const SUPABASE_URL = 'https://yddxjerwtahjoyoebabh.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlkZHhqZXJ3dGFoam95b2ViYWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNTY1NDQsImV4cCI6MjA3NzkzMjU0NH0.dnGklHi6V08pUZ5MvJmDXVn6hCduIxl8pi35L0kqLME';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // Estado Global
+        // Estado Global - Sistema funciona com localStorage
         let carrinho = [];
         let caixaAtual = null;
-        let usuarioAtual = { email: 'sistema@labella.com' }; // Usuario fake para funcionar sem login
+        let usuarioAtual = { email: 'sistema@labella.com' };
         let filtroRelatorioAtual = 'hoje';
+        let descontoAtual = 0;
 
-        // Inicialização - Remover verificação de sessão e mostrar app diretamente
+        // Dados em localStorage
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+        let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
+        let caixas = JSON.parse(localStorage.getItem('caixas')) || [];
+        let movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')) || [];
+
+        // Inicialização
         document.addEventListener('DOMContentLoaded', async () => {
             await inicializarApp();
         });
 
         async function inicializarApp() {
-            await verificarTabelasSupabase();
             await verificarCaixaAberto();
             await carregarClientes();
             await carregarProdutos();
@@ -1571,13 +1650,6 @@
             }
             atualizarRelogio();
             setInterval(atualizarRelogio, 1000);
-        }
-
-        // Verificar e criar tabelas no Supabase
-        async function verificarTabelasSupabase() {
-            console.log('Verificando estrutura do banco de dados...');
-            // As tabelas devem ser criadas manualmente no Supabase
-            // Este é apenas um log para o usuário saber
         }
 
         // Navegação
@@ -1670,6 +1742,22 @@
             if (confirm('Deseja realmente sair do sistema?')) {
                 location.reload();
             }
+        }
+
+        // ==================== DESCONTO ====================
+        function aplicarDesconto() {
+            const percentual = parseFloat(document.getElementById('descontoPercentual').value) || 0;
+            
+            if (percentual < 0 || percentual > 100) {
+                mostrarAlerta('Desconto deve estar entre 0% e 100%!', 'warning');
+                document.getElementById('descontoPercentual').value = 0;
+                descontoAtual = 0;
+                atualizarCarrinho();
+                return;
+            }
+            
+            descontoAtual = percentual;
+            atualizarCarrinho();
         }
 
         // ==================== FILTRO DE CLIENTES ====================
@@ -1789,6 +1877,7 @@
             const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
             
             const cliente = {
+                id: Date.now(),
                 nome: document.getElementById('clienteRapidoNome').value,
                 telefone: telefoneCompleto
             };
@@ -1796,19 +1885,14 @@
             try {
                 mostrarLoading();
 
-                const { data, error } = await supabase
-                    .from('clientes')
-                    .insert([cliente])
-                    .select()
-                    .single();
-                
-                if (error) throw error;
+                clientes.push(cliente);
+                localStorage.setItem('clientes', JSON.stringify(clientes));
 
                 fecharModalCadastroRapido();
                 await carregarClientes();
                 
                 // Selecionar o cliente recém-cadastrado
-                document.getElementById('pdvCliente').value = data.id;
+                document.getElementById('pdvCliente').value = cliente.id;
                 
                 mostrarAlerta('Cliente cadastrado e selecionado com sucesso!', 'success');
             } catch (error) {
@@ -1824,15 +1908,10 @@
             try {
                 const hoje = new Date().toISOString().split('T')[0];
                 
-                const { data, error } = await supabase
-                    .from('caixa')
-                    .select('*')
-                    .eq('status', 'aberto')
-                    .gte('data_abertura', hoje)
-                    .single();
+                const caixaAberto = caixas.find(c => c.status === 'aberto' && c.data_abertura.startsWith(hoje));
 
-                if (data) {
-                    caixaAtual = data;
+                if (caixaAberto) {
+                    caixaAtual = caixaAberto;
                     atualizarUICaixaAberto();
                 } else {
                     caixaAtual = null;
@@ -1880,21 +1959,13 @@
 
             try {
                 // Buscar vendas do caixa
-                const { data: vendas } = await supabase
-                    .from('vendas')
-                    .select('total')
-                    .eq('caixa_id', caixaAtual.id);
-
-                const totalVendas = vendas?.reduce((sum, v) => sum + parseFloat(v.total), 0) || 0;
+                const vendasCaixa = vendas.filter(v => v.caixa_id === caixaAtual.id);
+                const totalVendas = vendasCaixa.reduce((sum, v) => sum + parseFloat(v.total), 0) || 0;
 
                 // Buscar movimentações do caixa
-                const { data: movimentacoes } = await supabase
-                    .from('movimentacoes')
-                    .select('tipo, valor')
-                    .eq('caixa_id', caixaAtual.id);
-
+                const movimentacoesCaixa = movimentacoes.filter(m => m.caixa_id === caixaAtual.id);
                 let totalMovimentacoes = 0;
-                movimentacoes?.forEach(m => {
+                movimentacoesCaixa.forEach(m => {
                     if (m.tipo === 'entrada') {
                         totalMovimentacoes += parseFloat(m.valor);
                     } else {
@@ -1922,20 +1993,18 @@
             try {
                 mostrarLoading();
                 
-                const { data, error } = await supabase
-                    .from('caixa')
-                    .insert([{
-                        data_abertura: new Date().toISOString(),
-                        valor_inicial: valorInicial,
-                        status: 'aberto',
-                        usuario: usuarioAtual?.email || 'Sistema'
-                    }])
-                    .select()
-                    .single();
+                const novoCaixa = {
+                    id: Date.now(),
+                    data_abertura: new Date().toISOString(),
+                    valor_inicial: valorInicial,
+                    status: 'aberto',
+                    usuario: usuarioAtual?.email || 'Sistema'
+                };
 
-                if (error) throw error;
+                caixas.push(novoCaixa);
+                localStorage.setItem('caixas', JSON.stringify(caixas));
 
-                caixaAtual = data;
+                caixaAtual = novoCaixa;
                 atualizarUICaixaAberto();
                 mostrarAlerta('Caixa aberto com sucesso!', 'success');
                 document.getElementById('valorInicialCaixa').value = '';
@@ -1962,16 +2031,14 @@
                 const saldoAtualText = document.getElementById('caixaSaldoAtual').textContent;
                 const valorFinal = parseFloat(saldoAtualText.replace('R$', '').replace('.', '').replace(',', '.'));
 
-                const { error } = await supabase
-                    .from('caixa')
-                    .update({
-                        data_fechamento: new Date().toISOString(),
-                        valor_final: valorFinal,
-                        status: 'fechado'
-                    })
-                    .eq('id', caixaAtual.id);
-
-                if (error) throw error;
+                // Atualizar caixa no array
+                const index = caixas.findIndex(c => c.id === caixaAtual.id);
+                if (index !== -1) {
+                    caixas[index].data_fechamento = new Date().toISOString();
+                    caixas[index].valor_final = valorFinal;
+                    caixas[index].status = 'fechado';
+                    localStorage.setItem('caixas', JSON.stringify(caixas));
+                }
 
                 caixaAtual = null;
                 atualizarUICaixaFechado();
@@ -1987,18 +2054,12 @@
 
         async function carregarHistoricoCaixas() {
             try {
-                const { data, error } = await supabase
-                    .from('caixa')
-                    .select('*')
-                    .order('data_abertura', { ascending: false })
-                    .limit(50);
-
-                if (error) throw error;
+                const caixasOrdenados = [...caixas].sort((a, b) => new Date(b.data_abertura) - new Date(a.data_abertura)).slice(0, 50);
 
                 const tbody = document.getElementById('tabelaCaixas');
                 tbody.innerHTML = '';
 
-                data.forEach(caixa => {
+                caixasOrdenados.forEach(caixa => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${formatarData(caixa.data_abertura)}</td>
@@ -2017,17 +2078,12 @@
         // ==================== PRODUTOS ====================
         async function carregarProdutos() {
             try {
-                const { data, error } = await supabase
-                    .from('produtos')
-                    .select('*')
-                    .order('nome');
-
-                if (error) throw error;
+                const produtosOrdenados = [...produtos].sort((a, b) => a.nome.localeCompare(b.nome));
 
                 const tbody = document.getElementById('tabelaProdutos');
                 tbody.innerHTML = '';
 
-                data.forEach(produto => {
+                produtosOrdenados.forEach(produto => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${produto.sku}</td>
@@ -2081,6 +2137,7 @@
             
             const id = document.getElementById('produtoId').value;
             const produto = {
+                id: id || Date.now(),
                 nome: document.getElementById('produtoNome').value,
                 sku: document.getElementById('produtoSku').value,
                 categoria: document.getElementById('produtoCategoria').value,
@@ -2092,22 +2149,17 @@
                 mostrarLoading();
 
                 if (id) {
-                    const { error } = await supabase
-                        .from('produtos')
-                        .update(produto)
-                        .eq('id', id);
-                    
-                    if (error) throw error;
+                    const index = produtos.findIndex(p => p.id == id);
+                    if (index !== -1) {
+                        produtos[index] = produto;
+                    }
                     mostrarAlerta('Produto atualizado com sucesso!', 'success');
                 } else {
-                    const { error } = await supabase
-                        .from('produtos')
-                        .insert([produto]);
-                    
-                    if (error) throw error;
+                    produtos.push(produto);
                     mostrarAlerta('Produto cadastrado com sucesso!', 'success');
                 }
 
+                localStorage.setItem('produtos', JSON.stringify(produtos));
                 fecharModalProduto();
                 await carregarProdutos();
             } catch (error) {
@@ -2124,12 +2176,8 @@
             try {
                 mostrarLoading();
                 
-                const { error } = await supabase
-                    .from('produtos')
-                    .delete()
-                    .eq('id', id);
-
-                if (error) throw error;
+                produtos = produtos.filter(p => p.id != id);
+                localStorage.setItem('produtos', JSON.stringify(produtos));
 
                 mostrarAlerta('Produto excluído com sucesso!', 'success');
                 await carregarProdutos();
@@ -2144,25 +2192,35 @@
         // ==================== CLIENTES ====================
         async function carregarClientes() {
             try {
-                const { data, error } = await supabase
-                    .from('clientes')
-                    .select('*')
-                    .order('nome');
-
-                if (error) throw error;
+                const clientesOrdenados = [...clientes].sort((a, b) => a.nome.localeCompare(b.nome));
 
                 // Atualizar tabela
                 const tbody = document.getElementById('tabelaClientes');
                 tbody.innerHTML = '';
 
-                data.forEach(cliente => {
+                clientesOrdenados.forEach(cliente => {
+                    // Montar endereço completo para exibição
+                    let enderecoCompleto = '';
+                    if (cliente.rua || cliente.numero || cliente.bairro || cliente.cidade || cliente.estado || cliente.cep) {
+                        const partes = [];
+                        if (cliente.rua) partes.push(cliente.rua);
+                        if (cliente.numero) partes.push(cliente.numero);
+                        if (cliente.bairro) partes.push(cliente.bairro);
+                        if (cliente.cidade) partes.push(cliente.cidade);
+                        if (cliente.estado) partes.push(cliente.estado);
+                        if (cliente.cep) partes.push(cliente.cep);
+                        enderecoCompleto = partes.join(', ');
+                    } else if (cliente.endereco) {
+                        enderecoCompleto = cliente.endereco;
+                    }
+
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${cliente.nome}</td>
                         <td>${cliente.telefone}</td>
                         <td>${cliente.cpf || '-'}</td>
                         <td>${cliente.email || '-'}</td>
-                        <td>${cliente.endereco || '-'}</td>
+                        <td>${enderecoCompleto || '-'}</td>
                         <td>
                             <button class="btn btn-primary btn-icon" onclick='editarCliente(${JSON.stringify(cliente)})'>
                                 <svg class="icon"><use href="#icon-edit"></use></svg>
@@ -2179,7 +2237,7 @@
                 const select = document.getElementById('pdvCliente');
                 select.innerHTML = '<option value="">Cliente Avulso</option>';
                 
-                data.forEach(cliente => {
+                clientesOrdenados.forEach(cliente => {
                     const option = document.createElement('option');
                     option.value = cliente.id;
                     option.textContent = cliente.nome;
@@ -2223,7 +2281,15 @@
             
             document.getElementById('clienteCpf').value = cliente.cpf || '';
             document.getElementById('clienteEmail').value = cliente.email || '';
-            document.getElementById('clienteEndereco').value = cliente.endereco || '';
+            
+            // Preencher campos de endereço
+            document.getElementById('clienteRua').value = cliente.rua || '';
+            document.getElementById('clienteNumero').value = cliente.numero || '';
+            document.getElementById('clienteBairro').value = cliente.bairro || '';
+            document.getElementById('clienteCidade').value = cliente.cidade || '';
+            document.getElementById('clienteEstado').value = cliente.estado || '';
+            document.getElementById('clienteCep').value = cliente.cep || '';
+            
             document.getElementById('modalCliente').classList.add('active');
         }
 
@@ -2236,33 +2302,34 @@
             const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
             
             const cliente = {
+                id: id || Date.now(),
                 nome: document.getElementById('clienteNome').value,
                 telefone: telefoneCompleto,
                 cpf: document.getElementById('clienteCpf').value,
                 email: document.getElementById('clienteEmail').value,
-                endereco: document.getElementById('clienteEndereco').value
+                rua: document.getElementById('clienteRua').value,
+                numero: document.getElementById('clienteNumero').value,
+                bairro: document.getElementById('clienteBairro').value,
+                cidade: document.getElementById('clienteCidade').value,
+                estado: document.getElementById('clienteEstado').value,
+                cep: document.getElementById('clienteCep').value
             };
 
             try {
                 mostrarLoading();
 
                 if (id) {
-                    const { error } = await supabase
-                        .from('clientes')
-                        .update(cliente)
-                        .eq('id', id);
-                    
-                    if (error) throw error;
+                    const index = clientes.findIndex(c => c.id == id);
+                    if (index !== -1) {
+                        clientes[index] = cliente;
+                    }
                     mostrarAlerta('Cliente atualizado com sucesso!', 'success');
                 } else {
-                    const { error } = await supabase
-                        .from('clientes')
-                        .insert([cliente]);
-                    
-                    if (error) throw error;
+                    clientes.push(cliente);
                     mostrarAlerta('Cliente cadastrado com sucesso!', 'success');
                 }
 
+                localStorage.setItem('clientes', JSON.stringify(clientes));
                 fecharModalCliente();
                 await carregarClientes();
             } catch (error) {
@@ -2279,12 +2346,8 @@
             try {
                 mostrarLoading();
                 
-                const { error } = await supabase
-                    .from('clientes')
-                    .delete()
-                    .eq('id', id);
-
-                if (error) throw error;
+                clientes = clientes.filter(c => c.id != id);
+                localStorage.setItem('clientes', JSON.stringify(clientes));
 
                 mostrarAlerta('Cliente excluído com sucesso!', 'success');
                 await carregarClientes();
@@ -2301,24 +2364,20 @@
             const busca = document.getElementById('buscaProduto').value.toLowerCase();
             
             try {
-                const { data, error } = await supabase
-                    .from('produtos')
-                    .select('*')
-                    .or(`nome.ilike.%${busca}%,sku.ilike.%${busca}%`)
-                    .gt('quantidade', 0)
-                    .order('nome');
-
-                if (error) throw error;
+                const produtosFiltrados = produtos.filter(produto => 
+                    (produto.nome.toLowerCase().includes(busca) || produto.sku.toLowerCase().includes(busca)) &&
+                    produto.quantidade > 0
+                ).sort((a, b) => a.nome.localeCompare(b.nome));
 
                 const lista = document.getElementById('listaProdutos');
                 lista.innerHTML = '';
 
-                if (data.length === 0) {
+                if (produtosFiltrados.length === 0) {
                     lista.innerHTML = '<p style="color: var(--text-gray);">Nenhum produto encontrado</p>';
                     return;
                 }
 
-                data.forEach(produto => {
+                produtosFiltrados.forEach(produto => {
                     const div = document.createElement('div');
                     div.className = 'produto-item';
                     div.innerHTML = `
@@ -2393,15 +2452,16 @@
             if (carrinho.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-gray); text-align: center;">Carrinho vazio</p>';
                 document.getElementById('carrinhoTotal').textContent = 'R$ 0,00';
+                document.getElementById('descontoInfo').textContent = 'R$ 0,00';
                 calcularTroco();
                 return;
             }
 
-            let total = 0;
+            let subtotal = 0;
 
             carrinho.forEach(item => {
-                const subtotal = item.preco * item.quantidade;
-                total += subtotal;
+                const subtotalItem = item.preco * item.quantidade;
+                subtotal += subtotalItem;
 
                 const div = document.createElement('div');
                 div.className = 'carrinho-item';
@@ -2412,7 +2472,7 @@
                     </div>
                     <div style="text-align: right;">
                         <div style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
-                            ${formatarMoeda(subtotal)}
+                            ${formatarMoeda(subtotalItem)}
                         </div>
                         <div class="quantidade-control">
                             <button onclick="alterarQuantidade('${item.id}', -1)">
@@ -2431,6 +2491,11 @@
                 container.appendChild(div);
             });
 
+            // Calcular desconto
+            const valorDesconto = (subtotal * descontoAtual) / 100;
+            const total = subtotal - valorDesconto;
+
+            document.getElementById('descontoInfo').textContent = formatarMoeda(valorDesconto);
             document.getElementById('carrinhoTotal').textContent = formatarMoeda(total);
             calcularTroco();
         }
@@ -2448,7 +2513,9 @@
 
             const clienteId = document.getElementById('pdvCliente').value || null;
             const formaPagamento = document.getElementById('formaPagamento').value;
-            const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            const valorDesconto = (subtotal * descontoAtual) / 100;
+            const total = subtotal - valorDesconto;
 
             // Validar pagamento em dinheiro
             if (formaPagamento === 'dinheiro') {
@@ -2466,11 +2533,16 @@
 
                 // Inserir venda
                 const vendaData = {
+                    id: Date.now(),
                     cliente_id: clienteId,
+                    subtotal: subtotal,
+                    desconto_percentual: descontoAtual,
+                    desconto_valor: valorDesconto,
                     total: total,
                     forma_pagamento: formaPagamento,
                     caixa_id: caixaAtual.id,
-                    data: new Date().toISOString()
+                    data: new Date().toISOString(),
+                    itens: [...carrinho]
                 };
 
                 // Adicionar dados do pagamento em dinheiro
@@ -2479,43 +2551,25 @@
                     vendaData.precisa_troco = document.getElementById('precisaTroco').value;
                 }
 
-                const { data: venda, error: vendaError } = await supabase
-                    .from('vendas')
-                    .insert([vendaData])
-                    .select()
-                    .single();
+                vendas.push(vendaData);
+                localStorage.setItem('vendas', JSON.stringify(vendas));
 
-                if (vendaError) throw vendaError;
-
-                // Inserir itens da venda e atualizar estoque
-                for (const item of carrinho) {
-                    // Inserir item
-                    const { error: itemError } = await supabase
-                        .from('venda_itens')
-                        .insert([{
-                            venda_id: venda.id,
-                            produto_id: item.id,
-                            quantidade: item.quantidade,
-                            preco_unitario: item.preco,
-                            subtotal: item.preco * item.quantidade
-                        }]);
-
-                    if (itemError) throw itemError;
-
-                    // Atualizar estoque
-                    const { error: estoqueError } = await supabase
-                        .from('produtos')
-                        .update({ quantidade: item.quantidade_original - item.quantidade })
-                        .eq('id', item.id);
-
-                    if (estoqueError) throw estoqueError;
-                }
+                // Atualizar estoque
+                carrinho.forEach(item => {
+                    const produto = produtos.find(p => p.id === item.id);
+                    if (produto) {
+                        produto.quantidade -= item.quantidade;
+                    }
+                });
+                localStorage.setItem('produtos', JSON.stringify(produtos));
 
                 // Salvar carrinho para o comprovante
                 const carrinhoParaComprovante = [...carrinho];
 
-                // Limpar carrinho
+                // Limpar carrinho e desconto
                 carrinho = [];
+                descontoAtual = 0;
+                document.getElementById('descontoPercentual').value = '';
                 atualizarCarrinho();
                 document.getElementById('buscaProduto').value = '';
                 document.getElementById('listaProdutos').innerHTML = '';
@@ -2528,7 +2582,7 @@
                 mostrarAlerta('Venda finalizada com sucesso!', 'success');
                 
                 // Gerar e mostrar comprovante
-                gerarComprovante(venda, carrinhoParaComprovante);
+                gerarComprovante(vendaData, carrinhoParaComprovante);
                 
             } catch (error) {
                 console.error('Erro ao finalizar venda:', error);
@@ -2560,6 +2614,20 @@
                 }
             }
 
+            let descontoHTML = '';
+            if (venda.desconto_valor > 0) {
+                descontoHTML = `
+                    <div class="comprovante-item">
+                        <span>Subtotal:</span>
+                        <span>${formatarMoeda(venda.subtotal)}</span>
+                    </div>
+                    <div class="comprovante-item">
+                        <span>Desconto (${venda.desconto_percentual}%):</span>
+                        <span>-${formatarMoeda(venda.desconto_valor)}</span>
+                    </div>
+                `;
+            }
+
             comprovanteDiv.innerHTML = `
                 <div class="comprovante-header">
                     <h2>LaBella Woman</h2>
@@ -2569,6 +2637,7 @@
                 
                 <div style="margin: 1rem 0;">
                     ${itensHTML}
+                    ${descontoHTML}
                 </div>
                 
                 <div class="comprovante-footer">
@@ -2649,6 +2718,7 @@
             }
 
             const movimentacao = {
+                id: Date.now(),
                 tipo: document.getElementById('movimentacaoTipo').value,
                 valor: parseFloat(document.getElementById('movimentacaoValor').value),
                 descricao: document.getElementById('movimentacaoDescricao').value,
@@ -2659,11 +2729,8 @@
             try {
                 mostrarLoading();
 
-                const { error } = await supabase
-                    .from('movimentacoes')
-                    .insert([movimentacao]);
-
-                if (error) throw error;
+                movimentacoes.push(movimentacao);
+                localStorage.setItem('movimentacoes', JSON.stringify(movimentacoes));
 
                 fecharModalMovimentacao();
                 await carregarMovimentacoes();
@@ -2679,18 +2746,12 @@
 
         async function carregarMovimentacoes() {
             try {
-                const { data, error } = await supabase
-                    .from('movimentacoes')
-                    .select('*')
-                    .order('data', { ascending: false })
-                    .limit(100);
-
-                if (error) throw error;
+                const movimentacoesOrdenadas = [...movimentacoes].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 100);
 
                 const tbody = document.getElementById('tabelaMovimentacoes');
                 tbody.innerHTML = '';
 
-                data.forEach(mov => {
+                movimentacoesOrdenadas.forEach(mov => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${formatarData(mov.data)}</td>
@@ -2717,17 +2778,12 @@
                 const dataInicio = obterDataInicioPeriodo(filtroRelatorioAtual);
 
                 // Vendas do período
-                const { data: vendas, error: vendasError } = await supabase
-                    .from('vendas')
-                    .select('*, venda_itens(quantidade)')
-                    .gte('data', dataInicio);
+                const vendasPeriodo = vendas.filter(v => new Date(v.data) >= new Date(dataInicio));
 
-                if (vendasError) throw vendasError;
-
-                const totalVendas = vendas.length;
-                const totalValor = vendas.reduce((sum, v) => sum + parseFloat(v.total), 0);
-                const totalProdutos = vendas.reduce((sum, v) => {
-                    return sum + v.venda_itens.reduce((s, i) => s + i.quantidade, 0);
+                const totalVendas = vendasPeriodo.length;
+                const totalValor = vendasPeriodo.reduce((sum, v) => sum + parseFloat(v.total), 0);
+                const totalProdutos = vendasPeriodo.reduce((sum, v) => {
+                    return sum + v.itens.reduce((s, i) => s + i.quantidade, 0);
                 }, 0);
                 const ticketMedio = totalVendas > 0 ? totalValor / totalVendas : 0;
 
@@ -2737,22 +2793,17 @@
                 document.getElementById('ticketMedio').textContent = formatarMoeda(ticketMedio);
 
                 // Tabela de vendas recentes
-                const { data: vendasRecentes, error: recentesError } = await supabase
-                    .from('vendas')
-                    .select('*, clientes(nome)')
-                    .order('data', { ascending: false })
-                    .limit(20);
-
-                if (recentesError) throw recentesError;
+                const vendasRecentes = [...vendas].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 20);
 
                 const tbody = document.getElementById('tabelaVendasRelatorio');
                 tbody.innerHTML = '';
 
                 vendasRecentes.forEach(venda => {
+                    const cliente = clientes.find(c => c.id == venda.cliente_id);
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${formatarData(venda.data)}</td>
-                        <td>${venda.clientes?.nome || 'Cliente Avulso'}</td>
+                        <td>${cliente?.nome || 'Cliente Avulso'}</td>
                         <td style="color: var(--gold); font-weight: bold;">${formatarMoeda(venda.total)}</td>
                         <td>${venda.forma_pagamento}</td>
                         <td>
