@@ -13,31 +13,31 @@
         }
 
         :root {
-            --bg-primary: #FFFFFF;
-            --bg-secondary: #F8FBFF;
-            --bg-card: #FFFFFF;
-            --bg-hover: #E8F4FF;
-            --gold: #85C1E9;
-            --gold-dark: #5B9BD5;
-            --gold-light: #B4D7FF;
-            --accent: #6FA8DC;
-            --text-primary: #2C3E50;
-            --text-secondary: #6B7280;
-            --border: #D1E8FF;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #14141f;
+            --bg-card: #1a1a2e;
+            --bg-hover: #252542;
+            --gold: #f4c430;
+            --gold-dark: #d4a017;
+            --gold-light: #ffd966;
+            --accent: #6c63ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            --border: #2a2a42;
             --danger: #ff4757;
             --success: #2ed573;
             --warning: #ffa502;
             --sidebar-width: 280px;
-            --shadow-sm: 0 2px 8px rgba(133, 193, 233, 0.1);
-            --shadow-md: 0 4px 16px rgba(133, 193, 233, 0.15);
-            --shadow-lg: 0 8px 32px rgba(133, 193, 233, 0.2);
-            --shadow-xl: 0 12px 48px rgba(133, 193, 233, 0.25);
-            --glow-gold: 0 0 20px rgba(133, 193, 233, 0.3);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.5);
+            --glow-gold: 0 0 20px rgba(244, 196, 48, 0.3);
         }
 
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #F8FBFF 0%, #FFFFFF 100%);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0f0f1a 100%);
             color: var(--text-primary);
             overflow-x: hidden;
         }
@@ -69,9 +69,9 @@
 
         .sidebar {
             width: var(--sidebar-width);
-            background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
             backdrop-filter: blur(10px);
-            border-right: 2px solid var(--border);
+            border-right: 1px solid var(--border);
             padding: 20px 0;
             position: fixed;
             height: 100vh;
@@ -1259,18 +1259,23 @@
 
             <!-- PDV Page -->
             <div id="pdvPage" class="page">
-                <div style="max-width: 800px; margin: 0 auto;">
-                    <div class="card">
-                        <h3>Carrinho de Compras</h3>
-                        <div class="form-group">
-                            <button class="btn btn-primary" onclick="showProductSearchModal()" style="width: 100%;">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                <div style="display: grid; grid-template-columns: 1fr 400px; gap: 20px;">
+                    <div>
+                        <div class="card">
+                            <h3>Buscar Produto</h3>
+                            <div class="search-box">
+                                <input type="text" id="productSearch" placeholder="Buscar por nome, código de barras ou código...">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
-                                Adicionar ao Carrinho
-                            </button>
+                            </div>
+                            <div id="productResults" class="product-grid"></div>
                         </div>
-                        <div id="saleItems"></div>
+                    </div>
+                    <div>
+                        <div class="card">
+                            <h3>Carrinho de Compras</h3>
+                            <div id="saleItems"></div>
                             <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--gold);">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                                     <span>Subtotal:</span>
@@ -2167,40 +2172,25 @@
             const container = document.getElementById('productResults');
             const searchTerm = document.getElementById('productSearch').value.toLowerCase();
 
-            // Only show products if there's a search term
-            if (!searchTerm) {
-                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Digite para buscar produtos...</p>';
-                return;
-            }
-
-            let filtered = products.filter(p => 
-                p.name.toLowerCase().includes(searchTerm) ||
-                (p.barcode && p.barcode.toLowerCase().includes(searchTerm)) ||
-                p.id.toString().includes(searchTerm)
-            );
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Nenhum produto encontrado</p>';
-                return;
+            let filtered = products;
+            if (searchTerm) {
+                filtered = products.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm) ||
+                    (p.barcode && p.barcode.toLowerCase().includes(searchTerm)) ||
+                    p.id.toString().includes(searchTerm)
+                );
             }
 
             container.innerHTML = filtered.map(product => {
                 const totalStock = (product.product_variations || []).reduce((sum, v) => sum + v.quantity, 0);
                 return `
-                    <div class="product-card" style="position: relative; padding-bottom: 60px;">
+                    <div class="product-card" style="position: relative;">
                         <div onclick="selectProductForSale(${product.id})" style="cursor: pointer;">
                             <h4>${product.name}</h4>
                             <p>${product.category}</p>
                             <p>Estoque: ${totalStock}</p>
                             <div class="price">${formatCurrency(product.sale_price)}</div>
                         </div>
-                        <button class="btn btn-primary" onclick="event.stopPropagation(); selectProductForSale(${product.id});" 
-                                style="position: absolute; bottom: 10px; left: 10px; right: 10px; padding: 8px 12px; font-size: 13px; width: calc(100% - 20px);">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Adicionar
-                        </button>
                         <button class="btn btn-secondary" onclick="event.stopPropagation(); showEditProductModal(${product.id})" 
                                 style="position: absolute; top: 10px; right: 10px; padding: 6px 10px; font-size: 12px;">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
@@ -2214,12 +2204,7 @@
 
         function selectProductForSale(productId) {
             const product = products.find(p => p.id === productId);
-            if (!product) {
-                showPopup('Produto não encontrado', 'error');
-                return;
-            }
-            
-            if (!product.product_variations || product.product_variations.length === 0) {
+            if (!product || !product.product_variations || product.product_variations.length === 0) {
                 showPopup('Produto sem variações disponíveis', 'error');
                 return;
             }
@@ -2230,13 +2215,6 @@
                 return;
             }
 
-            // If only one variation, select it directly
-            if (variations.length === 1) {
-                selectProductVariation(product.id, variations[0].id);
-                return;
-            }
-
-            // Multiple variations - show selection modal
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
@@ -2247,176 +2225,7 @@
                     </div>
                     <div style="max-height: 400px; overflow-y: auto;">
                         ${variations.map(v => `
-                            <div class="product-card" onclick="selectProductVariation(${product.id}, ${v.id}); this.closest('.modal').remove();" style="cursor: pointer;">
-                                <h4>Tamanho: ${v.size} | Cor: ${v.color}</h4>
-                                <p>Disponível: ${v.quantity}</p>
-                                <div class="price">${formatCurrency(product.sale_price)}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        function selectProductVariation(productId, variationId) {
-            const product = products.find(p => p.id === productId);
-            const variation = product.product_variations.find(v => v.id === variationId);
-            
-            // Store selection
-            document.getElementById('selectedProductId').value = productId;
-            document.getElementById('selectedVariationId').value = variationId;
-            
-            // Display selection
-            document.getElementById('selectedProductName').textContent = product.name;
-            document.getElementById('selectedProductVariation').textContent = `${variation.size} | ${variation.color}`;
-            document.getElementById('selectedProductPrice').textContent = formatCurrency(product.sale_price);
-            document.getElementById('selectedProductDisplay').style.display = 'block';
-            
-            // Enable add to cart button
-            document.getElementById('addToCartBtn').disabled = false;
-            
-            // Clear search and hide results
-            document.getElementById('productSearch').value = '';
-            renderProductResults();
-            
-            showPopup('Produto selecionado! Clique em "Adicionar ao Carrinho"', 'success');
-        }
-
-        function showProductSearchModal() {
-            console.log('Products loaded:', products ? products.length : 'not loaded');
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.id = 'productSearchModal';
-            modal.innerHTML = `
-                <div class="modal-content" style="max-width: 900px;">
-                    <div class="modal-header">
-                        <h3>Buscar Produto</h3>
-                        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
-                    </div>
-                    <div class="search-box" style="margin-bottom: 20px;">
-                        <input type="text" id="modalProductSearch" placeholder="Buscar por nome, código de barras ou código..." oninput="renderModalProductResults()">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-                    <div id="modalProductResults" class="product-grid" style="max-height: 500px; overflow-y: auto;"></div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            
-            // Wait a bit for DOM to be ready
-            setTimeout(() => {
-                const searchInput = document.getElementById('modalProductSearch');
-                if (searchInput) {
-                    searchInput.focus();
-                }
-                renderModalProductResults();
-            }, 100);
-        }
-
-        function renderModalProductResults() {
-            const container = document.getElementById('modalProductResults');
-            if (!container) {
-                console.error('Container modalProductResults não encontrado');
-                return;
-            }
-            
-            const searchInput = document.getElementById('modalProductSearch');
-            if (!searchInput) {
-                console.error('Input modalProductSearch não encontrado');
-                return;
-            }
-            
-            const searchTerm = searchInput.value.toLowerCase();
-            console.log('Search term:', searchTerm);
-            console.log('Products available:', products ? products.length : 0);
-
-            if (!searchTerm) {
-                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Digite para buscar produtos...</p>';
-                return;
-            }
-
-            if (!products || products.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Carregando produtos...</p>';
-                return;
-            }
-
-            let filtered = products.filter(p => 
-                p.name.toLowerCase().includes(searchTerm) ||
-                (p.barcode && p.barcode.toLowerCase().includes(searchTerm)) ||
-                p.id.toString().includes(searchTerm)
-            );
-
-            console.log('Filtered products:', filtered.length);
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px; font-size: 15px;">Nenhum produto encontrado</p>';
-                return;
-            }
-
-            container.innerHTML = filtered.map(product => {
-                const totalStock = (product.product_variations || []).reduce((sum, v) => sum + v.quantity, 0);
-                return `
-                    <div class="product-card" style="position: relative; padding-bottom: 60px;">
-                        <div style="cursor: default;">
-                            <h4>${product.name}</h4>
-                            <p>${product.category}</p>
-                            <p>Estoque: ${totalStock}</p>
-                            <div class="price">${formatCurrency(product.sale_price)}</div>
-                        </div>
-                        <button class="btn btn-primary" onclick="selectProductForSaleFromModal(${product.id});" 
-                                style="position: absolute; bottom: 10px; left: 10px; right: 10px; padding: 8px 12px; font-size: 13px; width: calc(100% - 20px);">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            Adicionar
-                        </button>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function selectProductForSaleFromModal(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) {
-                showPopup('Produto não encontrado', 'error');
-                return;
-            }
-            
-            if (!product.product_variations || product.product_variations.length === 0) {
-                showPopup('Produto sem variações disponíveis', 'error');
-                return;
-            }
-
-            const variations = product.product_variations.filter(v => v.quantity > 0);
-            if (variations.length === 0) {
-                showPopup('Produto sem estoque', 'error');
-                return;
-            }
-
-            // Close search modal
-            document.getElementById('productSearchModal')?.remove();
-
-            // If only one variation, add directly
-            if (variations.length === 1) {
-                addToCart(product.id, variations[0].id);
-                return;
-            }
-
-            // Multiple variations - show selection modal
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Selecionar Variação - ${product.name}</h3>
-                        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
-                    </div>
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        ${variations.map(v => `
-                            <div class="product-card" onclick="addToCart(${product.id}, ${v.id}); this.closest('.modal').remove();" style="cursor: pointer;">
+                            <div class="product-card" onclick="addToCart(${product.id}, ${v.id}); this.closest('.modal').remove();">
                                 <h4>Tamanho: ${v.size} | Cor: ${v.color}</h4>
                                 <p>Disponível: ${v.quantity}</p>
                                 <div class="price">${formatCurrency(product.sale_price)}</div>
