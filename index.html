@@ -291,7 +291,24 @@
             }
 
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+
+            .product-card {
+                padding-top: 50px;
+            }
+
+            .product-card button {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .product-card button svg {
+                width: 12px;
+                height: 12px;
             }
 
             .form-row {
@@ -365,6 +382,21 @@
 
             .product-card {
                 padding: 12px;
+                padding-top: 45px;
+            }
+
+            .product-card button {
+                position: absolute !important;
+                top: 8px !important;
+                right: 8px !important;
+                padding: 5px 8px !important;
+                font-size: 11px !important;
+                z-index: 10;
+            }
+
+            .product-card button svg {
+                width: 12px !important;
+                height: 12px !important;
             }
 
             table {
@@ -1254,14 +1286,19 @@
                                 <div class="form-group">
                                     <label>Cliente</label>
                                     <div class="search-box" style="margin-bottom: 10px;">
-                                        <input type="text" id="clientSearchInput" placeholder="Digite para buscar cliente..." oninput="filterClients()">
+                                        <input type="text" id="clientSearchInput" placeholder="Digite para buscar cliente..." onfocus="showClientDropdown()" oninput="filterClients()">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         </svg>
                                     </div>
-                                    <select id="saleClient" size="4" style="height: auto; max-height: 120px; overflow-y: auto;">
-                                        <option value="">Selecione um cliente</option>
-                                    </select>
+                                    <div id="clientDropdown" class="hidden" style="background: var(--bg-hover); border: 2px solid var(--border); border-radius: 10px; max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
+                                        <div id="clientDropdownList"></div>
+                                    </div>
+                                    <div id="selectedClientDisplay" style="display: none; padding: 12px; background: var(--bg-hover); border: 2px solid var(--gold); border-radius: 10px; margin-bottom: 10px;">
+                                        <span id="selectedClientName"></span>
+                                        <button onclick="clearClientSelection()" style="float: right; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px;">&times;</button>
+                                    </div>
+                                    <input type="hidden" id="saleClient">
                                     <button class="btn btn-secondary" style="margin-top: 10px; width: 100%;" onclick="showNewClientModal()">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -2145,11 +2182,19 @@
             container.innerHTML = filtered.map(product => {
                 const totalStock = (product.product_variations || []).reduce((sum, v) => sum + v.quantity, 0);
                 return `
-                    <div class="product-card" onclick="selectProductForSale(${product.id})">
-                        <h4>${product.name}</h4>
-                        <p>${product.category}</p>
-                        <p>Estoque: ${totalStock}</p>
-                        <div class="price">${formatCurrency(product.sale_price)}</div>
+                    <div class="product-card" style="position: relative;">
+                        <div onclick="selectProductForSale(${product.id})" style="cursor: pointer;">
+                            <h4>${product.name}</h4>
+                            <p>${product.category}</p>
+                            <p>Estoque: ${totalStock}</p>
+                            <div class="price">${formatCurrency(product.sale_price)}</div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="event.stopPropagation(); showEditProductModal(${product.id})" 
+                                style="position: absolute; top: 10px; right: 10px; padding: 6px 10px; font-size: 12px;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </button>
                     </div>
                 `;
             }).join('');
@@ -2612,18 +2657,57 @@
                 clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
         }
 
+        function showClientDropdown() {
+            document.getElementById('clientDropdown').classList.remove('hidden');
+            filterClients();
+        }
+
         function filterClients() {
             const searchTerm = document.getElementById('clientSearchInput').value.toLowerCase();
-            const select = document.getElementById('saleClient');
+            const dropdownList = document.getElementById('clientDropdownList');
             
             const filteredClients = clients.filter(c => 
                 c.name.toLowerCase().includes(searchTerm) ||
                 (c.phone && c.phone.includes(searchTerm))
             );
             
-            select.innerHTML = '<option value="">Sem cliente</option>' +
-                filteredClients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            if (filteredClients.length === 0) {
+                dropdownList.innerHTML = '<div style="padding: 12px; text-align: center; color: var(--text-secondary);">Nenhum cliente encontrado</div>';
+            } else {
+                dropdownList.innerHTML = filteredClients.map(c => `
+                    <div onclick="selectClient(${c.id}, '${c.name.replace(/'/g, "\\'")}')" 
+                         style="padding: 12px; cursor: pointer; border-bottom: 1px solid var(--border); transition: all 0.3s;"
+                         onmouseover="this.style.background='var(--bg-card)'" 
+                         onmouseout="this.style.background='transparent'">
+                        <strong>${c.name}</strong>
+                        ${c.phone ? `<br><small style="color: var(--text-secondary);">55${c.phone}</small>` : ''}
+                    </div>
+                `).join('');
+            }
         }
+
+        function selectClient(clientId, clientName) {
+            document.getElementById('saleClient').value = clientId;
+            document.getElementById('selectedClientName').textContent = clientName;
+            document.getElementById('selectedClientDisplay').style.display = 'block';
+            document.getElementById('clientDropdown').classList.add('hidden');
+            document.getElementById('clientSearchInput').value = '';
+        }
+
+        function clearClientSelection() {
+            document.getElementById('saleClient').value = '';
+            document.getElementById('selectedClientDisplay').style.display = 'none';
+            document.getElementById('clientSearchInput').value = '';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('clientDropdown');
+            const searchInput = document.getElementById('clientSearchInput');
+            if (dropdown && searchInput && !dropdown.contains(event.target) && event.target !== searchInput) {
+                dropdown.classList.add('hidden');
+            }
+        });
 
         function renderProductsTable() {
             const tbody = document.querySelector('#productsTable tbody');
