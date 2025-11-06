@@ -1213,7 +1213,7 @@
         <main class="main-content">
             <div class="header">
                 <h2 id="pageTitle">PDV - Ponto de Venda</h2>
-                <button class="notification-btn" onclick="showBirthdays()">
+                <button class="notification-btn hidden" id="notificationBtn" onclick="showBirthdays()">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                     </svg>
@@ -1253,7 +1253,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Cliente</label>
-                                    <select id="saleClient">
+                                    <div class="search-box" style="margin-bottom: 10px;">
+                                        <input type="text" id="clientSearchInput" placeholder="Digite para buscar cliente..." oninput="filterClients()">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <select id="saleClient" size="4" style="height: auto; max-height: 120px; overflow-y: auto;">
                                         <option value="">Selecione um cliente</option>
                                     </select>
                                     <button class="btn btn-secondary" style="margin-top: 10px; width: 100%;" onclick="showNewClientModal()">
@@ -2331,6 +2337,12 @@
 
                 cart = [];
                 renderCart();
+                
+                // Ask if user wants to send receipt
+                if (clientId && confirm('Deseja enviar o recibo para o cliente?')) {
+                    await sendReceipt(sale.id, clientId);
+                }
+                
                 showPopup('Venda finalizada com sucesso!', 'success');
                 await loadData();
 
@@ -2340,12 +2352,105 @@
             }
         }
 
+        async function sendReceipt(saleId, clientId) {
+            try {
+                const { data: sale, error: saleError } = await supabase
+                    .from('sales')
+                    .select('*, clients(*), sale_items(*, product_variations(*, products(*)))')
+                    .eq('id', saleId)
+                    .single();
+
+                if (saleError) throw saleError;
+
+                const client = sale.clients;
+                if (!client || !client.phone) {
+                    showPopup('Cliente sem WhatsApp cadastrado', 'error');
+                    return;
+                }
+
+                // Build receipt message
+                let message = `🛍️ *LABELLA WOMAN* - Recibo de Compra\n\n`;
+                message += `📅 Data: ${formatDateTime(sale.created_at)}\n`;
+                message += `👤 Cliente: ${client.name}\n\n`;
+                message += `*Produtos:*\n`;
+                
+                sale.sale_items.forEach((item, index) => {
+                    const prod = item.product_variations.products;
+                    const variation = item.product_variations;
+                    message += `${index + 1}. ${prod.name} (${variation.size}/${variation.color})\n`;
+                    message += `   Qtd: ${item.quantity} x ${formatCurrency(item.unit_price)} = ${formatCurrency(item.subtotal)}\n\n`;
+                });
+
+                message += `💰 *Total: ${formatCurrency(sale.total)}*\n`;
+                message += `💳 Pagamento: ${sale.payment_method.replace('_', ' ')}\n\n`;
+                message += `Obrigado pela preferência! 💕`;
+
+                const whatsappUrl = `https://wa.me/55${client.phone}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+                
+                showPopup('Recibo pronto para envio!', 'success');
+            } catch (error) {
+                console.error('Error sending receipt:', error);
+                showPopup('Erro ao preparar recibo', 'error');
+            }
+        }
+
+        let editingProductId = null;
+
         function showProductModal(productId = null) {
+            editingProductId = null;
             document.getElementById('productModal').classList.remove('hidden');
-            if (productId) {
-                // Load product data for editing
+            document.getElementById('productForm').reset();
+            document.querySelector('#productModal h3').textContent = 'Cadastrar Produto';
+        }
+
+        async function showEditProductModal(productId) {
+            editingProductId = productId;
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('productModal').classList.remove('hidden');
+            document.querySelector('#productModal h3').textContent = 'Editar Produto';
+            
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productBarcode').value = product.barcode || '';
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productCost').value = product.cost_price || '';
+            document.getElementById('productPrice').value = product.sale_price;
+
+            // Load variations
+            const container = document.getElementById('productVariations');
+            container.innerHTML = '';
+            if (product.product_variations && product.product_variations.length > 0) {
+                product.product_variations.forEach(v => {
+                    const newVariation = document.createElement('div');
+                    newVariation.className = 'form-row variation-row';
+                    newVariation.innerHTML = `
+                        <div class="form-group">
+                            <label>Tamanho</label>
+                            <select class="variation-size">
+                                <option value="PP" ${v.size === 'PP' ? 'selected' : ''}>PP</option>
+                                <option value="P" ${v.size === 'P' ? 'selected' : ''}>P</option>
+                                <option value="M" ${v.size === 'M' ? 'selected' : ''}>M</option>
+                                <option value="G" ${v.size === 'G' ? 'selected' : ''}>G</option>
+                                <option value="GG" ${v.size === 'GG' ? 'selected' : ''}>GG</option>
+                                <option value="XG" ${v.size === 'XG' ? 'selected' : ''}>XG</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cor</label>
+                            <input type="text" class="variation-color" value="${v.color}" placeholder="Ex: Preto">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantidade</label>
+                            <input type="number" class="variation-quantity" value="${v.quantity}" min="0">
+                        </div>
+                    `;
+                    container.appendChild(newVariation);
+                });
             } else {
-                document.getElementById('productForm').reset();
+                addVariation();
             }
         }
 
@@ -2407,13 +2512,37 @@
                     sale_price: parseFloat(document.getElementById('productPrice').value)
                 };
 
-                const { data: product, error: productError } = await supabase
-                    .from('products')
-                    .insert(productData)
-                    .select()
-                    .single();
+                let product;
+                if (editingProductId) {
+                    // Update existing product
+                    const { data, error: productError } = await supabase
+                        .from('products')
+                        .update(productData)
+                        .eq('id', editingProductId)
+                        .select()
+                        .single();
+                    
+                    if (productError) throw productError;
+                    product = data;
 
-                if (productError) throw productError;
+                    // Delete old variations
+                    await supabase
+                        .from('product_variations')
+                        .delete()
+                        .eq('product_id', editingProductId);
+                } else {
+                    // Insert new product
+                    const { data, error: productError } = await supabase
+                        .from('products')
+                        .insert(productData)
+                        .select()
+                        .single();
+                    
+                    if (productError) throw productError;
+                    product = data;
+                }
+
+                if (!product) throw new Error('Erro ao salvar produto');
 
                 const variations = [];
                 document.querySelectorAll('.variation-row').forEach(row => {
@@ -2483,6 +2612,19 @@
                 clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
         }
 
+        function filterClients() {
+            const searchTerm = document.getElementById('clientSearchInput').value.toLowerCase();
+            const select = document.getElementById('saleClient');
+            
+            const filteredClients = clients.filter(c => 
+                c.name.toLowerCase().includes(searchTerm) ||
+                (c.phone && c.phone.includes(searchTerm))
+            );
+            
+            select.innerHTML = '<option value="">Sem cliente</option>' +
+                filteredClients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
         function renderProductsTable() {
             const tbody = document.querySelector('#productsTable tbody');
             tbody.innerHTML = products.map(product => {
@@ -2495,7 +2637,12 @@
                         <td>${formatCurrency(product.sale_price)}</td>
                         <td>${totalStock}</td>
                         <td>
-                            <button class="btn btn-secondary" onclick="editProduct(${product.id})" style="padding: 8px 12px;">Editar</button>
+                            <button class="btn btn-secondary" onclick="showEditProductModal(${product.id})" style="padding: 8px 12px;">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Editar
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -3105,6 +3252,14 @@
                 };
 
                 document.getElementById('pageTitle').textContent = titles[page];
+
+                // Show/hide notification button only on clients page
+                const notificationBtn = document.getElementById('notificationBtn');
+                if (page === 'clients') {
+                    notificationBtn.classList.remove('hidden');
+                } else {
+                    notificationBtn.classList.add('hidden');
+                }
 
                 if (page === 'dashboard') await loadDashboard();
                 if (page === 'stock') await loadStockPage();
