@@ -22,8 +22,6 @@
             --success: #2ecc71;
             --danger: #e74c3c;
             --warning: #f39c12;
-            --pink: #ff69b4;
-            --purple: #9b59b6;
         }
 
         body {
@@ -53,43 +51,46 @@
 
         /* Login Screen */
         .login-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 5000;
+            min-height: 100vh;
+            padding: 1rem;
         }
 
         .login-card {
             background: var(--card-black);
-            padding: 3rem;
             border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             border: 2px solid var(--gold);
-            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
-            text-align: center;
             max-width: 400px;
-            width: 90%;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-logo {
             font-size: 2.5rem;
+            font-weight: bold;
             color: var(--gold);
             margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
-        }
-
-        .login-title {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: var(--text-white);
         }
 
         /* Header */
@@ -146,6 +147,21 @@
             color: white;
         }
 
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
         /* Navigation */
         .nav-tabs {
             background: var(--secondary-black);
@@ -162,7 +178,7 @@
             border: 1px solid var(--gold);
             color: var(--text-gray);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
             border-radius: 8px;
             font-weight: 500;
@@ -191,15 +207,16 @@
         .nav-tab:hover {
             background: var(--gold);
             color: var(--primary-black);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
         }
 
         .nav-tab.active {
             background: var(--gold);
             color: var(--primary-black);
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
         }
 
         /* Container */
@@ -215,6 +232,12 @@
 
         .section.active {
             display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Cards */
@@ -225,18 +248,13 @@
             margin-bottom: 2rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(212, 175, 55, 0.2);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--pink), var(--purple));
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(212, 175, 55, 0.4);
         }
 
         .card-header {
@@ -274,14 +292,14 @@
             border-radius: 8px;
             color: var(--text-white);
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--gold-hover);
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            transform: scale(1.02);
+            transform: translateY(-2px);
         }
 
         .form-row {
@@ -298,7 +316,7 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -320,44 +338,53 @@
             transition: width 0.6s, height 0.6s;
         }
 
-        .btn:hover::before {
+        .btn:active::before {
             width: 300px;
             height: 300px;
         }
 
         .btn-primary {
-            background: linear-gradient(45deg, var(--gold), var(--gold-hover));
+            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
             color: var(--primary-black);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, var(--gold-hover), var(--gold));
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
         }
 
         .btn-success {
-            background: linear-gradient(45deg, var(--success), #27ae60);
+            background: linear-gradient(135deg, var(--success), #27ae60);
             color: white;
         }
 
         .btn-success:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, #27ae60, var(--success));
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
         }
 
         .btn-danger {
-            background: linear-gradient(45deg, var(--danger), #c0392b);
+            background: linear-gradient(135deg, var(--danger), #c0392b);
             color: white;
         }
 
         .btn-danger:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(135deg, #c0392b, var(--danger));
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.4);
         }
 
         .btn-warning {
-            background: linear-gradient(45deg, var(--warning), #e67e22);
+            background: linear-gradient(135deg, var(--warning), #e67e22);
             color: white;
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #e67e22, var(--warning));
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
         }
 
         .btn-icon {
@@ -412,14 +439,14 @@
             border-radius: 8px;
             border: 1px solid rgba(212, 175, 55, 0.3);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             margin-bottom: 0.5rem;
         }
 
         .produto-item:hover {
             border-color: var(--gold);
-            transform: translateX(5px);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            transform: translateX(5px) scale(1.02);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
         }
 
         .carrinho {
@@ -435,10 +462,16 @@
             background: var(--secondary-black);
             border-radius: 8px;
             margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .carrinho-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .carrinho-total {
-            background: linear-gradient(45deg, var(--gold), var(--gold-hover));
+            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
             color: var(--primary-black);
             padding: 1.5rem;
             border-radius: 8px;
@@ -446,7 +479,13 @@
             font-size: 1.5rem;
             font-weight: bold;
             margin: 1rem 0;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
         }
 
         .quantidade-control {
@@ -464,11 +503,12 @@
             color: var(--primary-black);
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .quantidade-control button:hover {
             transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4);
         }
 
         /* Stats Cards */
@@ -485,23 +525,11 @@
             border-radius: 12px;
             border: 1px solid var(--gold);
             text-align: center;
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s ease;
         }
 
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--pink));
-        }
-
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.05);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
         }
 
@@ -530,10 +558,12 @@
             justify-content: center;
             align-items: center;
             padding: 1rem;
+            backdrop-filter: blur(5px);
         }
 
         .modal.active {
             display: flex;
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
@@ -545,7 +575,18 @@
             max-height: 90vh;
             overflow-y: auto;
             border: 2px solid var(--gold);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.8) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
         }
 
         .modal-header {
@@ -566,11 +607,12 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.2rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .modal-close:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
         }
 
         /* Comprovante */
@@ -615,33 +657,46 @@
 
         .pagamento-dinheiro.active {
             display: block;
+            animation: slideDown 0.3s ease;
         }
 
-        /* Relatórios Filtros */
-        .relatorio-filtros {
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Filtros Relatório */
+        .filtros-relatorio {
             display: flex;
             gap: 1rem;
             margin-bottom: 2rem;
             flex-wrap: wrap;
         }
 
-        .filtro-periodo {
+        .filtro-btn {
             padding: 0.5rem 1rem;
             background: var(--card-black);
             border: 1px solid var(--gold);
-            color: var(--text-white);
-            border-radius: 8px;
+            color: var(--text-gray);
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
-        .filtro-periodo.active {
+        .filtro-btn.active {
             background: var(--gold);
             color: var(--primary-black);
         }
 
-        .filtro-periodo:hover {
+        .filtro-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
         }
 
         /* Responsive */
@@ -666,18 +721,29 @@
 
             .nav-tabs {
                 flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-tab {
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .filtros-relatorio {
+                justify-content: center;
             }
 
             .login-card {
                 padding: 2rem;
+                margin: 1rem;
             }
 
-            .relatorio-filtros {
-                justify-content: center;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .login-logo {
+                font-size: 2rem;
             }
         }
 
@@ -693,6 +759,7 @@
             z-index: 3000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
 
         .loading.active {
@@ -719,12 +786,18 @@
             border-radius: 8px;
             margin-bottom: 1rem;
             font-weight: 500;
-            animation: slideIn 0.3s ease;
+            animation: slideInDown 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .alert-success {
@@ -745,85 +818,30 @@
             color: var(--warning);
         }
 
-        /* Logout Button */
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        /* Hidden */
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginContainer" class="login-container">
-        <div class="login-card">
-            <div class="login-logo">
-                <svg class="icon-xl" style="fill: var(--gold);">
-                    <use href="#icon-dress"></use>
-                </svg>
-                LaBella Woman
-            </div>
-            <h2 class="login-title">Sistema PDV</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="loginEmail" class="form-control" required placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Senha</label>
-                    <input type="password" id="loginPassword" class="form-control" required placeholder="Sua senha">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
-                    <svg class="icon"><use href="#icon-lock"></use></svg>
-                    Entrar
-                </button>
-                <p style="color: var(--text-gray); font-size: 0.9rem;">
-                    Não tem conta? <a href="#" onclick="mostrarCadastro()" style="color: var(--gold);">Cadastre-se</a>
-                </p>
-            </form>
-            
-            <form id="cadastroForm" style="display: none;">
-                <div class="form-group">
-                    <label class="form-label">Nome</label>
-                    <input type="text" id="cadastroNome" class="form-control" required placeholder="Seu nome">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="cadastroEmail" class="form-control" required placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Senha</label>
-                    <input type="password" id="cadastroPassword" class="form-control" required placeholder="Mínimo 6 caracteres">
-                </div>
-                <button type="submit" class="btn btn-success" style="width: 100%; margin-bottom: 1rem;">
-                    <svg class="icon"><use href="#icon-user-plus"></use></svg>
-                    Cadastrar
-                </button>
-                <p style="color: var(--text-gray); font-size: 0.9rem;">
-                    Já tem conta? <a href="#" onclick="mostrarLogin()" style="color: var(--gold);">Faça login</a>
-                </p>
-            </form>
-        </div>
-    </div>
-
     <!-- SVG Icons Library -->
     <svg style="display: none;">
+        <!-- Ícones de Moda -->
         <symbol id="icon-dress" viewBox="0 0 24 24">
-            <path d="M12 2L8 6v2h8V6l-4-4zm-2 6v14h4V8h-4zm-2 0H4l2 14h2V8zm8 0v14h2l2-14h-4z"/>
+            <path d="M12 2L8 6v16h8V6l-4-4zm0 2.5L14 6.5V20h-4V6.5L12 4.5z"/>
         </symbol>
         
-        <symbol id="icon-fashion" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1s1-.45 1-1v-2.26c.64.16 1.31.26 2 .26s1.36-.1 2-.26V17c0 .55.45 1 1 1s1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+        <symbol id="icon-shirt" viewBox="0 0 24 24">
+            <path d="M16 4h2l2 4v12H4V8l2-4h2V2h8v2zm-2 0V2H10v2H8l-1.5 3H6v11h12V7h-1.5L15 4h-1z"/>
+        </symbol>
+        
+        <symbol id="icon-shoe" viewBox="0 0 24 24">
+            <path d="M2 18h20l-2-6H8l-2-4H2v10zm2-8h2l2 4h10l1.5 4.5H4V10z"/>
+        </symbol>
+        
+        <symbol id="icon-bag" viewBox="0 0 24 24">
+            <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z"/>
         </symbol>
         
         <symbol id="icon-store" viewBox="0 0 24 24">
@@ -913,373 +931,376 @@
         <symbol id="icon-user-plus" viewBox="0 0 24 24">
             <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </symbol>
-
-        <symbol id="icon-logout" viewBox="0 0 24 24">
-            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-        </symbol>
     </svg>
 
-    <!-- Header -->
-    <header class="header" id="mainHeader" style="display: none;">
-        <div class="header-content">
-            <div class="logo">
-                <svg class="icon-xl" style="fill: var(--gold);">
+    <!-- Tela de Login -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <svg class="icon-xl">
                     <use href="#icon-dress"></use>
                 </svg>
                 LaBella Woman
             </div>
-            <div class="user-info">
-                <span id="relogioTime"></span>
-                <span id="usuarioNome" style="color: var(--gold);"></span>
-                <span id="caixaStatusBadge" class="caixa-status caixa-fechado">Caixa Fechado</span>
-                <button class="logout-btn" onclick="logout()">
-                    <svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-logout"></use></svg>
-                    Sair
+            
+            <form id="loginForm" onsubmit="realizarLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" required placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" id="loginSenha" class="form-control" required placeholder="••••••••">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                    <svg class="icon"><use href="#icon-unlock"></use></svg>
+                    Entrar
                 </button>
-            </div>
+                
+                <button type="button" class="btn btn-success" style="width: 100%;" onclick="mostrarCadastro()">
+                    <svg class="icon"><use href="#icon-user-plus"></use></svg>
+                    Criar Conta
+                </button>
+            </form>
         </div>
-    </header>
+    </div>
 
-    <!-- Navigation -->
-    <nav class="nav-tabs" id="mainNav" style="display: none;">
-        <button class="nav-tab active" onclick="changeTab('pdv')">
-            <svg class="icon"><use href="#icon-cart"></use></svg>
-            PDV
-        </button>
-        <button class="nav-tab" onclick="changeTab('produtos')">
-            <svg class="icon"><use href="#icon-box"></use></svg>
-            Produtos
-        </button>
-        <button class="nav-tab" onclick="changeTab('clientes')">
-            <svg class="icon"><use href="#icon-users"></use></svg>
-            Clientes
-        </button>
-        <button class="nav-tab" onclick="changeTab('caixa')">
-            <svg class="icon"><use href="#icon-cash"></use></svg>
-            Caixa
-        </button>
-        <button class="nav-tab" onclick="changeTab('movimentacoes')">
-            <svg class="icon"><use href="#icon-money-transfer"></use></svg>
-            Movimentações
-        </button>
-        <button class="nav-tab" onclick="changeTab('relatorios')">
-            <svg class="icon"><use href="#icon-chart"></use></svg>
-            Relatórios
-        </button>
-    </nav>
+    <!-- Tela Principal -->
+    <div id="mainApp" class="hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="icon-xl" style="fill: var(--gold);">
+                        <use href="#icon-dress"></use>
+                    </svg>
+                    LaBella Woman
+                </div>
+                <div class="user-info">
+                    <span id="relogioTime"></span>
+                    <span id="caixaStatusBadge" class="caixa-status caixa-fechado">Caixa Fechado</span>
+                    <button class="logout-btn" onclick="realizarLogout()">
+                        <svg class="icon"><use href="#icon-lock"></use></svg>
+                        Sair
+                    </button>
+                </div>
+            </div>
+        </header>
 
-    <!-- Container Principal -->
-    <div class="container" id="mainContainer" style="display: none;">
-        <!-- Seção PDV -->
-        <section id="pdv" class="section active">
-            <div id="alertPdvCaixa"></div>
-            <div class="pdv-container">
-                <div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title">Nova Venda</h2>
-                            <button class="btn btn-success" onclick="abrirModalClienteRapido()">
-                                <svg class="icon"><use href="#icon-user-plus"></use></svg>
-                                Cadastro Rápido
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="changeTab('pdv')">
+                <svg class="icon"><use href="#icon-cart"></use></svg>
+                PDV
+            </button>
+            <button class="nav-tab" onclick="changeTab('produtos')">
+                <svg class="icon"><use href="#icon-shirt"></use></svg>
+                Produtos
+            </button>
+            <button class="nav-tab" onclick="changeTab('clientes')">
+                <svg class="icon"><use href="#icon-users"></use></svg>
+                Clientes
+            </button>
+            <button class="nav-tab" onclick="changeTab('caixa')">
+                <svg class="icon"><use href="#icon-cash"></use></svg>
+                Caixa
+            </button>
+            <button class="nav-tab" onclick="changeTab('movimentacoes')">
+                <svg class="icon"><use href="#icon-money-transfer"></use></svg>
+                Movimentações
+            </button>
+            <button class="nav-tab" onclick="changeTab('relatorios')">
+                <svg class="icon"><use href="#icon-chart"></use></svg>
+                Relatórios
+            </button>
+        </nav>
+
+        <!-- Container Principal -->
+        <div class="container">
+            <!-- Seção PDV -->
+            <section id="pdv" class="section active">
+                <div id="alertPdvCaixa"></div>
+                <div class="pdv-container">
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Nova Venda</h2>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Cliente</label>
+                                <div style="display: flex; gap: 1rem;">
+                                    <select id="pdvCliente" class="form-control" style="flex: 1;">
+                                        <option value="">Cliente Avulso</option>
+                                    </select>
+                                    <button class="btn btn-success" onclick="abrirCadastroRapidoCliente()">
+                                        <svg class="icon"><use href="#icon-user-plus"></use></svg>
+                                        Cadastrar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="produtos-busca">
+                                <input type="text" id="buscaProduto" class="form-control" placeholder="Buscar produto por nome ou SKU...">
+                                <button class="btn btn-primary" onclick="buscarProdutos()">
+                                    <svg class="icon"><use href="#icon-search"></use></svg>
+                                    Buscar
+                                </button>
+                            </div>
+
+                            <div id="listaProdutos"></div>
+                        </div>
+                    </div>
+
+                    <div class="carrinho">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Carrinho</h3>
+                            </div>
+                            
+                            <div id="carrinhoItens"></div>
+                            
+                            <div class="carrinho-total" id="carrinhoTotal">
+                                R$ 0,00
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Forma de Pagamento</label>
+                                <select id="formaPagamento" class="form-control" onchange="togglePagamentoDinheiro()">
+                                    <option value="dinheiro">Dinheiro</option>
+                                    <option value="cartao_debito">Cartão Débito</option>
+                                    <option value="cartao_credito">Cartão Crédito</option>
+                                    <option value="pix">PIX</option>
+                                </select>
+                            </div>
+
+                            <div id="pagamentoDinheiro" class="pagamento-dinheiro active">
+                                <div class="form-group">
+                                    <label class="form-label">Valor Recebido</label>
+                                    <input type="number" id="valorRecebido" class="form-control" step="0.01" placeholder="0,00">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Precisa de Troco?</label>
+                                    <select id="precisaTroco" class="form-control">
+                                        <option value="sim">Sim</option>
+                                        <option value="nao">Não</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="trocoInfo" style="margin-top: 1rem; padding: 1rem; background: var(--gold); color: var(--primary-black); border-radius: 8px; font-weight: bold; text-align: center;">
+                                    Troco: R$ 0,00
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success" style="width: 100%;" onclick="finalizarVenda()">
+                                <svg class="icon"><use href="#icon-check"></use></svg>
+                                Finalizar Venda
                             </button>
                         </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Cliente (Opcional)</label>
-                            <select id="pdvCliente" class="form-control">
-                                <option value="">Cliente Avulso</option>
-                            </select>
-                        </div>
+                    </div>
+                </div>
+            </section>
 
-                        <div class="produtos-busca">
-                            <input type="text" id="buscaProduto" class="form-control" placeholder="Buscar produto por nome ou SKU...">
-                            <button class="btn btn-primary" onclick="buscarProdutos()">
-                                <svg class="icon"><use href="#icon-search"></use></svg>
-                                Buscar
-                            </button>
-                        </div>
+            <!-- Seção Produtos -->
+            <section id="produtos" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Gerenciar Produtos</h2>
+                        <button class="btn btn-primary" onclick="abrirModalProduto()">
+                            <svg class="icon"><use href="#icon-plus"></use></svg>
+                            Novo Produto
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Nome</th>
+                                    <th>Categoria</th>
+                                    <th>Preço</th>
+                                    <th>Estoque</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaProdutos"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
-                        <div id="listaProdutos"></div>
+            <!-- Seção Clientes -->
+            <section id="clientes" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Gerenciar Clientes</h2>
+                        <button class="btn btn-primary" onclick="abrirModalCliente()">
+                            <svg class="icon"><use href="#icon-plus"></use></svg>
+                            Novo Cliente
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>CPF</th>
+                                    <th>Email</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaClientes"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Caixa -->
+            <section id="caixa" class="section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Status do Caixa</div>
+                        <div class="stat-value" id="caixaStatusText">Fechado</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Saldo Inicial</div>
+                        <div class="stat-value" id="caixaSaldoInicial">R$ 0,00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Vendas</div>
+                        <div class="stat-value" id="caixaTotalVendas">R$ 0,00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Saldo Atual</div>
+                        <div class="stat-value" id="caixaSaldoAtual">R$ 0,00</div>
                     </div>
                 </div>
 
-                <div class="carrinho">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Carrinho</h3>
-                        </div>
-                        
-                        <div id="carrinhoItens"></div>
-                        
-                        <div class="carrinho-total" id="carrinhoTotal">
-                            R$ 0,00
-                        </div>
-
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Controle de Caixa</h2>
+                    </div>
+                    
+                    <div id="caixaControles">
                         <div class="form-group">
-                            <label class="form-label">Forma de Pagamento</label>
-                            <select id="formaPagamento" class="form-control" onchange="mostrarCamposDinheiro()">
-                                <option value="dinheiro">Dinheiro</option>
-                                <option value="cartao_debito">Cartão Débito</option>
-                                <option value="cartao_credito">Cartão Crédito</option>
-                                <option value="pix">PIX</option>
-                            </select>
+                            <label class="form-label">Valor Inicial</label>
+                            <input type="number" id="valorInicialCaixa" class="form-control" placeholder="0.00" step="0.01">
                         </div>
+                        <button class="btn btn-success" onclick="abrirCaixa()">
+                            <svg class="icon"><use href="#icon-unlock"></use></svg>
+                            Abrir Caixa
+                        </button>
+                    </div>
 
-                        <div id="pagamentoDinheiro" class="pagamento-dinheiro active">
-                            <div class="form-group">
-                                <label class="form-label">Valor Recebido</label>
-                                <input type="number" id="valorRecebido" class="form-control" step="0.01" placeholder="0.00">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Precisa de Troco?</label>
-                                <select id="precisaTroco" class="form-control">
-                                    <option value="sim">Sim</option>
-                                    <option value="nao">Não</option>
-                                </select>
-                            </div>
-                            <div id="trocoInfo" style="padding: 0.5rem; background: var(--gold); color: var(--primary-black); border-radius: 8px; font-weight: bold; text-align: center; margin-top: 0.5rem; display: none;">
-                                Troco: R$ 0,00
-                            </div>
-                        </div>
-
-                        <button class="btn btn-success" style="width: 100%;" onclick="finalizarVenda()">
-                            <svg class="icon"><use href="#icon-check"></use></svg>
-                            Finalizar Venda
+                    <div id="caixaAberto" style="display: none;">
+                        <button class="btn btn-danger" onclick="fecharCaixa()">
+                            <svg class="icon"><use href="#icon-lock"></use></svg>
+                            Fechar Caixa
                         </button>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Seção Produtos -->
-        <section id="produtos" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Gerenciar Produtos</h2>
-                    <button class="btn btn-primary" onclick="abrirModalProduto()">
-                        <svg class="icon"><use href="#icon-plus"></use></svg>
-                        Novo Produto
-                    </button>
-                </div>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>SKU</th>
-                                <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Preço</th>
-                                <th>Estoque</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaProdutos"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção Clientes -->
-        <section id="clientes" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Gerenciar Clientes</h2>
-                    <button class="btn btn-primary" onclick="abrirModalCliente()">
-                        <svg class="icon"><use href="#icon-plus"></use></svg>
-                        Novo Cliente
-                    </button>
-                </div>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Telefone</th>
-                                <th>CPF</th>
-                                <th>Email</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaClientes"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção Caixa -->
-        <section id="caixa" class="section">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Status do Caixa</div>
-                    <div class="stat-value" id="caixaStatusText">Fechado</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Saldo Inicial</div>
-                    <div class="stat-value" id="caixaSaldoInicial">R$ 0,00</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Total Vendas</div>
-                    <div class="stat-value" id="caixaTotalVendas">R$ 0,00</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Saldo Atual</div>
-                    <div class="stat-value" id="caixaSaldoAtual">R$ 0,00</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Controle de Caixa</h2>
-                </div>
-                
-                <div id="caixaControles">
-                    <div class="form-group">
-                        <label class="form-label">Valor Inicial</label>
-                        <input type="number" id="valorInicialCaixa" class="form-control" placeholder="0.00" step="0.01">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Histórico de Caixas</h2>
                     </div>
-                    <button class="btn btn-success" onclick="abrirCaixa()">
-                        <svg class="icon"><use href="#icon-unlock"></use></svg>
-                        Abrir Caixa
-                    </button>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data Abertura</th>
+                                    <th>Data Fechamento</th>
+                                    <th>Valor Inicial</th>
+                                    <th>Valor Final</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaCaixas"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Movimentações -->
+            <section id="movimentacoes" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Movimentações Financeiras</h2>
+                        <button class="btn btn-primary" onclick="abrirModalMovimentacao()">
+                            <svg class="icon"><use href="#icon-plus"></use></svg>
+                            Nova Movimentação
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Tipo</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaMovimentacoes"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Relatórios -->
+            <section id="relatorios" class="section">
+                <div class="filtros-relatorio">
+                    <button class="filtro-btn active" onclick="filtrarRelatorio('hoje')">Hoje</button>
+                    <button class="filtro-btn" onclick="filtrarRelatorio('semana')">Esta Semana</button>
+                    <button class="filtro-btn" onclick="filtrarRelatorio('mes')">Este Mês</button>
                 </div>
 
-                <div id="caixaAberto" style="display: none;">
-                    <button class="btn btn-danger" onclick="fecharCaixa()">
-                        <svg class="icon"><use href="#icon-lock"></use></svg>
-                        Fechar Caixa
-                    </button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Histórico de Caixas</h2>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data Abertura</th>
-                                <th>Data Fechamento</th>
-                                <th>Valor Inicial</th>
-                                <th>Valor Final</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaCaixas"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção Movimentações -->
-        <section id="movimentacoes" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Movimentações Financeiras</h2>
-                    <button class="btn btn-primary" onclick="abrirModalMovimentacao()">
-                        <svg class="icon"><use href="#icon-plus"></use></svg>
-                        Nova Movimentação
-                    </button>
-                </div>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data/Hora</th>
-                                <th>Tipo</th>
-                                <th>Descrição</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaMovimentacoes"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção Relatórios -->
-        <section id="relatorios" class="section">
-            <div class="relatorio-filtros">
-                <button class="filtro-periodo active" onclick="filtrarRelatorio('hoje')" data-periodo="hoje">Hoje</button>
-                <button class="filtro-periodo" onclick="filtrarRelatorio('semana')" data-periodo="semana">Esta Semana</button>
-                <button class="filtro-periodo" onclick="filtrarRelatorio('mes')" data-periodo="mes">Este Mês</button>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label" id="labelVendas">Vendas Hoje</div>
-                    <div class="stat-value" id="vendasPeriodo">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label" id="labelTotal">Total Hoje</div>
-                    <div class="stat-value" id="totalPeriodo">R$ 0,00</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Produtos Vendidos</div>
-                    <div class="stat-value" id="produtosVendidos">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Ticket Médio</div>
-                    <div class="stat-value" id="ticketMedio">R$ 0,00</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Vendas do Período</h2>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data/Hora</th>
-                                <th>Cliente</th>
-                                <th>Total</th>
-                                <th>Pagamento</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelaVendasRelatorio"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Modal Cliente Rápido -->
-    <div id="modalClienteRapido" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="card-title">Cadastro Rápido de Cliente</h3>
-                <button class="modal-close" onclick="fecharModalClienteRapido()">×</button>
-            </div>
-            
-            <form id="formClienteRapido" onsubmit="salvarClienteRapido(event)">
-                <div class="form-group">
-                    <label class="form-label">Nome *</label>
-                    <input type="text" id="clienteRapidoNome" class="form-control" required>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Vendas no Período</div>
+                        <div class="stat-value" id="vendasPeriodo">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total no Período</div>
+                        <div class="stat-value" id="totalPeriodo">R$ 0,00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Produtos Vendidos</div>
+                        <div class="stat-value" id="produtosVendidos">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Ticket Médio</div>
+                        <div class="stat-value" id="ticketMedio">R$ 0,00</div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Telefone *</label>
-                    <input type="tel" id="clienteRapidoTelefone" class="form-control" required>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Vendas Recentes</h2>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Total</th>
+                                    <th>Pagamento</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaVendasRelatorio"></tbody>
+                        </table>
+                    </div>
                 </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Salvar e Usar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalClienteRapido()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
-            </form>
+            </section>
         </div>
     </div>
 
@@ -1309,7 +1330,17 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Categoria</label>
-                        <input type="text" id="produtoCategoria" class="form-control" placeholder="Ex: Vestidos, Blusas...">
+                        <select id="produtoCategoria" class="form-control">
+                            <option value="">Selecione...</option>
+                            <option value="Vestidos">Vestidos</option>
+                            <option value="Blusas">Blusas</option>
+                            <option value="Calças">Calças</option>
+                            <option value="Saias">Saias</option>
+                            <option value="Casacos">Casacos</option>
+                            <option value="Acessórios">Acessórios</option>
+                            <option value="Calçados">Calçados</option>
+                            <option value="Bolsas">Bolsas</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -1376,6 +1407,39 @@
                         Salvar
                     </button>
                     <button type="button" class="btn btn-danger" onclick="fecharModalCliente()">
+                        <svg class="icon"><use href="#icon-close"></use></svg>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Cadastro Rápido Cliente -->
+    <div id="modalCadastroRapido" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="card-title">Cadastro Rápido - Cliente</h3>
+                <button class="modal-close" onclick="fecharModalCadastroRapido()">×</button>
+            </div>
+            
+            <form id="formCadastroRapido" onsubmit="salvarClienteRapido(event)">
+                <div class="form-group">
+                    <label class="form-label">Nome *</label>
+                    <input type="text" id="clienteRapidoNome" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telefone *</label>
+                    <input type="tel" id="clienteRapidoTelefone" class="form-control" required>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-success" style="flex: 1;">
+                        <svg class="icon"><use href="#icon-save"></use></svg>
+                        Cadastrar e Selecionar
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="fecharModalCadastroRapido()">
                         <svg class="icon"><use href="#icon-close"></use></svg>
                         Cancelar
                     </button>
@@ -1466,130 +1530,121 @@
         let carrinho = [];
         let caixaAtual = null;
         let usuarioAtual = null;
-        let periodoRelatorio = 'hoje';
+        let filtroRelatorioAtual = 'hoje';
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', async () => {
-            await verificarAutenticacao();
+            await verificarSessao();
         });
 
         // ==================== AUTENTICAÇÃO ====================
-        async function verificarAutenticacao() {
+        async function verificarSessao() {
             const { data: { session } } = await supabase.auth.getSession();
             
             if (session) {
                 usuarioAtual = session.user;
-                inicializarSistema();
+                mostrarAppPrincipal();
+                await inicializarApp();
             } else {
-                mostrarLogin();
+                mostrarTelaLogin();
             }
         }
 
-        function mostrarLogin() {
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('mainHeader').style.display = 'none';
-            document.getElementById('mainNav').style.display = 'none';
-            document.getElementById('mainContainer').style.display = 'none';
+        function mostrarTelaLogin() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
         }
 
-        function mostrarSistema() {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('mainHeader').style.display = 'block';
-            document.getElementById('mainNav').style.display = 'flex';
-            document.getElementById('mainContainer').style.display = 'block';
+        function mostrarAppPrincipal() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
         }
 
-        function mostrarCadastro() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('cadastroForm').style.display = 'block';
-        }
-
-        function mostrarLogin() {
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('cadastroForm').style.display = 'none';
-        }
-
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        async function realizarLogin(event) {
+            event.preventDefault();
             
             const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+            const senha = document.getElementById('loginSenha').value;
             
             try {
                 mostrarLoading();
                 
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
-                    password: password
+                    password: senha
                 });
                 
-                if (error) throw error;
-                
-                usuarioAtual = data.user;
-                inicializarSistema();
-                
+                if (error) {
+                    // Se erro de login, tentar cadastrar automaticamente
+                    if (error.message.includes('Invalid login credentials')) {
+                        mostrarAlerta('Credenciais inválidas. Verifique email e senha.', 'danger');
+                    } else {
+                        throw error;
+                    }
+                } else {
+                    usuarioAtual = data.user;
+                    mostrarAppPrincipal();
+                    await inicializarApp();
+                    mostrarAlerta('Login realizado com sucesso!', 'success');
+                }
             } catch (error) {
                 console.error('Erro no login:', error);
                 mostrarAlerta('Erro no login: ' + error.message, 'danger');
             } finally {
                 esconderLoading();
             }
-        });
+        }
 
-        // Cadastro
-        document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        async function mostrarCadastro() {
+            const email = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginSenha').value;
             
-            const nome = document.getElementById('cadastroNome').value;
-            const email = document.getElementById('cadastroEmail').value;
-            const password = document.getElementById('cadastroPassword').value;
+            if (!email || !senha) {
+                mostrarAlerta('Preencha email e senha para criar a conta', 'warning');
+                return;
+            }
+            
+            if (senha.length < 6) {
+                mostrarAlerta('A senha deve ter pelo menos 6 caracteres', 'warning');
+                return;
+            }
             
             try {
                 mostrarLoading();
                 
                 const { data, error } = await supabase.auth.signUp({
                     email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            nome: nome
-                        }
-                    }
+                    password: senha
                 });
                 
                 if (error) throw error;
                 
-                mostrarAlerta('Cadastro realizado com sucesso! Verifique seu email.', 'success');
-                mostrarLogin();
-                
+                if (data.user) {
+                    mostrarAlerta('Conta criada com sucesso! Você já pode usar o sistema.', 'success');
+                    usuarioAtual = data.user;
+                    mostrarAppPrincipal();
+                    await inicializarApp();
+                }
             } catch (error) {
                 console.error('Erro no cadastro:', error);
                 mostrarAlerta('Erro no cadastro: ' + error.message, 'danger');
             } finally {
                 esconderLoading();
             }
-        });
+        }
 
-        // Logout
-        async function logout() {
-            try {
+        async function realizarLogout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
                 await supabase.auth.signOut();
                 usuarioAtual = null;
-                mostrarLogin();
-            } catch (error) {
-                console.error('Erro no logout:', error);
+                caixaAtual = null;
+                carrinho = [];
+                mostrarTelaLogin();
+                mostrarAlerta('Logout realizado com sucesso!', 'success');
             }
         }
 
-        // Inicializar sistema após login
-        async function inicializarSistema() {
-            mostrarSistema();
-            
-            // Mostrar nome do usuário
-            const nomeUsuario = usuarioAtual.user_metadata?.nome || usuarioAtual.email;
-            document.getElementById('usuarioNome').textContent = nomeUsuario;
-            
+        async function inicializarApp() {
             await verificarTabelasSupabase();
             await verificarCaixaAberto();
             await carregarClientes();
@@ -1684,52 +1739,96 @@
             alertDiv.className = `alert alert-${tipo}`;
             alertDiv.textContent = mensagem;
             
-            const container = document.querySelector('.container') || document.body;
+            const container = document.querySelector('.container') || document.querySelector('.login-container');
             container.insertBefore(alertDiv, container.firstChild);
             
             setTimeout(() => alertDiv.remove(), 5000);
         }
 
         // ==================== PAGAMENTO DINHEIRO ====================
-        function mostrarCamposDinheiro() {
+        function togglePagamentoDinheiro() {
             const formaPagamento = document.getElementById('formaPagamento').value;
-            const campoDinheiro = document.getElementById('pagamentoDinheiro');
+            const pagamentoDinheiro = document.getElementById('pagamentoDinheiro');
             
             if (formaPagamento === 'dinheiro') {
-                campoDinheiro.classList.add('active');
+                pagamentoDinheiro.classList.add('active');
+                calcularTroco();
             } else {
-                campoDinheiro.classList.remove('active');
+                pagamentoDinheiro.classList.remove('active');
             }
         }
-
-        // Calcular troco
-        document.getElementById('valorRecebido').addEventListener('input', calcularTroco);
-        document.getElementById('precisaTroco').addEventListener('change', calcularTroco);
 
         function calcularTroco() {
             const valorRecebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-            const precisaTroco = document.getElementById('precisaTroco').value;
-            const totalCarrinho = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            const totalText = document.getElementById('carrinhoTotal').textContent;
+            const total = parseFloat(totalText.replace('R$', '').replace('.', '').replace(',', '.')) || 0;
+            const troco = valorRecebido - total;
             
             const trocoInfo = document.getElementById('trocoInfo');
-            
-            if (precisaTroco === 'sim' && valorRecebido > totalCarrinho) {
-                const troco = valorRecebido - totalCarrinho;
+            if (troco >= 0) {
                 trocoInfo.textContent = `Troco: ${formatarMoeda(troco)}`;
-                trocoInfo.style.display = 'block';
+                trocoInfo.style.background = 'var(--success)';
             } else {
-                trocoInfo.style.display = 'none';
+                trocoInfo.textContent = `Faltam: ${formatarMoeda(Math.abs(troco))}`;
+                trocoInfo.style.background = 'var(--danger)';
             }
         }
 
-        // ==================== CLIENTE RÁPIDO ====================
-        function abrirModalClienteRapido() {
-            document.getElementById('formClienteRapido').reset();
-            document.getElementById('modalClienteRapido').classList.add('active');
+        // Atualizar troco quando valor recebido mudar
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const valorRecebidoInput = document.getElementById('valorRecebido');
+                if (valorRecebidoInput) {
+                    valorRecebidoInput.addEventListener('input', calcularTroco);
+                }
+            }, 1000);
+        });
+
+        // ==================== RELATÓRIOS ====================
+        function filtrarRelatorio(periodo) {
+            // Atualizar botões ativos
+            document.querySelectorAll('.filtro-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            filtroRelatorioAtual = periodo;
+            carregarRelatorios();
         }
 
-        function fecharModalClienteRapido() {
-            document.getElementById('modalClienteRapido').classList.remove('active');
+        function obterDataInicioPeriodo(periodo) {
+            const hoje = new Date();
+            let dataInicio;
+            
+            switch (periodo) {
+                case 'hoje':
+                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+                    break;
+                case 'semana':
+                    const diaSemana = hoje.getDay();
+                    const diasParaSegunda = diaSemana === 0 ? 6 : diaSemana - 1;
+                    dataInicio = new Date(hoje);
+                    dataInicio.setDate(hoje.getDate() - diasParaSegunda);
+                    dataInicio.setHours(0, 0, 0, 0);
+                    break;
+                case 'mes':
+                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+                    break;
+                default:
+                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+            }
+            
+            return dataInicio.toISOString();
+        }
+
+        // ==================== CADASTRO RÁPIDO CLIENTE ====================
+        function abrirCadastroRapidoCliente() {
+            document.getElementById('formCadastroRapido').reset();
+            document.getElementById('modalCadastroRapido').classList.add('active');
+        }
+
+        function fecharModalCadastroRapido() {
+            document.getElementById('modalCadastroRapido').classList.remove('active');
         }
 
         async function salvarClienteRapido(event) {
@@ -1751,10 +1850,10 @@
                 
                 if (error) throw error;
 
-                fecharModalClienteRapido();
+                fecharModalCadastroRapido();
                 await carregarClientes();
                 
-                // Selecionar o cliente no PDV
+                // Selecionar o cliente recém-cadastrado
                 document.getElementById('pdvCliente').value = data.id;
                 
                 mostrarAlerta('Cliente cadastrado e selecionado com sucesso!', 'success');
@@ -1764,29 +1863,6 @@
             } finally {
                 esconderLoading();
             }
-        }
-
-        // ==================== RELATÓRIOS COM FILTROS ====================
-        function filtrarRelatorio(periodo) {
-            periodoRelatorio = periodo;
-            
-            // Atualizar botões ativos
-            document.querySelectorAll('.filtro-periodo').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-periodo="${periodo}"]`).classList.add('active');
-            
-            // Atualizar labels
-            const labels = {
-                'hoje': { vendas: 'Vendas Hoje', total: 'Total Hoje' },
-                'semana': { vendas: 'Vendas Esta Semana', total: 'Total Esta Semana' },
-                'mes': { vendas: 'Vendas Este Mês', total: 'Total Este Mês' }
-            };
-            
-            document.getElementById('labelVendas').textContent = labels[periodo].vendas;
-            document.getElementById('labelTotal').textContent = labels[periodo].total;
-            
-            carregarRelatorios();
         }
 
         // ==================== CAIXA ====================
@@ -1898,7 +1974,7 @@
                         data_abertura: new Date().toISOString(),
                         valor_inicial: valorInicial,
                         status: 'aberto',
-                        usuario: usuarioAtual.email
+                        usuario: usuarioAtual?.email || 'Sistema'
                     }])
                     .select()
                     .single();
@@ -2341,6 +2417,7 @@
             if (carrinho.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-gray); text-align: center;">Carrinho vazio</p>';
                 document.getElementById('carrinhoTotal').textContent = 'R$ 0,00';
+                calcularTroco();
                 return;
             }
 
@@ -2379,7 +2456,7 @@
             });
 
             document.getElementById('carrinhoTotal').textContent = formatarMoeda(total);
-            calcularTroco(); // Recalcular troco quando carrinho muda
+            calcularTroco();
         }
 
         async function finalizarVenda() {
@@ -2397,11 +2474,13 @@
             const formaPagamento = document.getElementById('formaPagamento').value;
             const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
 
-            // Validação para pagamento em dinheiro
+            // Validar pagamento em dinheiro
             if (formaPagamento === 'dinheiro') {
                 const valorRecebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-                if (valorRecebido < total) {
-                    mostrarAlerta('Valor recebido é menor que o total da venda!', 'warning');
+                const precisaTroco = document.getElementById('precisaTroco').value;
+                
+                if (precisaTroco === 'sim' && valorRecebido < total) {
+                    mostrarAlerta('Valor recebido é insuficiente!', 'danger');
                     return;
                 }
             }
@@ -2409,8 +2488,8 @@
             try {
                 mostrarLoading();
 
-                // Dados da venda
-                const dadosVenda = {
+                // Inserir venda
+                const vendaData = {
                     cliente_id: clienteId,
                     total: total,
                     forma_pagamento: formaPagamento,
@@ -2418,19 +2497,15 @@
                     data: new Date().toISOString()
                 };
 
-                // Se for dinheiro, adicionar informações do troco
+                // Adicionar dados do pagamento em dinheiro
                 if (formaPagamento === 'dinheiro') {
-                    dadosVenda.valor_recebido = parseFloat(document.getElementById('valorRecebido').value);
-                    dadosVenda.precisa_troco = document.getElementById('precisaTroco').value;
-                    if (dadosVenda.precisa_troco === 'sim') {
-                        dadosVenda.troco = dadosVenda.valor_recebido - total;
-                    }
+                    vendaData.valor_recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
+                    vendaData.precisa_troco = document.getElementById('precisaTroco').value;
                 }
 
-                // Inserir venda
                 const { data: venda, error: vendaError } = await supabase
                     .from('vendas')
-                    .insert([dadosVenda])
+                    .insert([vendaData])
                     .select()
                     .single();
 
@@ -2460,7 +2535,7 @@
                     if (estoqueError) throw estoqueError;
                 }
 
-                // Salvar carrinho para comprovante
+                // Salvar carrinho para o comprovante
                 const carrinhoParaComprovante = [...carrinho];
 
                 // Limpar carrinho
@@ -2470,7 +2545,6 @@
                 document.getElementById('listaProdutos').innerHTML = '';
                 document.getElementById('pdvCliente').value = '';
                 document.getElementById('valorRecebido').value = '';
-                document.getElementById('precisaTroco').value = 'sim';
 
                 await atualizarSaldoCaixa();
                 await carregarProdutos();
@@ -2501,12 +2575,13 @@
                 `;
             });
 
-            let trocoHTML = '';
-            if (venda.forma_pagamento === 'dinheiro' && venda.precisa_troco === 'sim') {
-                trocoHTML = `
-                    <p>Valor Recebido: ${formatarMoeda(venda.valor_recebido)}</p>
-                    <p>Troco: ${formatarMoeda(venda.troco || 0)}</p>
-                `;
+            let pagamentoInfo = venda.forma_pagamento.toUpperCase();
+            if (venda.forma_pagamento === 'dinheiro' && venda.valor_recebido) {
+                const troco = venda.valor_recebido - venda.total;
+                pagamentoInfo += `<br>Recebido: ${formatarMoeda(venda.valor_recebido)}`;
+                if (troco > 0) {
+                    pagamentoInfo += `<br>Troco: ${formatarMoeda(troco)}`;
+                }
             }
 
             comprovanteDiv.innerHTML = `
@@ -2522,8 +2597,7 @@
                 
                 <div class="comprovante-footer">
                     <strong>TOTAL: ${formatarMoeda(venda.total)}</strong>
-                    <p>Pagamento: ${venda.forma_pagamento.toUpperCase()}</p>
-                    ${trocoHTML}
+                    <p>${pagamentoInfo}</p>
                     <p style="margin-top: 1rem;">Obrigado pela preferência!</p>
                     <p>Volte sempre!</p>
                 </div>
@@ -2664,24 +2738,7 @@
         // ==================== RELATÓRIOS ====================
         async function carregarRelatorios() {
             try {
-                let dataInicio;
-                const agora = new Date();
-                
-                // Definir período baseado no filtro
-                switch (periodoRelatorio) {
-                    case 'hoje':
-                        dataInicio = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).toISOString();
-                        break;
-                    case 'semana':
-                        const inicioSemana = new Date(agora);
-                        inicioSemana.setDate(agora.getDate() - agora.getDay());
-                        inicioSemana.setHours(0, 0, 0, 0);
-                        dataInicio = inicioSemana.toISOString();
-                        break;
-                    case 'mes':
-                        dataInicio = new Date(agora.getFullYear(), agora.getMonth(), 1).toISOString();
-                        break;
-                }
+                const dataInicio = obterDataInicioPeriodo(filtroRelatorioAtual);
 
                 // Vendas do período
                 const { data: vendas, error: vendasError } = await supabase
@@ -2703,20 +2760,19 @@
                 document.getElementById('produtosVendidos').textContent = totalProdutos;
                 document.getElementById('ticketMedio').textContent = formatarMoeda(ticketMedio);
 
-                // Tabela de vendas do período
-                const { data: vendasDetalhadas, error: detalhadasError } = await supabase
+                // Tabela de vendas recentes
+                const { data: vendasRecentes, error: recentesError } = await supabase
                     .from('vendas')
                     .select('*, clientes(nome)')
-                    .gte('data', dataInicio)
                     .order('data', { ascending: false })
-                    .limit(50);
+                    .limit(20);
 
-                if (detalhadasError) throw detalhadasError;
+                if (recentesError) throw recentesError;
 
                 const tbody = document.getElementById('tabelaVendasRelatorio');
                 tbody.innerHTML = '';
 
-                vendasDetalhadas.forEach(venda => {
+                vendasRecentes.forEach(venda => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${formatarData(venda.data)}</td>
@@ -2740,9 +2796,6 @@
             // Implementar visualização detalhada da venda
             mostrarAlerta('Função em desenvolvimento', 'warning');
         }
-
-        // Inicializar campos de dinheiro
-        mostrarCamposDinheiro();
     </script>
 </body>
 </html>
