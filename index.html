@@ -94,8 +94,10 @@
             border-radius: 3px;
         }
 
-        .sidebar.mobile-hidden {
-            transform: translateX(-100%);
+        @media (max-width: 768px) {
+            .sidebar.mobile-hidden {
+                transform: translateX(-100%);
+            }
         }
 
         .mobile-overlay {
