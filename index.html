@@ -1269,12 +1269,33 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                             </div>
+                            <div id="selectedProductDisplay" style="display: none; padding: 12px; background: var(--bg-hover); border: 2px solid var(--gold); border-radius: 10px; margin-top: 10px; margin-bottom: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <strong id="selectedProductName"></strong>
+                                        <p id="selectedProductVariation" style="font-size: 13px; color: var(--text-secondary); margin-top: 5px;"></p>
+                                        <p id="selectedProductPrice" style="color: var(--gold); margin-top: 5px;"></p>
+                                    </div>
+                                    <button onclick="clearProductSelection()" style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 24px; padding: 5px 10px;">&times;</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="selectedProductId">
+                            <input type="hidden" id="selectedVariationId">
                             <div id="productResults" class="product-grid"></div>
                         </div>
                     </div>
                     <div>
                         <div class="card">
                             <h3>Carrinho de Compras</h3>
+                            <div class="form-group">
+                                <label>Produto Selecionado</label>
+                                <button class="btn btn-primary" id="addToCartBtn" onclick="addSelectedProductToCart()" style="width: 100%;" disabled>
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    Adicionar ao Carrinho
+                                </button>
+                            </div>
                             <div id="saleItems"></div>
                             <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--gold);">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
@@ -2192,13 +2213,20 @@
             container.innerHTML = filtered.map(product => {
                 const totalStock = (product.product_variations || []).reduce((sum, v) => sum + v.quantity, 0);
                 return `
-                    <div class="product-card" style="position: relative;">
+                    <div class="product-card" style="position: relative; padding-bottom: 60px;">
                         <div onclick="selectProductForSale(${product.id})" style="cursor: pointer;">
                             <h4>${product.name}</h4>
                             <p>${product.category}</p>
                             <p>Estoque: ${totalStock}</p>
                             <div class="price">${formatCurrency(product.sale_price)}</div>
                         </div>
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); selectProductForSale(${product.id});" 
+                                style="position: absolute; bottom: 10px; left: 10px; right: 10px; padding: 8px 12px; font-size: 13px; width: calc(100% - 20px);">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Adicionar
+                        </button>
                         <button class="btn btn-secondary" onclick="event.stopPropagation(); showEditProductModal(${product.id})" 
                                 style="position: absolute; top: 10px; right: 10px; padding: 6px 10px; font-size: 12px;">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
@@ -2228,9 +2256,9 @@
                 return;
             }
 
-            // If only one variation, add directly
+            // If only one variation, select it directly
             if (variations.length === 1) {
-                addToCart(product.id, variations[0].id);
+                selectProductVariation(product.id, variations[0].id);
                 return;
             }
 
@@ -2245,7 +2273,7 @@
                     </div>
                     <div style="max-height: 400px; overflow-y: auto;">
                         ${variations.map(v => `
-                            <div class="product-card" onclick="addToCart(${product.id}, ${v.id}); this.closest('.modal').remove();" style="cursor: pointer;">
+                            <div class="product-card" onclick="selectProductVariation(${product.id}, ${v.id}); this.closest('.modal').remove();" style="cursor: pointer;">
                                 <h4>Tamanho: ${v.size} | Cor: ${v.color}</h4>
                                 <p>Disponível: ${v.quantity}</p>
                                 <div class="price">${formatCurrency(product.sale_price)}</div>
@@ -2255,6 +2283,55 @@
                 </div>
             `;
             document.body.appendChild(modal);
+        }
+
+        function selectProductVariation(productId, variationId) {
+            const product = products.find(p => p.id === productId);
+            const variation = product.product_variations.find(v => v.id === variationId);
+            
+            // Store selection
+            document.getElementById('selectedProductId').value = productId;
+            document.getElementById('selectedVariationId').value = variationId;
+            
+            // Display selection
+            document.getElementById('selectedProductName').textContent = product.name;
+            document.getElementById('selectedProductVariation').textContent = `${variation.size} | ${variation.color}`;
+            document.getElementById('selectedProductPrice').textContent = formatCurrency(product.sale_price);
+            document.getElementById('selectedProductDisplay').style.display = 'block';
+            
+            // Enable add to cart button
+            document.getElementById('addToCartBtn').disabled = false;
+            
+            // Clear search and hide results
+            document.getElementById('productSearch').value = '';
+            renderProductResults();
+            
+            showPopup('Produto selecionado! Clique em "Adicionar ao Carrinho"', 'success');
+        }
+
+        function clearProductSelection() {
+            document.getElementById('selectedProductId').value = '';
+            document.getElementById('selectedVariationId').value = '';
+            document.getElementById('selectedProductDisplay').style.display = 'none';
+            document.getElementById('addToCartBtn').disabled = true;
+            document.getElementById('productSearch').value = '';
+            renderProductResults();
+        }
+
+        function addSelectedProductToCart() {
+            const productId = parseInt(document.getElementById('selectedProductId').value);
+            const variationId = parseInt(document.getElementById('selectedVariationId').value);
+            
+            if (!productId || !variationId) {
+                showPopup('Selecione um produto primeiro', 'error');
+                return;
+            }
+            
+            addToCart(productId, variationId);
+            clearProductSelection();
+            
+            // Focus on client selection
+            document.getElementById('clientSearchInput').focus();
         }
 
         function addToCart(productId, variationId) {
@@ -2284,11 +2361,6 @@
 
             renderCart();
             showPopup('Produto adicionado ao carrinho', 'success');
-            
-            // Clear search and focus on client selection
-            document.getElementById('productSearch').value = '';
-            renderProductResults();
-            document.getElementById('clientSearchInput').focus();
         }
 
         function renderCart() {
