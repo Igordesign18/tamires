@@ -49,50 +49,6 @@
             height: 32px;
         }
 
-        /* Login Screen */
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-        }
-
-        .login-card {
-            background: var(--card-black);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 2px solid var(--gold);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-logo {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--gold);
-            margin-bottom: 2rem;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-
         /* Header */
         .header {
             background: var(--secondary-black);
@@ -736,15 +692,6 @@
             .filtros-relatorio {
                 justify-content: center;
             }
-
-            .login-card {
-                padding: 2rem;
-                margin: 1rem;
-            }
-
-            .login-logo {
-                font-size: 2rem;
-            }
         }
 
         /* Loading */
@@ -933,42 +880,8 @@
         </symbol>
     </svg>
 
-    <!-- Tela de Login -->
-    <div id="loginScreen" class="login-container">
-        <div class="login-card">
-            <div class="login-logo">
-                <svg class="icon-xl">
-                    <use href="#icon-dress"></use>
-                </svg>
-                LaBella Woman
-            </div>
-            
-            <form id="loginForm" onsubmit="realizarLogin(event)">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="loginEmail" class="form-control" required placeholder="seu@email.com">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Senha</label>
-                    <input type="password" id="loginSenha" class="form-control" required placeholder="••••••••">
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
-                    <svg class="icon"><use href="#icon-unlock"></use></svg>
-                    Entrar
-                </button>
-                
-                <button type="button" class="btn btn-success" style="width: 100%;" onclick="mostrarCadastro()">
-                    <svg class="icon"><use href="#icon-user-plus"></use></svg>
-                    Criar Conta
-                </button>
-            </form>
-        </div>
-    </div>
-
     <!-- Tela Principal -->
-    <div id="mainApp" class="hidden">
+    <div id="mainApp">
         <!-- Header -->
         <header class="header">
             <div class="header-content">
@@ -1529,120 +1442,13 @@
         // Estado Global
         let carrinho = [];
         let caixaAtual = null;
-        let usuarioAtual = null;
+        let usuarioAtual = { email: 'sistema@labella.com' }; // Usuario fake para funcionar sem login
         let filtroRelatorioAtual = 'hoje';
 
-        // Inicialização
+        // Inicialização - Remover verificação de sessão e mostrar app diretamente
         document.addEventListener('DOMContentLoaded', async () => {
-            await verificarSessao();
+            await inicializarApp();
         });
-
-        // ==================== AUTENTICAÇÃO ====================
-        async function verificarSessao() {
-            const { data: { session } } = await supabase.auth.getSession();
-            
-            if (session) {
-                usuarioAtual = session.user;
-                mostrarAppPrincipal();
-                await inicializarApp();
-            } else {
-                mostrarTelaLogin();
-            }
-        }
-
-        function mostrarTelaLogin() {
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
-        }
-
-        function mostrarAppPrincipal() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-        }
-
-        async function realizarLogin(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const senha = document.getElementById('loginSenha').value;
-            
-            try {
-                mostrarLoading();
-                
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: senha
-                });
-                
-                if (error) {
-                    // Se erro de login, tentar cadastrar automaticamente
-                    if (error.message.includes('Invalid login credentials')) {
-                        mostrarAlerta('Credenciais inválidas. Verifique email e senha.', 'danger');
-                    } else {
-                        throw error;
-                    }
-                } else {
-                    usuarioAtual = data.user;
-                    mostrarAppPrincipal();
-                    await inicializarApp();
-                    mostrarAlerta('Login realizado com sucesso!', 'success');
-                }
-            } catch (error) {
-                console.error('Erro no login:', error);
-                mostrarAlerta('Erro no login: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function mostrarCadastro() {
-            const email = document.getElementById('loginEmail').value;
-            const senha = document.getElementById('loginSenha').value;
-            
-            if (!email || !senha) {
-                mostrarAlerta('Preencha email e senha para criar a conta', 'warning');
-                return;
-            }
-            
-            if (senha.length < 6) {
-                mostrarAlerta('A senha deve ter pelo menos 6 caracteres', 'warning');
-                return;
-            }
-            
-            try {
-                mostrarLoading();
-                
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: senha
-                });
-                
-                if (error) throw error;
-                
-                if (data.user) {
-                    mostrarAlerta('Conta criada com sucesso! Você já pode usar o sistema.', 'success');
-                    usuarioAtual = data.user;
-                    mostrarAppPrincipal();
-                    await inicializarApp();
-                }
-            } catch (error) {
-                console.error('Erro no cadastro:', error);
-                mostrarAlerta('Erro no cadastro: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function realizarLogout() {
-            if (confirm('Deseja realmente sair do sistema?')) {
-                await supabase.auth.signOut();
-                usuarioAtual = null;
-                caixaAtual = null;
-                carrinho = [];
-                mostrarTelaLogin();
-                mostrarAlerta('Logout realizado com sucesso!', 'success');
-            }
-        }
 
         async function inicializarApp() {
             await verificarTabelasSupabase();
@@ -1739,10 +1545,17 @@
             alertDiv.className = `alert alert-${tipo}`;
             alertDiv.textContent = mensagem;
             
-            const container = document.querySelector('.container') || document.querySelector('.login-container');
+            const container = document.querySelector('.container');
             container.insertBefore(alertDiv, container.firstChild);
             
             setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Logout simplificado - apenas recarregar página
+        async function realizarLogout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
+                location.reload();
+            }
         }
 
         // ==================== PAGAMENTO DINHEIRO ====================
