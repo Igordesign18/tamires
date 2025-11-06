@@ -2204,7 +2204,12 @@
 
         function selectProductForSale(productId) {
             const product = products.find(p => p.id === productId);
-            if (!product || !product.product_variations || product.product_variations.length === 0) {
+            if (!product) {
+                showPopup('Produto não encontrado', 'error');
+                return;
+            }
+            
+            if (!product.product_variations || product.product_variations.length === 0) {
                 showPopup('Produto sem variações disponíveis', 'error');
                 return;
             }
@@ -2215,6 +2220,13 @@
                 return;
             }
 
+            // If only one variation, add directly
+            if (variations.length === 1) {
+                addToCart(product.id, variations[0].id);
+                return;
+            }
+
+            // Multiple variations - show selection modal
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
@@ -2225,7 +2237,7 @@
                     </div>
                     <div style="max-height: 400px; overflow-y: auto;">
                         ${variations.map(v => `
-                            <div class="product-card" onclick="addToCart(${product.id}, ${v.id}); this.closest('.modal').remove();">
+                            <div class="product-card" onclick="addToCart(${product.id}, ${v.id}); this.closest('.modal').remove();" style="cursor: pointer;">
                                 <h4>Tamanho: ${v.size} | Cor: ${v.color}</h4>
                                 <p>Disponível: ${v.quantity}</p>
                                 <div class="price">${formatCurrency(product.sale_price)}</div>
