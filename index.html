@@ -11,53 +11,17 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary-black: #0a0a0a;
-            --secondary-black: #1a1a1a;
-            --card-black: #242424;
-            --gold: #d4af37;
-            --gold-hover: #f0c040;
-            --text-white: #ffffff;
-            --text-gray: #b0b0b0;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
-            color: var(--text-white);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
 
-        /* SVG Icons */
-        .icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-            vertical-align: middle;
-        }
-
-        .icon-lg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .icon-xl {
-            width: 32px;
-            height: 32px;
-        }
-
-        /* Header */
         .header {
-            background: var(--secondary-black);
+            background: linear-gradient(135deg, #000000 0%, #1E90FF 100%);
+            color: white;
             padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .header-content {
@@ -66,530 +30,223 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
-        .user-info {
+        .header-info {
             display: flex;
+            gap: 2rem;
             align-items: center;
-            gap: 1rem;
         }
 
         .caixa-status {
+            background: rgba(255,255,255,0.2);
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: bold;
         }
 
-        .caixa-aberto {
-            background: var(--success);
+        .btn-sair {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
             color: white;
-        }
-
-        .caixa-fechado {
-            background: var(--danger);
-            color: white;
-        }
-
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .logout-btn:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
+        .btn-sair:hover {
+            background: white;
+            color: #1E90FF;
         }
 
-        /* Navigation */
         .nav-tabs {
-            background: var(--secondary-black);
-            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-tabs-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            border-bottom: 1px solid var(--gold);
+            gap: 0;
         }
 
-        .nav-tab {
-            padding: 0.8rem 1.5rem;
-            background: var(--card-black);
-            border: 1px solid var(--gold);
-            color: var(--text-gray);
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: white;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            white-space: nowrap;
-            border-radius: 8px;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
         }
 
-        .nav-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-            transition: left 0.5s;
+        .tab-btn:hover {
+            background: #f8f9fa;
         }
 
-        .nav-tab:hover::before {
-            left: 100%;
+        .tab-btn.active {
+            background: linear-gradient(135deg, #000000 0%, #1E90FF 100%);
+            color: white;
+            border-bottom-color: #1E90FF;
         }
 
-        .nav-tab:hover {
-            background: var(--gold);
-            color: var(--primary-black);
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
-        }
-
-        .nav-tab.active {
-            background: var(--gold);
-            color: var(--primary-black);
-            font-weight: bold;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
-        }
-
-        /* Container */
         .container {
             max-width: 1400px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
-        .section {
+        .tab-content {
             display: none;
         }
 
-        .section.active {
+        .tab-content.active {
             display: block;
-            animation: fadeIn 0.5s ease-in;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Cards */
         .card {
-            background: var(--card-black);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(212, 175, 55, 0.4);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gold);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .card-title {
-            font-size: 1.5rem;
-            color: var(--gold);
-            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #000000;
+            border-bottom: 2px solid #1E90FF;
+            padding-bottom: 0.5rem;
         }
 
-        /* Forms */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        .form-label {
+        label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--gold);
+            font-weight: 500;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1E90FF;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
             font-weight: 500;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 0.8rem;
-            background: var(--secondary-black);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            color: var(--text-white);
-            font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--gold-hover);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        /* Address Form Styles */
-        .address-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1rem;
-        }
-
-        .address-row-full {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-        }
-
-        /* Search Field Styles */
-        .search-container {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.8rem 1rem 0.8rem 3rem;
-            background: var(--secondary-black);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            color: var(--text-white);
-            font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--gold-hover);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gold);
-            pointer-events: none;
-        }
-
-        /* Phone Input Container */
-        .phone-container {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .country-code {
-            width: 80px;
-            flex-shrink: 0;
-        }
-
-        .phone-number {
-            flex: 1;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
         .btn-primary {
-            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
-            color: var(--primary-black);
+            background: linear-gradient(135deg, #000000 0%, #1E90FF 100%);
+            color: white;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, var(--gold-hover), var(--gold));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 144, 255, 0.3);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, var(--success), #27ae60);
+            background: #28a745;
             color: white;
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #27ae60, var(--success));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #c0392b);
+            background: #dc3545;
             color: white;
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #c0392b, var(--danger));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.4);
         }
 
         .btn-warning {
-            background: linear-gradient(135deg, var(--warning), #e67e22);
+            background: #ffc107;
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
             color: white;
-        }
-
-        .btn-warning:hover {
-            background: linear-gradient(135deg, #e67e22, var(--warning));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
-        }
-
-        .btn-icon {
-            padding: 0.6rem;
-            font-size: 1.2rem;
-        }
-
-        /* Table */
-        .table-container {
-            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background: var(--secondary-black);
-            color: var(--gold);
-            padding: 1rem;
-            text-align: left;
-            font-weight: bold;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            background: linear-gradient(135deg, #000000 0%, #1E90FF 100%);
+            color: white;
+            font-weight: 500;
         }
 
         tr:hover {
-            background: rgba(212, 175, 55, 0.05);
+            background: #f8f9fa;
         }
 
-        /* PDV Específico */
-        .pdv-container {
+        .grid-2 {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 2rem;
-        }
-
-        .produtos-busca {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .produto-item {
-            background: var(--secondary-black);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 0.5rem;
-        }
-
-        .produto-item:hover {
-            border-color: var(--gold);
-            transform: translateX(5px) scale(1.02);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
-        }
-
-        .carrinho {
-            position: sticky;
-            top: 120px;
-        }
-
-        .carrinho-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background: var(--secondary-black);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .carrinho-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .carrinho-total {
-            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
-            color: var(--primary-black);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
-        }
-
-        .quantidade-control {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .quantidade-control button {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: none;
-            background: var(--gold);
-            color: var(--primary-black);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quantidade-control button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4);
-        }
-
-        /* Discount Field Styles */
-        .discount-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: var(--secondary-black);
-            border-radius: 8px;
-            border: 1px solid var(--gold);
-        }
-
-        .discount-input {
-            width: 100px;
-            padding: 0.5rem;
-            background: var(--card-black);
-            border: 1px solid var(--gold);
-            border-radius: 4px;
-            color: var(--text-white);
-            text-align: center;
-        }
-
-        .discount-info {
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
-            margin-bottom: 2rem;
         }
 
-        .stat-card {
-            background: var(--card-black);
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #000000 0%, #1E90FF 100%);
+            color: white;
             padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--gold);
+            border-radius: 10px;
             text-align: center;
-            transition: all 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-        }
-
-        .stat-value {
+        .stats-value {
             font-size: 2rem;
-            color: var(--gold);
             font-weight: bold;
             margin: 0.5rem 0;
         }
 
-        .stat-label {
-            color: var(--text-gray);
+        .stats-label {
             font-size: 0.9rem;
+            opacity: 0.9;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -597,40 +254,24 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
         }
 
         .modal.active {
             display: flex;
-            animation: fadeIn 0.3s ease;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-content {
-            background: var(--card-black);
+            background: white;
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 10px;
             max-width: 600px;
-            width: 100%;
+            width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            border: 2px solid var(--gold);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: scale(0.8) translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
         }
 
         .modal-header {
@@ -638,40 +279,110 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gold);
         }
 
-        .modal-close {
-            background: var(--danger);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+        .modal-title {
+            font-size: 1.5rem;
+            color: #000000;
+        }
+
+        .close-modal {
+            font-size: 2rem;
             cursor: pointer;
-            font-size: 1.2rem;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #000;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1rem;
+            color: #1E90FF;
+        }
+
+        .search-results {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: calc(100% - 2rem);
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .search-result-item {
+            padding: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .period-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .period-tab {
+            padding: 0.5rem 1rem;
+            border: 2px solid #1E90FF;
+            background: white;
+            color: #1E90FF;
+            border-radius: 5px;
+            cursor: pointer;
             transition: all 0.3s;
         }
 
-        .modal-close:hover {
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
+        .period-tab.active {
+            background: linear-gradient(135deg, #000000 0%, #1E90FF 100%);
+            color: white;
         }
 
-        /* Comprovante */
         .comprovante {
-            background: white;
-            color: black;
-            padding: 2rem;
-            max-width: 300px;
-            margin: 0 auto;
-            font-family: 'Courier New', monospace;
+            font-family: monospace;
+            line-height: 1.6;
         }
 
         .comprovante-header {
             text-align: center;
-            border-bottom: 2px dashed black;
+            border-bottom: 2px dashed #000;
             padding-bottom: 1rem;
             margin-bottom: 1rem;
         }
@@ -682,2147 +393,1098 @@
             margin: 0.5rem 0;
         }
 
-        .comprovante-footer {
-            border-top: 2px dashed black;
+        .comprovante-total {
+            border-top: 2px dashed #000;
             padding-top: 1rem;
             margin-top: 1rem;
-            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
-        /* Pagamento Dinheiro */
-        .pagamento-dinheiro {
-            display: none;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--secondary-black);
-            border-radius: 8px;
-            border: 1px solid var(--gold);
-        }
-
-        .pagamento-dinheiro.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Filtros Relatório */
-        .filtros-relatorio {
+        .size-tags {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
             flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
         }
 
-        .filtro-btn {
+        .size-tag {
+            background: #e9ecef;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .size-tag-remove {
+            cursor: pointer;
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .size-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .size-input-group input {
+            flex: 1;
+        }
+
+        .size-input-group button {
             padding: 0.5rem 1rem;
-            background: var(--card-black);
-            border: 1px solid var(--gold);
-            color: var(--text-gray);
-            border-radius: 20px;
+        }
+
+        .size-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .size-option {
+            padding: 0.5rem 1rem;
+            border: 2px solid #1E90FF;
+            background: white;
+            color: #1E90FF;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .filtro-btn.active {
-            background: var(--gold);
-            color: var(--primary-black);
+        .size-option.selected {
+            background: linear-gradient(135deg, #000000 0%, #1E90FF 100%);
+            color: white;
         }
 
-        .filtro-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .pdv-container {
-                grid-template-columns: 1fr;
+        @media print {
+            body * {
+                visibility: hidden;
             }
-
-            .carrinho {
-                position: relative;
+            .modal-content, .modal-content * {
+                visibility: visible;
+            }
+            .modal-content {
+                position: absolute;
+                left: 0;
                 top: 0;
             }
-
-            .form-row {
-                grid-template-columns: 1fr;
+            .btn {
+                display: none;
             }
-
-            .address-row {
-                grid-template-columns: 1fr;
-            }
-
-            .address-row-full {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .nav-tabs {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .nav-tab {
-                flex: 1;
-                min-width: 120px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-
-            .filtros-relatorio {
-                justify-content: center;
-            }
-
-            .phone-container {
-                flex-direction: column;
-            }
-
-            .country-code {
-                width: 100%;
-            }
-        }
-
-        /* Loading */
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .loading.active {
-            display: flex;
-        }
-
-        .spinner {
-            border: 4px solid var(--secondary-black);
-            border-top: 4px solid var(--gold);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Alert */
-        .alert {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            animation: slideInDown 0.3s ease;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert-success {
-            background: rgba(46, 204, 113, 0.2);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-
-        .alert-danger {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-        }
-
-        .alert-warning {
-            background: rgba(243, 156, 18, 0.2);
-            border: 1px solid var(--warning);
-            color: var(--warning);
-        }
-
-        /* Hidden */
-        .hidden {
-            display: none !important;
         }
     </style>
 </head>
 <body>
-    <!-- SVG Icons Library -->
-    <svg style="display: none;">
-        <!-- Ícones de Moda -->
-        <symbol id="icon-dress" viewBox="0 0 24 24">
-            <path d="M12 2L8 6v16h8V6l-4-4zm0 2.5L14 6.5V20h-4V6.5L12 4.5z"/>
-        </symbol>
-        
-        <symbol id="icon-shirt" viewBox="0 0 24 24">
-            <path d="M16 4h2l2 4v12H4V8l2-4h2V2h8v2zm-2 0V2H10v2H8l-1.5 3H6v11h12V7h-1.5L15 4h-1z"/>
-        </symbol>
-        
-        <symbol id="icon-shoe" viewBox="0 0 24 24">
-            <path d="M2 18h20l-2-6H8l-2-4H2v10zm2-8h2l2 4h10l1.5 4.5H4V10z"/>
-        </symbol>
-        
-        <symbol id="icon-bag" viewBox="0 0 24 24">
-            <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z"/>
-        </symbol>
-        
-        <symbol id="icon-store" viewBox="0 0 24 24">
-            <path d="M12 2L2 7v2h20V7L12 2zm0 2.18L18.09 7H5.91L12 4.18zM4 9v12h16V9H4zm2 2h12v8H6v-8zm2 2v4h8v-4H8z"/>
-        </symbol>
-        
-        <symbol id="icon-cart" viewBox="0 0 24 24">
-            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-        </symbol>
-        
-        <symbol id="icon-box" viewBox="0 0 24 24">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/>
-        </symbol>
-        
-        <symbol id="icon-users" viewBox="0 0 24 24">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-        </symbol>
-        
-        <symbol id="icon-cash" viewBox="0 0 24 24">
-            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
-        </symbol>
-        
-        <symbol id="icon-money-transfer" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-        </symbol>
-        
-        <symbol id="icon-chart" viewBox="0 0 24 24">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-        </symbol>
-        
-        <symbol id="icon-search" viewBox="0 0 24 24">
-            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-        </symbol>
-        
-        <symbol id="icon-plus" viewBox="0 0 24 24">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </symbol>
-        
-        <symbol id="icon-edit" viewBox="0 0 24 24">
-            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-        </symbol>
-        
-        <symbol id="icon-delete" viewBox="0 0 24 24">
-            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-        </symbol>
-        
-        <symbol id="icon-check" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-        </symbol>
-        
-        <symbol id="icon-close" viewBox="0 0 24 24">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-        </symbol>
-        
-        <symbol id="icon-print" viewBox="0 0 24 24">
-            <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
-        </symbol>
-        
-        <symbol id="icon-share" viewBox="0 0 24 24">
-            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
-        </symbol>
-        
-        <symbol id="icon-eye" viewBox="0 0 24 24">
-            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-        </symbol>
-        
-        <symbol id="icon-save" viewBox="0 0 24 24">
-            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
-        </symbol>
-        
-        <symbol id="icon-lock" viewBox="0 0 24 24">
-            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-        </symbol>
-        
-        <symbol id="icon-unlock" viewBox="0 0 24 24">
-            <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/>
-        </symbol>
-        
-        <symbol id="icon-warning" viewBox="0 0 24 24">
-            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-        </symbol>
-        
-        <symbol id="icon-minus" viewBox="0 0 24 24">
-            <path d="M19 13H5v-2h14v2z"/>
-        </symbol>
-
-        <symbol id="icon-user-plus" viewBox="0 0 24 24">
-            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </symbol>
-    </svg>
-
-    <!-- Tela Principal -->
-    <div id="mainApp">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <svg class="icon-xl" style="fill: var(--gold);">
-                        <use href="#icon-dress"></use>
-                    </svg>
-                    LaBella Woman
-                </div>
-                <div class="user-info">
-                    <span id="relogioTime"></span>
-                    <span id="caixaStatusBadge" class="caixa-status caixa-fechado">Caixa Fechado</span>
-                    <button class="logout-btn" onclick="realizarLogout()">
-                        <svg class="icon"><use href="#icon-lock"></use></svg>
-                        Sair
-                    </button>
-                </div>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">LaBella Woman</div>
+            <div class="header-info">
+                <div class="caixa-status">Caixa <span id="caixaStatusHeader">Fechado</span></div>
+                <button class="btn-sair" onclick="alert('Saindo do sistema...')">Sair</button>
             </div>
-        </header>
+        </div>
+    </div>
 
-        <!-- Navigation -->
-        <nav class="nav-tabs">
-            <button class="nav-tab active" onclick="changeTab('pdv')">
-                <svg class="icon"><use href="#icon-cart"></use></svg>
-                PDV
-            </button>
-            <button class="nav-tab" onclick="changeTab('produtos')">
-                <svg class="icon"><use href="#icon-shirt"></use></svg>
-                Produtos
-            </button>
-            <button class="nav-tab" onclick="changeTab('clientes')">
-                <svg class="icon"><use href="#icon-users"></use></svg>
-                Clientes
-            </button>
-            <button class="nav-tab" onclick="changeTab('caixa')">
-                <svg class="icon"><use href="#icon-cash"></use></svg>
-                Caixa
-            </button>
-            <button class="nav-tab" onclick="changeTab('movimentacoes')">
-                <svg class="icon"><use href="#icon-money-transfer"></use></svg>
-                Movimentações
-            </button>
-            <button class="nav-tab" onclick="changeTab('relatorios')">
-                <svg class="icon"><use href="#icon-chart"></use></svg>
-                Relatórios
-            </button>
-        </nav>
+    <div class="nav-tabs">
+        <div class="nav-tabs-content">
+            <button class="tab-btn active" onclick="changeTab('pdv')">PDV</button>
+            <button class="tab-btn" onclick="changeTab('produtos')">Produtos</button>
+            <button class="tab-btn" onclick="changeTab('clientes')">Clientes</button>
+            <button class="tab-btn" onclick="changeTab('caixa')">Caixa</button>
+            <button class="tab-btn" onclick="changeTab('movimentacoes')">Movimentações</button>
+            <button class="tab-btn" onclick="changeTab('relatorios')">Relatórios</button>
+        </div>
+    </div>
 
-        <!-- Container Principal -->
-        <div class="container">
-            <!-- Seção PDV -->
-            <section id="pdv" class="section active">
-                <div id="alertPdvCaixa"></div>
-                <div class="pdv-container">
+    <div class="container">
+        <!-- TAB PDV -->
+        <div id="tab-pdv" class="tab-content active">
+            <div class="card">
+                <h2 class="card-title">Nova Venda</h2>
+                <div class="grid-2">
                     <div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="card-title">Nova Venda</h2>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Cliente</label>
-                                <div style="display: flex; gap: 1rem;">
-                                    <select id="pdvCliente" class="form-control" style="flex: 1;">
-                                        <option value="">Cliente Avulso</option>
-                                    </select>
-                                    <button class="btn btn-success" onclick="abrirCadastroRapidoCliente()">
-                                        <svg class="icon"><use href="#icon-user-plus"></use></svg>
-                                        Cadastrar
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="produtos-busca">
-                                <input type="text" id="buscaProduto" class="form-control" placeholder="Buscar produto por nome ou SKU...">
-                                <button class="btn btn-primary" onclick="buscarProdutos()">
-                                    <svg class="icon"><use href="#icon-search"></use></svg>
-                                    Buscar
-                                </button>
-                            </div>
-
-                            <div id="listaProdutos"></div>
-                        </div>
-                    </div>
-
-                    <div class="carrinho">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Carrinho</h3>
-                            </div>
-                            
-                            <div id="carrinhoItens"></div>
-                            
-                            <!-- Campo de Desconto -->
-                            <div class="discount-container">
-                                <label class="form-label" style="margin: 0;">Desconto (%):</label>
-                                <input type="number" id="descontoPercentual" class="discount-input" min="0" max="100" step="0.01" placeholder="0" onchange="aplicarDesconto()">
-                                <span class="discount-info" id="descontoInfo">R$ 0,00</span>
-                            </div>
-                            
-                            <div class="carrinho-total" id="carrinhoTotal">
-                                R$ 0,00
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Forma de Pagamento</label>
-                                <select id="formaPagamento" class="form-control" onchange="togglePagamentoDinheiro()">
-                                    <option value="dinheiro">Dinheiro</option>
-                                    <option value="cartao_debito">Cartão Débito</option>
-                                    <option value="cartao_credito">Cartão Crédito</option>
-                                    <option value="pix">PIX</option>
-                                </select>
-                            </div>
-
-                            <div id="pagamentoDinheiro" class="pagamento-dinheiro active">
-                                <div class="form-group">
-                                    <label class="form-label">Valor Recebido</label>
-                                    <input type="number" id="valorRecebido" class="form-control" step="0.01" placeholder="0,00">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="form-label">Precisa de Troco?</label>
-                                    <select id="precisaTroco" class="form-control">
-                                        <option value="sim">Sim</option>
-                                        <option value="nao">Não</option>
-                                    </select>
-                                </div>
-                                
-                                <div id="trocoInfo" style="margin-top: 1rem; padding: 1rem; background: var(--gold); color: var(--primary-black); border-radius: 8px; font-weight: bold; text-align: center;">
-                                    Troco: R$ 0,00
-                                </div>
-                            </div>
-
-                            <button class="btn btn-success" style="width: 100%;" onclick="finalizarVenda()">
-                                <svg class="icon"><use href="#icon-check"></use></svg>
-                                Finalizar Venda
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Seção Produtos -->
-            <section id="produtos" class="section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Gerenciar Produtos</h2>
-                        <button class="btn btn-primary" onclick="abrirModalProduto()">
-                            <svg class="icon"><use href="#icon-plus"></use></svg>
-                            Novo Produto
-                        </button>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>SKU</th>
-                                    <th>Nome</th>
-                                    <th>Categoria</th>
-                                    <th>Preço</th>
-                                    <th>Estoque</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaProdutos"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Seção Clientes -->
-            <section id="clientes" class="section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Gerenciar Clientes</h2>
-                        <button class="btn btn-primary" onclick="abrirModalCliente()">
-                            <svg class="icon"><use href="#icon-plus"></use></svg>
-                            Novo Cliente
-                        </button>
-                    </div>
-                    
-                    <!-- Campo de Pesquisa -->
-                    <div class="search-container">
-                        <svg class="icon search-icon"><use href="#icon-search"></use></svg>
-                        <input type="text" id="searchCliente" class="search-input" placeholder="Pesquisar clientes por nome, telefone ou CPF...">
-                    </div>
-                    
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Telefone</th>
-                                    <th>CPF</th>
-                                    <th>Email</th>
-                                    <th>Endereço</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaClientes"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Seção Caixa -->
-            <section id="caixa" class="section">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Status do Caixa</div>
-                        <div class="stat-value" id="caixaStatusText">Fechado</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Saldo Inicial</div>
-                        <div class="stat-value" id="caixaSaldoInicial">R$ 0,00</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total Vendas</div>
-                        <div class="stat-value" id="caixaTotalVendas">R$ 0,00</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Saldo Atual</div>
-                        <div class="stat-value" id="caixaSaldoAtual">R$ 0,00</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Controle de Caixa</h2>
-                    </div>
-                    
-                    <div id="caixaControles">
                         <div class="form-group">
-                            <label class="form-label">Valor Inicial</label>
-                            <input type="number" id="valorInicialCaixa" class="form-control" placeholder="0.00" step="0.01">
-                        </div>
-                        <button class="btn btn-success" onclick="abrirCaixa()">
-                            <svg class="icon"><use href="#icon-unlock"></use></svg>
-                            Abrir Caixa
-                        </button>
-                    </div>
-
-                    <div id="caixaAberto" style="display: none;">
-                        <button class="btn btn-danger" onclick="fecharCaixa()">
-                            <svg class="icon"><use href="#icon-lock"></use></svg>
-                            Fechar Caixa
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Histórico de Caixas</h2>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data Abertura</th>
-                                    <th>Data Fechamento</th>
-                                    <th>Valor Inicial</th>
-                                    <th>Valor Final</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaCaixas"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Seção Movimentações -->
-            <section id="movimentacoes" class="section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Movimentações Financeiras</h2>
-                        <button class="btn btn-primary" onclick="abrirModalMovimentacao()">
-                            <svg class="icon"><use href="#icon-plus"></use></svg>
-                            Nova Movimentação
-                        </button>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data/Hora</th>
-                                    <th>Tipo</th>
-                                    <th>Descrição</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaMovimentacoes"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Seção Relatórios -->
-            <section id="relatorios" class="section">
-                <div class="filtros-relatorio">
-                    <button class="filtro-btn active" onclick="filtrarRelatorio('hoje')">Hoje</button>
-                    <button class="filtro-btn" onclick="filtrarRelatorio('semana')">Esta Semana</button>
-                    <button class="filtro-btn" onclick="filtrarRelatorio('mes')">Este Mês</button>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Vendas no Período</div>
-                        <div class="stat-value" id="vendasPeriodo">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total no Período</div>
-                        <div class="stat-value" id="totalPeriodo">R$ 0,00</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Produtos Vendidos</div>
-                        <div class="stat-value" id="produtosVendidos">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Ticket Médio</div>
-                        <div class="stat-value" id="ticketMedio">R$ 0,00</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Vendas Recentes</h2>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data/Hora</th>
-                                    <th>Cliente</th>
-                                    <th>Total</th>
-                                    <th>Pagamento</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaVendasRelatorio"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-
-    <!-- Modal Produto -->
-    <div id="modalProduto" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="card-title" id="modalProdutoTitulo">Novo Produto</h3>
-                <button class="modal-close" onclick="fecharModalProduto()">×</button>
-            </div>
-            
-            <form id="formProduto" onsubmit="salvarProduto(event)">
-                <input type="hidden" id="produtoId">
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Nome *</label>
-                        <input type="text" id="produtoNome" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">SKU *</label>
-                        <input type="text" id="produtoSku" class="form-control" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Categoria</label>
-                        <select id="produtoCategoria" class="form-control">
-                            <option value="">Selecione...</option>
-                            <option value="Vestidos">Vestidos</option>
-                            <option value="Blusas">Blusas</option>
-                            <option value="Calças">Calças</option>
-                            <option value="Saias">Saias</option>
-                            <option value="Casacos">Casacos</option>
-                            <option value="Acessórios">Acessórios</option>
-                            <option value="Calçados">Calçados</option>
-                            <option value="Bolsas">Bolsas</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Preço *</label>
-                        <input type="number" id="produtoPreco" class="form-control" step="0.01" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Quantidade em Estoque *</label>
-                    <input type="number" id="produtoQuantidade" class="form-control" required>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Salvar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalProduto()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Cliente -->
-    <div id="modalCliente" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="card-title" id="modalClienteTitulo">Novo Cliente</h3>
-                <button class="modal-close" onclick="fecharModalCliente()">×</button>
-            </div>
-            
-            <form id="formCliente" onsubmit="salvarCliente(event)">
-                <input type="hidden" id="clienteId">
-                
-                <div class="form-group">
-                    <label class="form-label">Nome *</label>
-                    <input type="text" id="clienteNome" class="form-control" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Telefone *</label>
-                        <div class="phone-container">
-                            <select id="codigoPais" class="form-control country-code">
-                                <option value="+55" selected>+55</option>
-                                <option value="+1">+1</option>
-                                <option value="+44">+44</option>
-                                <option value="+49">+49</option>
-                                <option value="+33">+33</option>
+                            <label>Cliente</label>
+                            <select id="vendaCliente">
+                                <option value="">Selecione um cliente</option>
                             </select>
-                            <input type="tel" id="clienteTelefone" class="form-control phone-number" required placeholder="(11) 99999-9999">
+                            <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="openModal('modalClienteRapido')">Cadastrar</button>
+                        </div>
+
+                        <div class="form-group" style="position: relative;">
+                            <label>Buscar</label>
+                            <input type="text" id="buscaProduto" placeholder="Buscar produto por nome ou SKU..." oninput="buscarProduto()">
+                            <div id="resultadosBusca" class="search-results" style="display: none;"></div>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">CPF</label>
-                        <input type="text" id="clienteCpf" class="form-control" placeholder="000.000.000-00">
+
+                    <div>
+                        <h3>Carrinho</h3>
+                        <div id="carrinho"></div>
+                        <div class="form-group">
+                            <label>Desconto (%)</label>
+                            <input type="number" id="desconto" value="0" min="0" max="100" oninput="atualizarCarrinho()">
+                        </div>
+                        <div class="cart-total" id="totalVenda">R$ 0,00</div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="clienteEmail" class="form-control" placeholder="cliente@email.com">
-                </div>
-
-                <!-- Campos de Endereço Completo -->
-                <div class="form-group">
-                    <label class="form-label">Endereço Completo</label>
-                    
-                    <div class="address-row" style="margin-bottom: 1rem;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteRua" class="form-control" placeholder="Rua/Avenida">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteNumero" class="form-control" placeholder="Número">
-                        </div>
-                    </div>
-                    
-                    <div class="address-row-full" style="margin-bottom: 1rem;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteBairro" class="form-control" placeholder="Bairro">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteCidade" class="form-control" placeholder="Cidade">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteEstado" class="form-control" placeholder="Estado">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <input type="text" id="clienteCep" class="form-control" placeholder="CEP">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Salvar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalCliente()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Cadastro Rápido Cliente -->
-    <div id="modalCadastroRapido" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="card-title">Cadastro Rápido - Cliente</h3>
-                <button class="modal-close" onclick="fecharModalCadastroRapido()">×</button>
-            </div>
-            
-            <form id="formCadastroRapido" onsubmit="salvarClienteRapido(event)">
-                <div class="form-group">
-                    <label class="form-label">Nome *</label>
-                    <input type="text" id="clienteRapidoNome" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Telefone *</label>
-                    <div class="phone-container">
-                        <select id="codigoPaisRapido" class="form-control country-code">
-                            <option value="+55" selected>+55</option>
-                            <option value="+1">+1</option>
-                            <option value="+44">+44</option>
-                            <option value="+49">+49</option>
-                            <option value="+33">+33</option>
-                        </select>
-                        <input type="tel" id="clienteRapidoTelefone" class="form-control phone-number" required placeholder="(11) 99999-9999">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Cadastrar e Selecionar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalCadastroRapido()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Movimentação -->
-    <div id="modalMovimentacao" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="card-title">Nova Movimentação</h3>
-                <button class="modal-close" onclick="fecharModalMovimentacao()">×</button>
-            </div>
-            
-            <form id="formMovimentacao" onsubmit="salvarMovimentacao(event)">
-                <div class="form-group">
-                    <label class="form-label">Tipo *</label>
-                    <select id="movimentacaoTipo" class="form-control" required>
-                        <option value="entrada">Entrada</option>
-                        <option value="saida">Saída</option>
+                    <label>Forma de Pagamento</label>
+                    <select id="formaPagamento">
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Cartão Débito">Cartão Débito</option>
+                        <option value="Cartão Crédito">Cartão Crédito</option>
+                        <option value="PIX">PIX</option>
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Valor *</label>
-                    <input type="number" id="movimentacaoValor" class="form-control" step="0.01" required>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Valor Recebido</label>
+                        <input type="number" id="valorRecebido" step="0.01" oninput="calcularTroco()">
+                    </div>
+                    <div class="form-group">
+                        <label>Precisa de Troco?</label>
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #1E90FF; margin-top: 0.5rem;">Troco: R$ <span id="troco">0,00</span></div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Descrição *</label>
-                    <textarea id="movimentacaoDescricao" class="form-control" rows="3" required></textarea>
+                <button class="btn btn-success" style="width: 100%; padding: 1rem; font-size: 1.1rem;" onclick="finalizarVenda()">Finalizar Venda</button>
+            </div>
+        </div>
+
+        <!-- TAB PRODUTOS -->
+        <div id="tab-produtos" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 class="card-title" style="margin: 0;">Gerenciar Produtos</h2>
+                    <button class="btn btn-primary" onclick="openModal('modalProduto')">Novo Produto</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Tamanhos</th>
+                            <th>Preço Venda</th>
+                            <th>Preço Custo</th>
+                            <th>Estoque</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaProdutos"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB CLIENTES -->
+        <div id="tab-clientes" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 class="card-title" style="margin: 0;">Gerenciar Clientes</h2>
+                    <button class="btn btn-primary" onclick="openModal('modalCliente')">Novo Cliente</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>CPF</th>
+                            <th>Email</th>
+                            <th>Endereço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaClientes"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB CAIXA -->
+        <div id="tab-caixa" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <h2 class="card-title">Status do Caixa</h2>
+                    <div class="stats-card" style="margin-bottom: 1rem;">
+                        <div class="stats-label">Status</div>
+                        <div class="stats-value" id="caixaStatusDisplay">Fechado</div>
+                    </div>
+                    <div class="grid-3">
+                        <div>
+                            <div class="stats-label">Saldo Inicial</div>
+                            <div class="stats-value" style="font-size: 1.2rem; color: #1E90FF;">R$ <span id="saldoInicial">0,00</span></div>
+                        </div>
+                        <div>
+                            <div class="stats-label">Total Vendas</div>
+                            <div class="stats-value" style="font-size: 1.2rem; color: #28a745;">R$ <span id="totalVendas">0,00</span></div>
+                        </div>
+                        <div>
+                            <div class="stats-label">Saldo Atual</div>
+                            <div class="stats-value" style="font-size: 1.2rem; color: #1E90FF;">R$ <span id="saldoAtual">0,00</span></div>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="card">
+                    <h2 class="card-title">Controle de Caixa</h2>
+                    <div class="form-group">
+                        <label>Valor Inicial</label>
+                        <input type="number" id="valorInicialCaixa" step="0.01" placeholder="0.00">
+                    </div>
+                    <button class="btn btn-success" style="width: 100%; margin-bottom: 0.5rem;" onclick="abrirCaixa()">Abrir Caixa</button>
+                    <button class="btn btn-danger" style="width: 100%;" onclick="fecharCaixa()">Fechar Caixa</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Histórico de Caixas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data Abertura</th>
+                            <th>Data Fechamento</th>
+                            <th>Valor Inicial</th>
+                            <th>Valor Final</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historicoCaixas"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB MOVIMENTAÇÕES -->
+        <div id="tab-movimentacoes" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 class="card-title" style="margin: 0;">Movimentações Financeiras</h2>
+                    <button class="btn btn-primary" onclick="openModal('modalMovimentacao')">Nova Movimentação</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Tipo</th>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaMovimentacoes"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB RELATÓRIOS -->
+        <div id="tab-relatorios" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">Relatórios de Vendas</h2>
+                <div class="period-tabs">
+                    <button class="period-tab active" onclick="filtrarRelatorio('hoje')">Hoje</button>
+                    <button class="period-tab" onclick="filtrarRelatorio('semana')">Esta Semana</button>
+                    <button class="period-tab" onclick="filtrarRelatorio('mes')">Este Mês</button>
+                </div>
+
+                <div class="grid-2">
+                    <div class="stats-card">
+                        <div class="stats-label">Vendas no Período</div>
+                        <div class="stats-value" id="relatorioQtdVendas">0</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-label">Total no Período</div>
+                        <div class="stats-value">R$ <span id="relatorioTotalVendas">0,00</span></div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <div class="stats-card">
+                        <div class="stats-label">Produtos Vendidos</div>
+                        <div class="stats-value" id="relatorioProdutosVendidos">0</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-label">Ticket Médio</div>
+                        <div class="stats-value">R$ <span id="relatorioTicketMedio">0,00</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Vendas Recentes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaVendas"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PRODUTO -->
+    <div id="modalProduto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Novo Produto</h2>
+                <span class="close-modal" onclick="closeModal('modalProduto')">&times;</span>
+            </div>
+            <form onsubmit="salvarProduto(event)">
+                <div class="form-group">
+                    <label>Nome *</label>
+                    <input type="text" id="produtoNome" required>
+                </div>
+                <div class="form-group">
+                    <label>SKU *</label>
+                    <input type="text" id="produtoSku" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <input type="text" id="produtoCategoria">
+                </div>
+                <div class="form-group">
+                    <label>Tamanhos Disponíveis</label>
+                    <div class="size-tags" id="tamanhosList"></div>
+                    <div class="size-input-group">
+                        <input type="text" id="novoTamanho" placeholder="Ex: P, M, G, GG, 36, 38...">
+                        <button type="button" class="btn btn-secondary" onclick="adicionarTamanho()">Adicionar</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Preço de Venda *</label>
+                    <input type="number" id="produtoPreco" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Preço de Custo *</label>
+                    <input type="number" id="produtoPrecoCusto" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade em Estoque *</label>
+                    <input type="number" id="produtoEstoque" required>
+                </div>
                 <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Salvar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalMovimentacao()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Salvar</button>
+                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('modalProduto')">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal Comprovante -->
+    <!-- MODAL CLIENTE -->
+    <div id="modalCliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Novo Cliente</h2>
+                <span class="close-modal" onclick="closeModal('modalCliente')">&times;</span>
+            </div>
+            <form onsubmit="salvarCliente(event)">
+                <div class="form-group">
+                    <label>Nome *</label>
+                    <input type="text" id="clienteNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Telefone *</label>
+                    <input type="tel" id="clienteTelefone" required>
+                </div>
+                <div class="form-group">
+                    <label>CPF</label>
+                    <input type="text" id="clienteCpf">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="clienteEmail">
+                </div>
+                <div class="form-group">
+                    <label>Endereço Completo</label>
+                    <textarea id="clienteEndereco" rows="3"></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Salvar</button>
+                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('modalCliente')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CLIENTE RÁPIDO -->
+    <div id="modalClienteRapido" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Cadastro Rápido - Cliente</h2>
+                <span class="close-modal" onclick="closeModal('modalClienteRapido')">&times;</span>
+            </div>
+            <form onsubmit="salvarClienteRapido(event)">
+                <div class="form-group">
+                    <label>Nome *</label>
+                    <input type="text" id="clienteRapidoNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Telefone *</label>
+                    <input type="tel" id="clienteRapidoTelefone" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Cadastrar e Selecionar</button>
+                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('modalClienteRapido')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL MOVIMENTAÇÃO -->
+    <div id="modalMovimentacao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nova Movimentação</h2>
+                <span class="close-modal" onclick="closeModal('modalMovimentacao')">&times;</span>
+            </div>
+            <form onsubmit="salvarMovimentacao(event)">
+                <div class="form-group">
+                    <label>Tipo *</label>
+                    <select id="movimentacaoTipo" required>
+                        <option value="Entrada">Entrada</option>
+                        <option value="Saída">Saída</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Valor *</label>
+                    <input type="number" id="movimentacaoValor" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Descrição *</label>
+                    <textarea id="movimentacaoDescricao" rows="3" required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Salvar</button>
+                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('modalMovimentacao')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL COMPROVANTE -->
     <div id="modalComprovante" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="card-title">Comprovante de Venda</h3>
-                <button class="modal-close" onclick="fecharModalComprovante()">×</button>
+                <h2 class="modal-title">Comprovante de Venda</h2>
+                <span class="close-modal" onclick="closeModal('modalComprovante')">&times;</span>
             </div>
-            
             <div id="comprovanteConteudo" class="comprovante"></div>
-
-            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                <button class="btn btn-primary" style="flex: 1;" onclick="imprimirComprovante()">
-                    <svg class="icon"><use href="#icon-print"></use></svg>
-                    Imprimir
-                </button>
-                <button class="btn btn-success" style="flex: 1;" onclick="compartilharComprovante()">
-                    <svg class="icon"><use href="#icon-share"></use></svg>
-                    Compartilhar
-                </button>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="window.print()">Imprimir</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="alert('Funcionalidade de compartilhamento em desenvolvimento')">Compartilhar</button>
             </div>
         </div>
     </div>
 
-    <!-- Loading -->
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
+    <!-- MODAL SELEÇÃO DE TAMANHO -->
+    <div id="modalTamanho" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Selecione o Tamanho</h2>
+                <span class="close-modal" onclick="closeModal('modalTamanho')">&times;</span>
+            </div>
+            <div>
+                <p><strong>Produto:</strong> <span id="tamanhoNomeProduto"></span></p>
+                <div class="form-group">
+                    <label>Tamanhos Disponíveis:</label>
+                    <div id="tamanhoOptions" class="size-selector"></div>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade:</label>
+                    <input type="number" id="tamanhoQuantidade" value="1" min="1">
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="confirmarTamanho()">Adicionar ao Carrinho</button>
+                    <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('modalTamanho')">Cancelar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Estado Global - Sistema funciona com localStorage
+        // Dados em memória
+        let produtos = [];
+        let clientes = [];
+        let vendas = [];
         let carrinho = [];
+        let caixaAberto = false;
         let caixaAtual = null;
-        let usuarioAtual = { email: 'sistema@labella.com' };
-        let filtroRelatorioAtual = 'hoje';
-        let descontoAtual = 0;
+        let historicoCaixas = [];
+        let movimentacoes = [];
+        let periodoRelatorio = 'hoje';
+        let tamanhosProdutoAtual = [];
+        let produtoParaAdicionar = null;
+        let tamanhoSelecionado = null;
 
-        // Dados em localStorage
-        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
-        let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
-        let caixas = JSON.parse(localStorage.getItem('caixas')) || [];
-        let movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')) || [];
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', async () => {
-            await inicializarApp();
-        });
-
-        async function inicializarApp() {
-            await verificarCaixaAberto();
-            await carregarClientes();
-            await carregarProdutos();
-            await carregarHistoricoCaixas();
-            await carregarMovimentacoes();
-            await carregarRelatorios();
-            iniciarRelogio();
-            
-            // Adicionar event listener para pesquisa de clientes
-            document.getElementById('searchCliente').addEventListener('input', filtrarClientes);
-            
-            // Adicionar formatação de telefone
-            adicionarFormatacaoTelefone();
-        }
-
-        // Relógio
-        function iniciarRelogio() {
-            function atualizarRelogio() {
-                const now = new Date();
-                const options = {
-                    timeZone: 'America/Sao_Paulo',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                };
-                const timeString = now.toLocaleString('pt-BR', options);
-                document.getElementById('relogioTime').textContent = timeString;
-            }
-            atualizarRelogio();
-            setInterval(atualizarRelogio, 1000);
-        }
-
-        // Navegação
+        // Funções de navegação
         function changeTab(tabName) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.getElementById(tabName).classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
             event.target.classList.add('active');
 
-            // Recarregar dados ao mudar de aba
-            if (tabName === 'produtos') carregarProdutos();
-            if (tabName === 'clientes') carregarClientes();
-            if (tabName === 'caixa') {
-                verificarCaixaAberto();
-                carregarHistoricoCaixas();
-            }
-            if (tabName === 'movimentacoes') carregarMovimentacoes();
-            if (tabName === 'relatorios') carregarRelatorios();
-        }
-
-        // Formatação
-        function formatarMoeda(valor) {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(valor);
-        }
-
-        function formatarData(data) {
-            return new Date(data).toLocaleString('pt-BR', {
-                timeZone: 'America/Sao_Paulo',
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        // Formatação de telefone
-        function adicionarFormatacaoTelefone() {
-            const telefoneInputs = ['clienteTelefone', 'clienteRapidoTelefone'];
-            
-            telefoneInputs.forEach(inputId => {
-                const input = document.getElementById(inputId);
-                if (input) {
-                    input.addEventListener('input', function(e) {
-                        let value = e.target.value.replace(/\D/g, '');
-                        if (value.length <= 11) {
-                            if (value.length > 6) {
-                                value = value.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
-                            } else if (value.length > 2) {
-                                value = value.replace(/(\d{2})(\d+)/, '($1) $2');
-                            }
-                        }
-                        e.target.value = value;
-                    });
-                }
-            });
-        }
-
-        // Loading
-        function mostrarLoading() {
-            document.getElementById('loading').classList.add('active');
-        }
-
-        function esconderLoading() {
-            document.getElementById('loading').classList.remove('active');
-        }
-
-        // Alertas
-        function mostrarAlerta(mensagem, tipo = 'success') {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${tipo}`;
-            alertDiv.textContent = mensagem;
-            
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            setTimeout(() => alertDiv.remove(), 5000);
-        }
-
-        // Logout simplificado - apenas recarregar página
-        async function realizarLogout() {
-            if (confirm('Deseja realmente sair do sistema?')) {
-                location.reload();
+            if (tabName === 'relatorios') {
+                atualizarRelatorios();
             }
         }
 
-        // ==================== DESCONTO ====================
-        function aplicarDesconto() {
-            const percentual = parseFloat(document.getElementById('descontoPercentual').value) || 0;
-            
-            if (percentual < 0 || percentual > 100) {
-                mostrarAlerta('Desconto deve estar entre 0% e 100%!', 'warning');
-                document.getElementById('descontoPercentual').value = 0;
-                descontoAtual = 0;
-                atualizarCarrinho();
-                return;
-            }
-            
-            descontoAtual = percentual;
-            atualizarCarrinho();
-        }
-
-        // ==================== FILTRO DE CLIENTES ====================
-        function filtrarClientes() {
-            const searchTerm = document.getElementById('searchCliente').value.toLowerCase();
-            const rows = document.querySelectorAll('#tabelaClientes tr');
-            
-            rows.forEach(row => {
-                const nome = row.cells[0]?.textContent.toLowerCase() || '';
-                const telefone = row.cells[1]?.textContent.toLowerCase() || '';
-                const cpf = row.cells[2]?.textContent.toLowerCase() || '';
-                const email = row.cells[3]?.textContent.toLowerCase() || '';
-                const endereco = row.cells[4]?.textContent.toLowerCase() || '';
-                
-                const matches = nome.includes(searchTerm) || 
-                               telefone.includes(searchTerm) || 
-                               cpf.includes(searchTerm) || 
-                               email.includes(searchTerm) || 
-                               endereco.includes(searchTerm);
-                
-                row.style.display = matches ? '' : 'none';
-            });
-        }
-
-        // ==================== PAGAMENTO DINHEIRO ====================
-        function togglePagamentoDinheiro() {
-            const formaPagamento = document.getElementById('formaPagamento').value;
-            const pagamentoDinheiro = document.getElementById('pagamentoDinheiro');
-            
-            if (formaPagamento === 'dinheiro') {
-                pagamentoDinheiro.classList.add('active');
-                calcularTroco();
-            } else {
-                pagamentoDinheiro.classList.remove('active');
+        // Funções de modal
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            if (modalId === 'modalProduto') {
+                limparFormProduto();
             }
         }
 
-        function calcularTroco() {
-            const valorRecebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-            const totalText = document.getElementById('carrinhoTotal').textContent;
-            const total = parseFloat(totalText.replace('R$', '').replace('.', '').replace(',', '.')) || 0;
-            const troco = valorRecebido - total;
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Funções de tamanhos
+        function adicionarTamanho() {
+            const input = document.getElementById('novoTamanho');
+            const tamanho = input.value.trim().toUpperCase();
             
-            const trocoInfo = document.getElementById('trocoInfo');
-            if (troco >= 0) {
-                trocoInfo.textContent = `Troco: ${formatarMoeda(troco)}`;
-                trocoInfo.style.background = 'var(--success)';
-            } else {
-                trocoInfo.textContent = `Faltam: ${formatarMoeda(Math.abs(troco))}`;
-                trocoInfo.style.background = 'var(--danger)';
+            if (tamanho && !tamanhosProdutoAtual.includes(tamanho)) {
+                tamanhosProdutoAtual.push(tamanho);
+                atualizarListaTamanhos();
+                input.value = '';
             }
         }
 
-        // Atualizar troco quando valor recebido mudar
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const valorRecebidoInput = document.getElementById('valorRecebido');
-                if (valorRecebidoInput) {
-                    valorRecebidoInput.addEventListener('input', calcularTroco);
-                }
-            }, 1000);
-        });
-
-        // ==================== RELATÓRIOS ====================
-        function filtrarRelatorio(periodo) {
-            // Atualizar botões ativos
-            document.querySelectorAll('.filtro-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            filtroRelatorioAtual = periodo;
-            carregarRelatorios();
+        function removerTamanho(tamanho) {
+            tamanhosProdutoAtual = tamanhosProdutoAtual.filter(t => t !== tamanho);
+            atualizarListaTamanhos();
         }
 
-        function obterDataInicioPeriodo(periodo) {
-            const hoje = new Date();
-            let dataInicio;
-            
-            switch (periodo) {
-                case 'hoje':
-                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-                    break;
-                case 'semana':
-                    const diaSemana = hoje.getDay();
-                    const diasParaSegunda = diaSemana === 0 ? 6 : diaSemana - 1;
-                    dataInicio = new Date(hoje);
-                    dataInicio.setDate(hoje.getDate() - diasParaSegunda);
-                    dataInicio.setHours(0, 0, 0, 0);
-                    break;
-                case 'mes':
-                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-                    break;
-                default:
-                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-            }
-            
-            return dataInicio.toISOString();
+        function atualizarListaTamanhos() {
+            const lista = document.getElementById('tamanhosList');
+            lista.innerHTML = tamanhosProdutoAtual.map(t => 
+                `<span class="size-tag">${t} <span class="size-tag-remove" onclick="removerTamanho('${t}')">×</span></span>`
+            ).join('');
         }
 
-        // ==================== CADASTRO RÁPIDO CLIENTE ====================
-        function abrirCadastroRapidoCliente() {
-            document.getElementById('formCadastroRapido').reset();
-            document.getElementById('codigoPaisRapido').value = '+55';
-            document.getElementById('modalCadastroRapido').classList.add('active');
+        function limparFormProduto() {
+            document.getElementById('produtoNome').value = '';
+            document.getElementById('produtoSku').value = '';
+            document.getElementById('produtoCategoria').value = '';
+            document.getElementById('produtoPreco').value = '';
+            document.getElementById('produtoPrecoCusto').value = '';
+            document.getElementById('produtoEstoque').value = '';
+            document.getElementById('novoTamanho').value = '';
+            tamanhosProdutoAtual = [];
+            atualizarListaTamanhos();
         }
 
-        function fecharModalCadastroRapido() {
-            document.getElementById('modalCadastroRapido').classList.remove('active');
-        }
-
-        async function salvarClienteRapido(event) {
-            event.preventDefault();
-            
-            const codigoPais = document.getElementById('codigoPaisRapido').value;
-            const telefoneNumero = document.getElementById('clienteRapidoTelefone').value;
-            const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
-            
-            const cliente = {
-                id: Date.now(),
-                nome: document.getElementById('clienteRapidoNome').value,
-                telefone: telefoneCompleto
-            };
-
-            try {
-                mostrarLoading();
-
-                clientes.push(cliente);
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-
-                fecharModalCadastroRapido();
-                await carregarClientes();
-                
-                // Selecionar o cliente recém-cadastrado
-                document.getElementById('pdvCliente').value = cliente.id;
-                
-                mostrarAlerta('Cliente cadastrado e selecionado com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao salvar cliente:', error);
-                mostrarAlerta('Erro ao salvar cliente: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        // ==================== CAIXA ====================
-        async function verificarCaixaAberto() {
-            try {
-                const hoje = new Date().toISOString().split('T')[0];
-                
-                const caixaAberto = caixas.find(c => c.status === 'aberto' && c.data_abertura.startsWith(hoje));
-
-                if (caixaAberto) {
-                    caixaAtual = caixaAberto;
-                    atualizarUICaixaAberto();
-                } else {
-                    caixaAtual = null;
-                    atualizarUICaixaFechado();
-                }
-            } catch (error) {
-                console.error('Erro ao verificar caixa:', error);
-            }
-        }
-
-        function atualizarUICaixaAberto() {
-            document.getElementById('caixaStatusBadge').className = 'caixa-status caixa-aberto';
-            document.getElementById('caixaStatusBadge').textContent = 'Caixa Aberto';
-            document.getElementById('caixaStatusText').textContent = 'Aberto';
-            document.getElementById('caixaControles').style.display = 'none';
-            document.getElementById('caixaAberto').style.display = 'block';
-            
-            if (caixaAtual) {
-                document.getElementById('caixaSaldoInicial').textContent = formatarMoeda(caixaAtual.valor_inicial || 0);
-            }
-            
-            atualizarSaldoCaixa();
-            
-            const alertPdv = document.getElementById('alertPdvCaixa');
-            alertPdv.innerHTML = '';
-        }
-
-        function atualizarUICaixaFechado() {
-            document.getElementById('caixaStatusBadge').className = 'caixa-status caixa-fechado';
-            document.getElementById('caixaStatusBadge').textContent = 'Caixa Fechado';
-            document.getElementById('caixaStatusText').textContent = 'Fechado';
-            document.getElementById('caixaControles').style.display = 'block';
-            document.getElementById('caixaAberto').style.display = 'none';
-            
-            document.getElementById('caixaSaldoInicial').textContent = 'R$ 0,00';
-            document.getElementById('caixaTotalVendas').textContent = 'R$ 0,00';
-            document.getElementById('caixaSaldoAtual').textContent = 'R$ 0,00';
-            
-            const alertPdv = document.getElementById('alertPdvCaixa');
-            alertPdv.innerHTML = '<div class="alert alert-warning">Caixa fechado! Abra o caixa para realizar vendas.</div>';
-        }
-
-        async function atualizarSaldoCaixa() {
-            if (!caixaAtual) return;
-
-            try {
-                // Buscar vendas do caixa
-                const vendasCaixa = vendas.filter(v => v.caixa_id === caixaAtual.id);
-                const totalVendas = vendasCaixa.reduce((sum, v) => sum + parseFloat(v.total), 0) || 0;
-
-                // Buscar movimentações do caixa
-                const movimentacoesCaixa = movimentacoes.filter(m => m.caixa_id === caixaAtual.id);
-                let totalMovimentacoes = 0;
-                movimentacoesCaixa.forEach(m => {
-                    if (m.tipo === 'entrada') {
-                        totalMovimentacoes += parseFloat(m.valor);
-                    } else {
-                        totalMovimentacoes -= parseFloat(m.valor);
-                    }
-                });
-
-                const saldoAtual = parseFloat(caixaAtual.valor_inicial) + totalVendas + totalMovimentacoes;
-
-                document.getElementById('caixaTotalVendas').textContent = formatarMoeda(totalVendas);
-                document.getElementById('caixaSaldoAtual').textContent = formatarMoeda(saldoAtual);
-            } catch (error) {
-                console.error('Erro ao atualizar saldo:', error);
-            }
-        }
-
-        async function abrirCaixa() {
-            const valorInicial = parseFloat(document.getElementById('valorInicialCaixa').value) || 0;
-            
-            if (valorInicial < 0) {
-                mostrarAlerta('Valor inicial não pode ser negativo!', 'danger');
-                return;
-            }
-
-            try {
-                mostrarLoading();
-                
-                const novoCaixa = {
-                    id: Date.now(),
-                    data_abertura: new Date().toISOString(),
-                    valor_inicial: valorInicial,
-                    status: 'aberto',
-                    usuario: usuarioAtual?.email || 'Sistema'
-                };
-
-                caixas.push(novoCaixa);
-                localStorage.setItem('caixas', JSON.stringify(caixas));
-
-                caixaAtual = novoCaixa;
-                atualizarUICaixaAberto();
-                mostrarAlerta('Caixa aberto com sucesso!', 'success');
-                document.getElementById('valorInicialCaixa').value = '';
-            } catch (error) {
-                console.error('Erro ao abrir caixa:', error);
-                mostrarAlerta('Erro ao abrir caixa: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function fecharCaixa() {
-            if (!caixaAtual) {
-                mostrarAlerta('Nenhum caixa aberto!', 'danger');
-                return;
-            }
-
-            if (!confirm('Deseja realmente fechar o caixa?')) return;
-
-            try {
-                mostrarLoading();
-
-                // Calcular valor final
-                const saldoAtualText = document.getElementById('caixaSaldoAtual').textContent;
-                const valorFinal = parseFloat(saldoAtualText.replace('R$', '').replace('.', '').replace(',', '.'));
-
-                // Atualizar caixa no array
-                const index = caixas.findIndex(c => c.id === caixaAtual.id);
-                if (index !== -1) {
-                    caixas[index].data_fechamento = new Date().toISOString();
-                    caixas[index].valor_final = valorFinal;
-                    caixas[index].status = 'fechado';
-                    localStorage.setItem('caixas', JSON.stringify(caixas));
-                }
-
-                caixaAtual = null;
-                atualizarUICaixaFechado();
-                await carregarHistoricoCaixas();
-                mostrarAlerta('Caixa fechado com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao fechar caixa:', error);
-                mostrarAlerta('Erro ao fechar caixa: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function carregarHistoricoCaixas() {
-            try {
-                const caixasOrdenados = [...caixas].sort((a, b) => new Date(b.data_abertura) - new Date(a.data_abertura)).slice(0, 50);
-
-                const tbody = document.getElementById('tabelaCaixas');
-                tbody.innerHTML = '';
-
-                caixasOrdenados.forEach(caixa => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${formatarData(caixa.data_abertura)}</td>
-                        <td>${caixa.data_fechamento ? formatarData(caixa.data_fechamento) : '-'}</td>
-                        <td>${formatarMoeda(caixa.valor_inicial)}</td>
-                        <td>${caixa.valor_final ? formatarMoeda(caixa.valor_final) : '-'}</td>
-                        <td><span class="caixa-status ${caixa.status === 'aberto' ? 'caixa-aberto' : 'caixa-fechado'}">${caixa.status}</span></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar histórico:', error);
-            }
-        }
-
-        // ==================== PRODUTOS ====================
-        async function carregarProdutos() {
-            try {
-                const produtosOrdenados = [...produtos].sort((a, b) => a.nome.localeCompare(b.nome));
-
-                const tbody = document.getElementById('tabelaProdutos');
-                tbody.innerHTML = '';
-
-                produtosOrdenados.forEach(produto => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${produto.sku}</td>
-                        <td>${produto.nome}</td>
-                        <td>${produto.categoria || '-'}</td>
-                        <td>${formatarMoeda(produto.preco)}</td>
-                        <td style="color: ${produto.quantidade < 5 ? 'var(--danger)' : 'var(--success)'}">
-                            ${produto.quantidade}
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-icon" onclick='editarProduto(${JSON.stringify(produto)})'>
-                                <svg class="icon"><use href="#icon-edit"></use></svg>
-                            </button>
-                            <button class="btn btn-danger btn-icon" onclick="excluirProduto('${produto.id}')">
-                                <svg class="icon"><use href="#icon-delete"></use></svg>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar produtos:', error);
-                mostrarAlerta('Erro ao carregar produtos', 'danger');
-            }
-        }
-
-        function abrirModalProduto() {
-            document.getElementById('modalProdutoTitulo').textContent = 'Novo Produto';
-            document.getElementById('formProduto').reset();
-            document.getElementById('produtoId').value = '';
-            document.getElementById('modalProduto').classList.add('active');
-        }
-
-        function fecharModalProduto() {
-            document.getElementById('modalProduto').classList.remove('active');
-        }
-
-        function editarProduto(produto) {
-            document.getElementById('modalProdutoTitulo').textContent = 'Editar Produto';
-            document.getElementById('produtoId').value = produto.id;
-            document.getElementById('produtoNome').value = produto.nome;
-            document.getElementById('produtoSku').value = produto.sku;
-            document.getElementById('produtoCategoria').value = produto.categoria || '';
-            document.getElementById('produtoPreco').value = produto.preco;
-            document.getElementById('produtoQuantidade').value = produto.quantidade;
-            document.getElementById('modalProduto').classList.add('active');
-        }
-
-        async function salvarProduto(event) {
-            event.preventDefault();
-            
-            const id = document.getElementById('produtoId').value;
+        // Produtos
+        function salvarProduto(e) {
+            e.preventDefault();
             const produto = {
-                id: id || Date.now(),
+                id: Date.now().toString(),
                 nome: document.getElementById('produtoNome').value,
                 sku: document.getElementById('produtoSku').value,
                 categoria: document.getElementById('produtoCategoria').value,
                 preco: parseFloat(document.getElementById('produtoPreco').value),
-                quantidade: parseInt(document.getElementById('produtoQuantidade').value)
+                precoCusto: parseFloat(document.getElementById('produtoPrecoCusto').value),
+                estoque: parseInt(document.getElementById('produtoEstoque').value),
+                tamanhos: [...tamanhosProdutoAtual]
             };
+            produtos.push(produto);
+            atualizarListaProdutos();
+            closeModal('modalProduto');
+            alert('Produto cadastrado com sucesso!');
+        }
 
-            try {
-                mostrarLoading();
+        function atualizarListaProdutos() {
+            const lista = document.getElementById('listaProdutos');
+            lista.innerHTML = produtos.map(p => `
+                <tr>
+                    <td>${p.sku}</td>
+                    <td>${p.nome}</td>
+                    <td>${p.categoria}</td>
+                    <td>${p.tamanhos.length > 0 ? p.tamanhos.join(', ') : '-'}</td>
+                    <td>R$ ${p.preco.toFixed(2)}</td>
+                    <td>R$ ${p.precoCusto.toFixed(2)}</td>
+                    <td>${p.estoque}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="excluirProduto('${p.id}')">Excluir</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-                if (id) {
-                    const index = produtos.findIndex(p => p.id == id);
-                    if (index !== -1) {
-                        produtos[index] = produto;
-                    }
-                    mostrarAlerta('Produto atualizado com sucesso!', 'success');
-                } else {
-                    produtos.push(produto);
-                    mostrarAlerta('Produto cadastrado com sucesso!', 'success');
-                }
-
-                localStorage.setItem('produtos', JSON.stringify(produtos));
-                fecharModalProduto();
-                await carregarProdutos();
-            } catch (error) {
-                console.error('Erro ao salvar produto:', error);
-                mostrarAlerta('Erro ao salvar produto: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
+        function excluirProduto(id) {
+            if (confirm('Deseja realmente excluir este produto?')) {
+                produtos = produtos.filter(p => p.id !== id);
+                atualizarListaProdutos();
             }
         }
 
-        async function excluirProduto(id) {
-            if (!confirm('Deseja realmente excluir este produto?')) return;
-
-            try {
-                mostrarLoading();
-                
-                produtos = produtos.filter(p => p.id != id);
-                localStorage.setItem('produtos', JSON.stringify(produtos));
-
-                mostrarAlerta('Produto excluído com sucesso!', 'success');
-                await carregarProdutos();
-            } catch (error) {
-                console.error('Erro ao excluir produto:', error);
-                mostrarAlerta('Erro ao excluir produto: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        // ==================== CLIENTES ====================
-        async function carregarClientes() {
-            try {
-                const clientesOrdenados = [...clientes].sort((a, b) => a.nome.localeCompare(b.nome));
-
-                // Atualizar tabela
-                const tbody = document.getElementById('tabelaClientes');
-                tbody.innerHTML = '';
-
-                clientesOrdenados.forEach(cliente => {
-                    // Montar endereço completo para exibição
-                    let enderecoCompleto = '';
-                    if (cliente.rua || cliente.numero || cliente.bairro || cliente.cidade || cliente.estado || cliente.cep) {
-                        const partes = [];
-                        if (cliente.rua) partes.push(cliente.rua);
-                        if (cliente.numero) partes.push(cliente.numero);
-                        if (cliente.bairro) partes.push(cliente.bairro);
-                        if (cliente.cidade) partes.push(cliente.cidade);
-                        if (cliente.estado) partes.push(cliente.estado);
-                        if (cliente.cep) partes.push(cliente.cep);
-                        enderecoCompleto = partes.join(', ');
-                    } else if (cliente.endereco) {
-                        enderecoCompleto = cliente.endereco;
-                    }
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${cliente.nome}</td>
-                        <td>${cliente.telefone}</td>
-                        <td>${cliente.cpf || '-'}</td>
-                        <td>${cliente.email || '-'}</td>
-                        <td>${enderecoCompleto || '-'}</td>
-                        <td>
-                            <button class="btn btn-primary btn-icon" onclick='editarCliente(${JSON.stringify(cliente)})'>
-                                <svg class="icon"><use href="#icon-edit"></use></svg>
-                            </button>
-                            <button class="btn btn-danger btn-icon" onclick="excluirCliente('${cliente.id}')">
-                                <svg class="icon"><use href="#icon-delete"></use></svg>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                // Atualizar select do PDV
-                const select = document.getElementById('pdvCliente');
-                select.innerHTML = '<option value="">Cliente Avulso</option>';
-                
-                clientesOrdenados.forEach(cliente => {
-                    const option = document.createElement('option');
-                    option.value = cliente.id;
-                    option.textContent = cliente.nome;
-                    select.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar clientes:', error);
-            }
-        }
-
-        function abrirModalCliente() {
-            document.getElementById('modalClienteTitulo').textContent = 'Novo Cliente';
-            document.getElementById('formCliente').reset();
-            document.getElementById('clienteId').value = '';
-            document.getElementById('codigoPais').value = '+55';
-            document.getElementById('modalCliente').classList.add('active');
-        }
-
-        function fecharModalCliente() {
-            document.getElementById('modalCliente').classList.remove('active');
-        }
-
-        function editarCliente(cliente) {
-            document.getElementById('modalClienteTitulo').textContent = 'Editar Cliente';
-            document.getElementById('clienteId').value = cliente.id;
-            document.getElementById('clienteNome').value = cliente.nome;
-            
-            // Separar código do país e número de telefone
-            const telefoneCompleto = cliente.telefone || '';
-            if (telefoneCompleto.startsWith('+55')) {
-                document.getElementById('codigoPais').value = '+55';
-                document.getElementById('clienteTelefone').value = telefoneCompleto.substring(3).trim();
-            } else if (telefoneCompleto.startsWith('+')) {
-                const codigoPais = telefoneCompleto.substring(0, 3);
-                document.getElementById('codigoPais').value = codigoPais;
-                document.getElementById('clienteTelefone').value = telefoneCompleto.substring(3).trim();
-            } else {
-                document.getElementById('codigoPais').value = '+55';
-                document.getElementById('clienteTelefone').value = telefoneCompleto;
-            }
-            
-            document.getElementById('clienteCpf').value = cliente.cpf || '';
-            document.getElementById('clienteEmail').value = cliente.email || '';
-            
-            // Preencher campos de endereço
-            document.getElementById('clienteRua').value = cliente.rua || '';
-            document.getElementById('clienteNumero').value = cliente.numero || '';
-            document.getElementById('clienteBairro').value = cliente.bairro || '';
-            document.getElementById('clienteCidade').value = cliente.cidade || '';
-            document.getElementById('clienteEstado').value = cliente.estado || '';
-            document.getElementById('clienteCep').value = cliente.cep || '';
-            
-            document.getElementById('modalCliente').classList.add('active');
-        }
-
-        async function salvarCliente(event) {
-            event.preventDefault();
-            
-            const id = document.getElementById('clienteId').value;
-            const codigoPais = document.getElementById('codigoPais').value;
-            const telefoneNumero = document.getElementById('clienteTelefone').value;
-            const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
-            
+        // Clientes
+        function salvarCliente(e) {
+            e.preventDefault();
             const cliente = {
-                id: id || Date.now(),
+                id: Date.now().toString(),
                 nome: document.getElementById('clienteNome').value,
-                telefone: telefoneCompleto,
+                telefone: document.getElementById('clienteTelefone').value,
                 cpf: document.getElementById('clienteCpf').value,
                 email: document.getElementById('clienteEmail').value,
-                rua: document.getElementById('clienteRua').value,
-                numero: document.getElementById('clienteNumero').value,
-                bairro: document.getElementById('clienteBairro').value,
-                cidade: document.getElementById('clienteCidade').value,
-                estado: document.getElementById('clienteEstado').value,
-                cep: document.getElementById('clienteCep').value
+                endereco: document.getElementById('clienteEndereco').value
             };
+            clientes.push(cliente);
+            atualizarListaClientes();
+            atualizarSelectClientes();
+            closeModal('modalCliente');
+            alert('Cliente cadastrado com sucesso!');
+        }
 
-            try {
-                mostrarLoading();
+        function salvarClienteRapido(e) {
+            e.preventDefault();
+            const cliente = {
+                id: Date.now().toString(),
+                nome: document.getElementById('clienteRapidoNome').value,
+                telefone: document.getElementById('clienteRapidoTelefone').value,
+                cpf: '',
+                email: '',
+                endereco: ''
+            };
+            clientes.push(cliente);
+            atualizarListaClientes();
+            atualizarSelectClientes();
+            document.getElementById('vendaCliente').value = cliente.id;
+            closeModal('modalClienteRapido');
+            alert('Cliente cadastrado e selecionado!');
+        }
 
-                if (id) {
-                    const index = clientes.findIndex(c => c.id == id);
-                    if (index !== -1) {
-                        clientes[index] = cliente;
-                    }
-                    mostrarAlerta('Cliente atualizado com sucesso!', 'success');
-                } else {
-                    clientes.push(cliente);
-                    mostrarAlerta('Cliente cadastrado com sucesso!', 'success');
-                }
+        function atualizarListaClientes() {
+            const lista = document.getElementById('listaClientes');
+            lista.innerHTML = clientes.map(c => `
+                <tr>
+                    <td>${c.nome}</td>
+                    <td>${c.telefone}</td>
+                    <td>${c.cpf || '-'}</td>
+                    <td>${c.email || '-'}</td>
+                    <td>${c.endereco || '-'}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="excluirCliente('${c.id}')">Excluir</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-                fecharModalCliente();
-                await carregarClientes();
-            } catch (error) {
-                console.error('Erro ao salvar cliente:', error);
-                mostrarAlerta('Erro ao salvar cliente: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
+        function excluirCliente(id) {
+            if (confirm('Deseja realmente excluir este cliente?')) {
+                clientes = clientes.filter(c => c.id !== id);
+                atualizarListaClientes();
+                atualizarSelectClientes();
             }
         }
 
-        async function excluirCliente(id) {
-            if (!confirm('Deseja realmente excluir este cliente?')) return;
-
-            try {
-                mostrarLoading();
-                
-                clientes = clientes.filter(c => c.id != id);
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-
-                mostrarAlerta('Cliente excluído com sucesso!', 'success');
-                await carregarClientes();
-            } catch (error) {
-                console.error('Erro ao excluir cliente:', error);
-                mostrarAlerta('Erro ao excluir cliente: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
+        function atualizarSelectClientes() {
+            const select = document.getElementById('vendaCliente');
+            select.innerHTML = '<option value="">Selecione um cliente</option>' + 
+                clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
         }
 
-        // ==================== PDV ====================
-        async function buscarProdutos() {
+        // PDV - Busca de produtos
+        function buscarProduto() {
             const busca = document.getElementById('buscaProduto').value.toLowerCase();
+            const resultados = document.getElementById('resultadosBusca');
             
-            try {
-                const produtosFiltrados = produtos.filter(produto => 
-                    (produto.nome.toLowerCase().includes(busca) || produto.sku.toLowerCase().includes(busca)) &&
-                    produto.quantidade > 0
-                ).sort((a, b) => a.nome.localeCompare(b.nome));
+            if (busca.length < 2) {
+                resultados.style.display = 'none';
+                return;
+            }
 
-                const lista = document.getElementById('listaProdutos');
-                lista.innerHTML = '';
+            const produtosFiltrados = produtos.filter(p => 
+                p.nome.toLowerCase().includes(busca) || 
+                p.sku.toLowerCase().includes(busca)
+            );
 
-                if (produtosFiltrados.length === 0) {
-                    lista.innerHTML = '<p style="color: var(--text-gray);">Nenhum produto encontrado</p>';
-                    return;
-                }
-
-                produtosFiltrados.forEach(produto => {
-                    const div = document.createElement('div');
-                    div.className = 'produto-item';
-                    div.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <strong>${produto.nome}</strong><br>
-                                <small style="color: var(--text-gray);">SKU: ${produto.sku} | Estoque: ${produto.quantidade}</small>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-size: 1.2rem; color: var(--gold); font-weight: bold;">
-                                    ${formatarMoeda(produto.preco)}
-                                </div>
-                                <button class="btn btn-primary btn-icon" onclick='adicionarAoCarrinho(${JSON.stringify(produto)})'>
-                                    <svg class="icon"><use href="#icon-plus"></use></svg>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    lista.appendChild(div);
-                });
-            } catch (error) {
-                console.error('Erro ao buscar produtos:', error);
+            if (produtosFiltrados.length > 0) {
+                resultados.innerHTML = produtosFiltrados.map(p => `
+                    <div class="search-result-item" onclick="selecionarProduto('${p.id}')">
+                        <strong>${p.nome}</strong> - SKU: ${p.sku} - R$ ${p.preco.toFixed(2)}
+                        ${p.tamanhos.length > 0 ? '<br><small>Tamanhos: ' + p.tamanhos.join(', ') + '</small>' : ''}
+                    </div>
+                `).join('');
+                resultados.style.display = 'block';
+            } else {
+                resultados.innerHTML = '<div class="search-result-item">Nenhum produto encontrado</div>';
+                resultados.style.display = 'block';
             }
         }
 
-        function adicionarAoCarrinho(produto) {
-            const itemExistente = carrinho.find(item => item.id === produto.id);
-            
-            if (itemExistente) {
-                if (itemExistente.quantidade < produto.quantidade) {
-                    itemExistente.quantidade++;
+        function selecionarProduto(id) {
+            const produto = produtos.find(p => p.id === id);
+            if (produto) {
+                if (produto.tamanhos.length > 0) {
+                    produtoParaAdicionar = produto;
+                    abrirModalTamanho(produto);
                 } else {
-                    mostrarAlerta('Quantidade máxima em estoque atingida!', 'warning');
-                    return;
+                    adicionarAoCarrinho(produto, 1);
                 }
+                document.getElementById('buscaProduto').value = '';
+                document.getElementById('resultadosBusca').style.display = 'none';
+            }
+        }
+
+        function abrirModalTamanho(produto) {
+            document.getElementById('tamanhoNomeProduto').textContent = produto.nome;
+            const optionsDiv = document.getElementById('tamanhoOptions');
+            optionsDiv.innerHTML = produto.tamanhos.map(t => 
+                `<button type="button" class="size-option" onclick="selecionarTamanhoOpcao('${t}')">${t}</button>`
+            ).join('');
+            document.getElementById('tamanhoQuantidade').value = 1;
+            tamanhoSelecionado = null;
+            openModal('modalTamanho');
+        }
+
+        function selecionarTamanhoOpcao(tamanho) {
+            document.querySelectorAll('.size-option').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            tamanhoSelecionado = tamanho;
+        }
+
+        function confirmarTamanho() {
+            if (!tamanhoSelecionado) {
+                alert('Por favor, selecione um tamanho!');
+                return;
+            }
+            const quantidade = parseInt(document.getElementById('tamanhoQuantidade').value);
+            adicionarAoCarrinho(produtoParaAdicionar, quantidade, tamanhoSelecionado);
+            closeModal('modalTamanho');
+            produtoParaAdicionar = null;
+            tamanhoSelecionado = null;
+        }
+
+        function adicionarAoCarrinho(produto, quantidade = 1, tamanho = null) {
+            if (produto.estoque < quantidade) {
+                alert('Estoque insuficiente!');
+                return;
+            }
+
+            const itemExistente = carrinho.find(item => 
+                item.produto.id === produto.id && item.tamanhoSelecionado === tamanho
+            );
+
+            if (itemExistente) {
+                itemExistente.quantidade += quantidade;
             } else {
                 carrinho.push({
-                    ...produto,
-                    quantidade: 1,
-                    quantidade_original: produto.quantidade
+                    produto: produto,
+                    quantidade: quantidade,
+                    tamanhoSelecionado: tamanho
                 });
             }
-            
             atualizarCarrinho();
         }
 
-        function removerDoCarrinho(produtoId) {
-            carrinho = carrinho.filter(item => item.id !== produtoId);
+        function removerDoCarrinho(index) {
+            carrinho.splice(index, 1);
             atualizarCarrinho();
-        }
-
-        function alterarQuantidade(produtoId, delta) {
-            const item = carrinho.find(item => item.id === produtoId);
-            if (!item) return;
-
-            const novaQuantidade = item.quantidade + delta;
-            
-            if (novaQuantidade <= 0) {
-                removerDoCarrinho(produtoId);
-            } else if (novaQuantidade <= item.quantidade_original) {
-                item.quantidade = novaQuantidade;
-                atualizarCarrinho();
-            } else {
-                mostrarAlerta('Quantidade máxima em estoque atingida!', 'warning');
-            }
         }
 
         function atualizarCarrinho() {
-            const container = document.getElementById('carrinhoItens');
-            container.innerHTML = '';
-
+            const carrinhoDiv = document.getElementById('carrinho');
+            const desconto = parseFloat(document.getElementById('desconto').value) || 0;
+            
             if (carrinho.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-gray); text-align: center;">Carrinho vazio</p>';
-                document.getElementById('carrinhoTotal').textContent = 'R$ 0,00';
-                document.getElementById('descontoInfo').textContent = 'R$ 0,00';
-                calcularTroco();
+                carrinhoDiv.innerHTML = '<p style="color: #999;">Carrinho vazio</p>';
+                document.getElementById('totalVenda').textContent = 'R$ 0,00';
                 return;
             }
 
             let subtotal = 0;
-
-            carrinho.forEach(item => {
-                const subtotalItem = item.preco * item.quantidade;
-                subtotal += subtotalItem;
-
-                const div = document.createElement('div');
-                div.className = 'carrinho-item';
-                div.innerHTML = `
-                    <div>
-                        <strong>${item.nome}</strong><br>
-                        <small style="color: var(--text-gray);">${formatarMoeda(item.preco)} x ${item.quantidade}</small>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
-                            ${formatarMoeda(subtotalItem)}
+            carrinhoDiv.innerHTML = carrinho.map((item, index) => {
+                const itemTotal = item.produto.preco * item.quantidade;
+                subtotal += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.produto.nome}</strong>
+                            ${item.tamanhoSelecionado ? '<br><small>Tamanho: ' + item.tamanhoSelecionado + '</small>' : ''}
+                            <br>R$ ${item.produto.preco.toFixed(2)} x ${item.quantidade}
                         </div>
-                        <div class="quantidade-control">
-                            <button onclick="alterarQuantidade('${item.id}', -1)">
-                                <svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-minus"></use></svg>
-                            </button>
-                            <span>${item.quantidade}</span>
-                            <button onclick="alterarQuantidade('${item.id}', 1)">
-                                <svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-plus"></use></svg>
-                            </button>
-                            <button onclick="removerDoCarrinho('${item.id}')" style="background: var(--danger); margin-left: 0.5rem;">
-                                <svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-delete"></use></svg>
-                            </button>
+                        <div style="text-align: right;">
+                            <div>R$ ${itemTotal.toFixed(2)}</div>
+                            <button class="btn btn-danger" style="margin-top: 0.5rem; padding: 0.25rem 0.5rem;" onclick="removerDoCarrinho(${index})">Remover</button>
                         </div>
                     </div>
                 `;
-                container.appendChild(div);
-            });
+            }).join('');
 
-            // Calcular desconto
-            const valorDesconto = (subtotal * descontoAtual) / 100;
+            const valorDesconto = subtotal * (desconto / 100);
             const total = subtotal - valorDesconto;
-
-            document.getElementById('descontoInfo').textContent = formatarMoeda(valorDesconto);
-            document.getElementById('carrinhoTotal').textContent = formatarMoeda(total);
-            calcularTroco();
+            document.getElementById('totalVenda').textContent = 'R$ ' + total.toFixed(2);
         }
 
-        async function finalizarVenda() {
-            if (!caixaAtual) {
-                mostrarAlerta('Caixa fechado! Abra o caixa para realizar vendas.', 'danger');
+        function calcularTroco() {
+            const total = parseFloat(document.getElementById('totalVenda').textContent.replace('R$ ', '').replace(',', '.'));
+            const recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
+            const troco = Math.max(0, recebido - total);
+            document.getElementById('troco').textContent = troco.toFixed(2);
+        }
+
+        function finalizarVenda() {
+            if (!caixaAberto) {
+                alert('Caixa está fechado! Abra o caixa primeiro.');
                 return;
             }
 
             if (carrinho.length === 0) {
-                mostrarAlerta('Adicione produtos ao carrinho!', 'warning');
+                alert('Carrinho vazio!');
                 return;
             }
 
-            const clienteId = document.getElementById('pdvCliente').value || null;
+            const clienteId = document.getElementById('vendaCliente').value;
+            if (!clienteId) {
+                alert('Selecione um cliente!');
+                return;
+            }
+
+            const desconto = parseFloat(document.getElementById('desconto').value) || 0;
+            const subtotal = carrinho.reduce((sum, item) => sum + (item.produto.preco * item.quantidade), 0);
+            const total = subtotal - (subtotal * desconto / 100);
             const formaPagamento = document.getElementById('formaPagamento').value;
-            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
-            const valorDesconto = (subtotal * descontoAtual) / 100;
-            const total = subtotal - valorDesconto;
 
-            // Validar pagamento em dinheiro
-            if (formaPagamento === 'dinheiro') {
-                const valorRecebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-                const precisaTroco = document.getElementById('precisaTroco').value;
-                
-                if (precisaTroco === 'sim' && valorRecebido < total) {
-                    mostrarAlerta('Valor recebido é insuficiente!', 'danger');
-                    return;
+            // Atualizar estoque
+            carrinho.forEach(item => {
+                const produto = produtos.find(p => p.id === item.produto.id);
+                if (produto) {
+                    produto.estoque -= item.quantidade;
                 }
-            }
-
-            try {
-                mostrarLoading();
-
-                // Inserir venda
-                const vendaData = {
-                    id: Date.now(),
-                    cliente_id: clienteId,
-                    subtotal: subtotal,
-                    desconto_percentual: descontoAtual,
-                    desconto_valor: valorDesconto,
-                    total: total,
-                    forma_pagamento: formaPagamento,
-                    caixa_id: caixaAtual.id,
-                    data: new Date().toISOString(),
-                    itens: [...carrinho]
-                };
-
-                // Adicionar dados do pagamento em dinheiro
-                if (formaPagamento === 'dinheiro') {
-                    vendaData.valor_recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-                    vendaData.precisa_troco = document.getElementById('precisaTroco').value;
-                }
-
-                vendas.push(vendaData);
-                localStorage.setItem('vendas', JSON.stringify(vendas));
-
-                // Atualizar estoque
-                carrinho.forEach(item => {
-                    const produto = produtos.find(p => p.id === item.id);
-                    if (produto) {
-                        produto.quantidade -= item.quantidade;
-                    }
-                });
-                localStorage.setItem('produtos', JSON.stringify(produtos));
-
-                // Salvar carrinho para o comprovante
-                const carrinhoParaComprovante = [...carrinho];
-
-                // Limpar carrinho e desconto
-                carrinho = [];
-                descontoAtual = 0;
-                document.getElementById('descontoPercentual').value = '';
-                atualizarCarrinho();
-                document.getElementById('buscaProduto').value = '';
-                document.getElementById('listaProdutos').innerHTML = '';
-                document.getElementById('pdvCliente').value = '';
-                document.getElementById('valorRecebido').value = '';
-
-                await atualizarSaldoCaixa();
-                await carregarProdutos();
-
-                mostrarAlerta('Venda finalizada com sucesso!', 'success');
-                
-                // Gerar e mostrar comprovante
-                gerarComprovante(vendaData, carrinhoParaComprovante);
-                
-            } catch (error) {
-                console.error('Erro ao finalizar venda:', error);
-                mostrarAlerta('Erro ao finalizar venda: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        function gerarComprovante(venda, itens) {
-            const comprovanteDiv = document.getElementById('comprovanteConteudo');
-            
-            let itensHTML = '';
-            itens.forEach(item => {
-                itensHTML += `
-                    <div class="comprovante-item">
-                        <span>${item.nome} (${item.quantidade}x)</span>
-                        <span>${formatarMoeda(item.preco * item.quantidade)}</span>
-                    </div>
-                `;
             });
 
-            let pagamentoInfo = venda.forma_pagamento.toUpperCase();
-            if (venda.forma_pagamento === 'dinheiro' && venda.valor_recebido) {
-                const troco = venda.valor_recebido - venda.total;
-                pagamentoInfo += `<br>Recebido: ${formatarMoeda(venda.valor_recebido)}`;
-                if (troco > 0) {
-                    pagamentoInfo += `<br>Troco: ${formatarMoeda(troco)}`;
-                }
-            }
+            // Registrar venda
+            const venda = {
+                id: Date.now().toString(),
+                dataHora: new Date().toLocaleString('pt-BR'),
+                cliente: clientes.find(c => c.id === clienteId)?.nome || 'Cliente não identificado',
+                total: total,
+                pagamento: formaPagamento,
+                itens: [...carrinho]
+            };
+            vendas.push(venda);
 
-            let descontoHTML = '';
-            if (venda.desconto_valor > 0) {
-                descontoHTML = `
-                    <div class="comprovante-item">
-                        <span>Subtotal:</span>
-                        <span>${formatarMoeda(venda.subtotal)}</span>
-                    </div>
-                    <div class="comprovante-item">
-                        <span>Desconto (${venda.desconto_percentual}%):</span>
-                        <span>-${formatarMoeda(venda.desconto_valor)}</span>
-                    </div>
-                `;
-            }
+            // Atualizar caixa
+            caixaAtual.totalVendas += total;
 
-            comprovanteDiv.innerHTML = `
+            // Limpar carrinho
+            carrinho = [];
+            document.getElementById('desconto').value = '0';
+            document.getElementById('valorRecebido').value = '';
+            document.getElementById('vendaCliente').value = '';
+            atualizarCarrinho();
+            atualizarListaProdutos();
+            atualizarStatusCaixa();
+
+            // Mostrar comprovante
+            gerarComprovante(venda);
+            alert('Venda finalizada com sucesso!');
+        }
+
+        function gerarComprovante(venda) {
+            const comprovante = `
                 <div class="comprovante-header">
                     <h2>LaBella Woman</h2>
-                    <p>COMPROVANTE DE VENDA</p>
-                    <p>${formatarData(venda.data)}</p>
+                    <p>Comprovante de Venda</p>
+                    <p>${venda.dataHora}</p>
                 </div>
-                
-                <div style="margin: 1rem 0;">
-                    ${itensHTML}
-                    ${descontoHTML}
+                <p><strong>Cliente:</strong> ${venda.cliente}</p>
+                <p><strong>Pagamento:</strong> ${venda.pagamento}</p>
+                <hr>
+                ${venda.itens.map(item => `
+                    <div class="comprovante-item">
+                        <span>${item.produto.nome} ${item.tamanhoSelecionado ? '(' + item.tamanhoSelecionado + ')' : ''} x${item.quantidade}</span>
+                        <span>R$ ${(item.produto.preco * item.quantidade).toFixed(2)}</span>
+                    </div>
+                `).join('')}
+                <div class="comprovante-total">
+                    <div class="comprovante-item">
+                        <span>TOTAL</span>
+                        <span>R$ ${venda.total.toFixed(2)}</span>
+                    </div>
                 </div>
-                
-                <div class="comprovante-footer">
-                    <strong>TOTAL: ${formatarMoeda(venda.total)}</strong>
-                    <p>${pagamentoInfo}</p>
-                    <p style="margin-top: 1rem;">Obrigado pela preferência!</p>
-                    <p>Volte sempre!</p>
-                </div>
+                <hr>
+                <p style="text-align: center; margin-top: 1rem;">Obrigado pela preferência!</p>
             `;
-
-            document.getElementById('modalComprovante').classList.add('active');
+            document.getElementById('comprovanteConteudo').innerHTML = comprovante;
+            openModal('modalComprovante');
         }
 
-        function fecharModalComprovante() {
-            document.getElementById('modalComprovante').classList.remove('active');
-        }
-
-        function imprimirComprovante() {
-            const conteudo = document.getElementById('comprovanteConteudo').innerHTML;
-            const janelaImpressao = window.open('', '', 'width=300,height=600');
-            janelaImpressao.document.write(`
-                <html>
-                    <head>
-                        <title>Comprovante</title>
-                        <style>
-                            body { font-family: 'Courier New', monospace; }
-                            .comprovante { padding: 1rem; }
-                            .comprovante-header { text-align: center; border-bottom: 2px dashed black; padding-bottom: 1rem; margin-bottom: 1rem; }
-                            .comprovante-item { display: flex; justify-content: space-between; margin: 0.5rem 0; }
-                            .comprovante-footer { border-top: 2px dashed black; padding-top: 1rem; margin-top: 1rem; text-align: center; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="comprovante">${conteudo}</div>
-                    </body>
-                </html>
-            `);
-            janelaImpressao.document.close();
-            janelaImpressao.print();
-        }
-
-        function compartilharComprovante() {
-            const texto = document.getElementById('comprovanteConteudo').innerText;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Comprovante LaBella Woman',
-                    text: texto
-                }).catch(err => console.log('Erro ao compartilhar:', err));
-            } else {
-                // Fallback: copiar para clipboard
-                navigator.clipboard.writeText(texto).then(() => {
-                    mostrarAlerta('Comprovante copiado para área de transferência!', 'success');
-                });
-            }
-        }
-
-        // ==================== MOVIMENTAÇÕES ====================
-        function abrirModalMovimentacao() {
-            if (!caixaAtual) {
-                mostrarAlerta('Abra o caixa primeiro para registrar movimentações!', 'danger');
-                return;
-            }
-            document.getElementById('formMovimentacao').reset();
-            document.getElementById('modalMovimentacao').classList.add('active');
-        }
-
-        function fecharModalMovimentacao() {
-            document.getElementById('modalMovimentacao').classList.remove('active');
-        }
-
-        async function salvarMovimentacao(event) {
-            event.preventDefault();
-
-            if (!caixaAtual) {
-                mostrarAlerta('Caixa fechado!', 'danger');
+        // Caixa
+        function abrirCaixa() {
+            const valorInicial = parseFloat(document.getElementById('valorInicialCaixa').value);
+            if (isNaN(valorInicial) || valorInicial < 0) {
+                alert('Digite um valor inicial válido!');
                 return;
             }
 
-            const movimentacao = {
-                id: Date.now(),
-                tipo: document.getElementById('movimentacaoTipo').value,
-                valor: parseFloat(document.getElementById('movimentacaoValor').value),
-                descricao: document.getElementById('movimentacaoDescricao').value,
-                data: new Date().toISOString(),
-                caixa_id: caixaAtual.id
+            caixaAtual = {
+                id: Date.now().toString(),
+                dataAbertura: new Date().toLocaleString('pt-BR'),
+                dataFechamento: null,
+                valorInicial: valorInicial,
+                totalVendas: 0,
+                status: 'Aberto'
             };
 
-            try {
-                mostrarLoading();
+            caixaAberto = true;
+            atualizarStatusCaixa();
+            alert('Caixa aberto com sucesso!');
+        }
 
-                movimentacoes.push(movimentacao);
-                localStorage.setItem('movimentacoes', JSON.stringify(movimentacoes));
+        function fecharCaixa() {
+            if (!caixaAberto) {
+                alert('Caixa já está fechado!');
+                return;
+            }
 
-                fecharModalMovimentacao();
-                await carregarMovimentacoes();
-                await atualizarSaldoCaixa();
-                mostrarAlerta('Movimentação registrada com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao salvar movimentação:', error);
-                mostrarAlerta('Erro ao salvar movimentação: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
+            if (confirm('Deseja realmente fechar o caixa?')) {
+                caixaAtual.dataFechamento = new Date().toLocaleString('pt-BR');
+                caixaAtual.status = 'Fechado';
+                historicoCaixas.push({...caixaAtual});
+                
+                caixaAberto = false;
+                caixaAtual = null;
+                atualizarStatusCaixa();
+                atualizarHistoricoCaixas();
+                alert('Caixa fechado com sucesso!');
             }
         }
 
-        async function carregarMovimentacoes() {
-            try {
-                const movimentacoesOrdenadas = [...movimentacoes].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 100);
+        function atualizarStatusCaixa() {
+            const status = caixaAberto ? 'Aberto' : 'Fechado';
+            document.getElementById('caixaStatusHeader').textContent = status;
+            document.getElementById('caixaStatusDisplay').textContent = status;
 
-                const tbody = document.getElementById('tabelaMovimentacoes');
-                tbody.innerHTML = '';
+            if (caixaAberto && caixaAtual) {
+                document.getElementById('saldoInicial').textContent = caixaAtual.valorInicial.toFixed(2);
+                document.getElementById('totalVendas').textContent = caixaAtual.totalVendas.toFixed(2);
+                document.getElementById('saldoAtual').textContent = (caixaAtual.valorInicial + caixaAtual.totalVendas).toFixed(2);
+            } else {
+                document.getElementById('saldoInicial').textContent = '0,00';
+                document.getElementById('totalVendas').textContent = '0,00';
+                document.getElementById('saldoAtual').textContent = '0,00';
+            }
+        }
 
-                movimentacoesOrdenadas.forEach(mov => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${formatarData(mov.data)}</td>
-                        <td>
-                            <span style="color: ${mov.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)'}">
-                                ${mov.tipo === 'entrada' ? 'Entrada' : 'Saída'}
-                            </span>
-                        </td>
-                        <td>${mov.descricao}</td>
-                        <td style="color: ${mov.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)'}; font-weight: bold;">
-                            ${mov.tipo === 'entrada' ? '+' : '-'} ${formatarMoeda(mov.valor)}
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
+        function atualizarHistoricoCaixas() {
+            const lista = document.getElementById('historicoCaixas');
+            lista.innerHTML = historicoCaixas.map(c => `
+                <tr>
+                    <td>${c.dataAbertura}</td>
+                    <td>${c.dataFechamento || '-'}</td>
+                    <td>R$ ${c.valorInicial.toFixed(2)}</td>
+                    <td>R$ ${(c.valorInicial + c.totalVendas).toFixed(2)}</td>
+                    <td><span class="badge ${c.status === 'Aberto' ? 'badge-success' : 'badge-danger'}">${c.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Movimentações
+        function salvarMovimentacao(e) {
+            e.preventDefault();
+            const movimentacao = {
+                id: Date.now().toString(),
+                dataHora: new Date().toLocaleString('pt-BR'),
+                tipo: document.getElementById('movimentacaoTipo').value,
+                valor: parseFloat(document.getElementById('movimentacaoValor').value),
+                descricao: document.getElementById('movimentacaoDescricao').value
+            };
+            movimentacoes.push(movimentacao);
+            atualizarListaMovimentacoes();
+            closeModal('modalMovimentacao');
+            alert('Movimentação registrada com sucesso!');
+        }
+
+        function atualizarListaMovimentacoes() {
+            const lista = document.getElementById('listaMovimentacoes');
+            lista.innerHTML = movimentacoes.map(m => `
+                <tr>
+                    <td>${m.dataHora}</td>
+                    <td><span class="badge ${m.tipo === 'Entrada' ? 'badge-success' : 'badge-danger'}">${m.tipo}</span></td>
+                    <td>${m.descricao}</td>
+                    <td style="color: ${m.tipo === 'Entrada' ? '#28a745' : '#dc3545'}">R$ ${m.valor.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Relatórios
+        function filtrarRelatorio(periodo) {
+            periodoRelatorio = periodo;
+            document.querySelectorAll('.period-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            atualizarRelatorios();
+        }
+
+        function atualizarRelatorios() {
+            const agora = new Date();
+            let vendasFiltradas = vendas;
+
+            if (periodoRelatorio === 'hoje') {
+                vendasFiltradas = vendas.filter(v => {
+                    const dataVenda = new Date(v.dataHora.split(', ')[0].split('/').reverse().join('-'));
+                    return dataVenda.toDateString() === agora.toDateString();
                 });
-            } catch (error) {
-                console.error('Erro ao carregar movimentações:', error);
-            }
-        }
-
-        // ==================== RELATÓRIOS ====================
-        async function carregarRelatorios() {
-            try {
-                const dataInicio = obterDataInicioPeriodo(filtroRelatorioAtual);
-
-                // Vendas do período
-                const vendasPeriodo = vendas.filter(v => new Date(v.data) >= new Date(dataInicio));
-
-                const totalVendas = vendasPeriodo.length;
-                const totalValor = vendasPeriodo.reduce((sum, v) => sum + parseFloat(v.total), 0);
-                const totalProdutos = vendasPeriodo.reduce((sum, v) => {
-                    return sum + v.itens.reduce((s, i) => s + i.quantidade, 0);
-                }, 0);
-                const ticketMedio = totalVendas > 0 ? totalValor / totalVendas : 0;
-
-                document.getElementById('vendasPeriodo').textContent = totalVendas;
-                document.getElementById('totalPeriodo').textContent = formatarMoeda(totalValor);
-                document.getElementById('produtosVendidos').textContent = totalProdutos;
-                document.getElementById('ticketMedio').textContent = formatarMoeda(ticketMedio);
-
-                // Tabela de vendas recentes
-                const vendasRecentes = [...vendas].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 20);
-
-                const tbody = document.getElementById('tabelaVendasRelatorio');
-                tbody.innerHTML = '';
-
-                vendasRecentes.forEach(venda => {
-                    const cliente = clientes.find(c => c.id == venda.cliente_id);
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${formatarData(venda.data)}</td>
-                        <td>${cliente?.nome || 'Cliente Avulso'}</td>
-                        <td style="color: var(--gold); font-weight: bold;">${formatarMoeda(venda.total)}</td>
-                        <td>${venda.forma_pagamento}</td>
-                        <td>
-                            <button class="btn btn-primary btn-icon" onclick="visualizarVenda('${venda.id}')">
-                                <svg class="icon"><use href="#icon-eye"></use></svg>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
+            } else if (periodoRelatorio === 'semana') {
+                const inicioSemana = new Date(agora);
+                inicioSemana.setDate(agora.getDate() - agora.getDay());
+                vendasFiltradas = vendas.filter(v => {
+                    const dataVenda = new Date(v.dataHora.split(', ')[0].split('/').reverse().join('-'));
+                    return dataVenda >= inicioSemana;
                 });
-            } catch (error) {
-                console.error('Erro ao carregar relatórios:', error);
+            } else if (periodoRelatorio === 'mes') {
+                vendasFiltradas = vendas.filter(v => {
+                    const dataVenda = new Date(v.dataHora.split(', ')[0].split('/').reverse().join('-'));
+                    return dataVenda.getMonth() === agora.getMonth() && dataVenda.getFullYear() === agora.getFullYear();
+                });
             }
+
+            const totalVendas = vendasFiltradas.reduce((sum, v) => sum + v.total, 0);
+            const produtosVendidos = vendasFiltradas.reduce((sum, v) => sum + v.itens.reduce((s, i) => s + i.quantidade, 0), 0);
+            const ticketMedio = vendasFiltradas.length > 0 ? totalVendas / vendasFiltradas.length : 0;
+
+            document.getElementById('relatorioQtdVendas').textContent = vendasFiltradas.length;
+            document.getElementById('relatorioTotalVendas').textContent = totalVendas.toFixed(2);
+            document.getElementById('relatorioProdutosVendidos').textContent = produtosVendidos;
+            document.getElementById('relatorioTicketMedio').textContent = ticketMedio.toFixed(2);
+
+            atualizarListaVendas();
         }
 
-        async function visualizarVenda(vendaId) {
-            // Implementar visualização detalhada da venda
-            mostrarAlerta('Função em desenvolvimento', 'warning');
+        function atualizarListaVendas() {
+            const lista = document.getElementById('listaVendas');
+            lista.innerHTML = vendas.slice(-10).reverse().map(v => `
+                <tr>
+                    <td>${v.dataHora}</td>
+                    <td>${v.cliente}</td>
+                    <td>R$ ${v.total.toFixed(2)}</td>
+                    <td>${v.pagamento}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="gerarComprovante(${JSON.stringify(v).replace(/"/g, '&quot;')})">Ver Comprovante</button>
+                    </td>
+                </tr>
+            `).join('');
         }
+
+        // Inicialização
+        window.onload = function() {
+            atualizarStatusCaixa();
+            atualizarListaProdutos();
+            atualizarListaClientes();
+            atualizarSelectClientes();
+        };
     </script>
 </body>
 </html>
