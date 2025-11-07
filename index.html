@@ -189,6 +189,26 @@
                                 <div>Total: <span id="carrinhoTotal">R$ 0,00</span></div>
                             </div>
                             
+                            <!-- Seleção de Cliente -->
+                            <div class="cliente-container" style="margin-bottom: 1rem;">
+                                <label style="color: #00BFFF; font-weight: bold; display: block; margin-bottom: 0.5rem;">
+                                    <svg class="icon"><use href="#icon-users"></use></svg>
+                                    Cliente:
+                                </label>
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <select id="clienteVenda" class="form-control" onchange="selecionarCliente()">
+                                        <option value="">Selecione ou cadastre...</option>
+                                    </select>
+                                    <button class="btn btn-success btn-icon" onclick="abrirCadastroRapidoCliente()" title="Novo Cliente">
+                                        <svg class="icon"><use href="#icon-user-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div id="clienteSelecionado" style="display: none; padding: 0.8rem; background: rgba(0, 191, 255, 0.1); border: 1px solid #00BFFF; border-radius: 8px; font-size: 0.9rem;">
+                                    <strong id="clienteNomeSelecionado"></strong><br>
+                                    <small id="clienteTelefoneSelecionado"></small>
+                                </div>
+                            </div>
+                            
                             <div class="discount-container">
                                 <label for="desconto" style="color: #00BFFF; font-weight: bold;">Desconto:</label>
                                 <input type="number" id="desconto" class="discount-input" min="0" max="100" value="0" onchange="atualizarDesconto()">
@@ -448,6 +468,44 @@
                     <svg class="icon"><use href="#icon-save"></use></svg>
                     Salvar Cliente
                 </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Cadastro Rápido Cliente (PDV) -->
+    <div id="modalClienteRapido" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="card-title">Cadastro Rápido - Cliente</h2>
+                <button class="modal-close" onclick="fecharModal('modalClienteRapido')">×</button>
+            </div>
+            
+            <form onsubmit="salvarClienteRapido(event)">
+                <div class="form-group">
+                    <label for="clienteRapidoNome" class="form-label">Nome Completo:*</label>
+                    <input type="text" id="clienteRapidoNome" class="form-control" required placeholder="Ex: Maria Silva">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clienteRapidoTelefone" class="form-label">Telefone:*</label>
+                    <input type="tel" id="clienteRapidoTelefone" class="form-control" required placeholder="(00) 00000-0000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clienteRapidoEmail" class="form-label">Email: <small>(opcional)</small></label>
+                    <input type="email" id="clienteRapidoEmail" class="form-control" placeholder="cliente@email.com">
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn btn-success" style="flex: 1;">
+                        <svg class="icon"><use href="#icon-save"></use></svg>
+                        Salvar e Selecionar
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="fecharModal('modalClienteRapido')" style="flex: 1;">
+                        <svg class="icon"><use href="#icon-close"></use></svg>
+                        Cancelar
+                    </button>
+                </div>
             </form>
         </div>
     </div>
