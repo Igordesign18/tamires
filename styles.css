@@ -560,6 +560,19 @@ tr:hover td {
   font-weight: 700;
 }
 
+/* Cliente Container */
+.cliente-container {
+  padding: 1rem;
+  background: rgba(13, 13, 13, 0.8);
+  border-radius: 10px;
+  border: 2px solid rgba(0, 191, 255, 0.2);
+  transition: border-color var(--transition-smooth);
+}
+
+.cliente-container:hover {
+  border-color: var(--capri-blue);
+}
+
 /* Stats - Simplificado */
 .stats-grid {
   display: grid;
