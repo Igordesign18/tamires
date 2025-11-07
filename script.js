@@ -5,6 +5,7 @@ const usuarioAtual = { email: "sistema@labella.com" }
 let filtroRelatorioAtual = "hoje"
 let descontoAtual = 0
 let clienteVendaAtual = null
+let clienteEmEdicao = null
 
 // Dados em localStorage
 let clientes = JSON.parse(localStorage.getItem("clientes")) || []
@@ -91,6 +92,22 @@ function formatarData(data) {
     hour: "2-digit",
     minute: "2-digit",
   })
+}
+
+function formatarCPF(valor) {
+  valor = valor.replace(/\D/g, "")
+  if (valor.length > 11) valor = valor.substring(0, 11)
+
+  if (valor.length <= 3) return valor
+  if (valor.length <= 6) return valor.replace(/(\d{3})(\d+)/, "$1.$2")
+  if (valor.length <= 9) return valor.replace(/(\d{3})(\d{3})(\d+)/, "$1.$2.$3")
+  return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+}
+
+function formatarCEP(valor) {
+  valor = valor.replace(/\D/g, "")
+  if (valor.length > 8) valor = valor.substring(0, 8)
+  return valor.replace(/(\d{5})(\d+)/, "$1-$2")
 }
 
 // Formatação de telefone
@@ -283,11 +300,13 @@ function finalizarVenda() {
     desconto: descontoAtual,
     metodo: document.getElementById("metodoPagamento").value,
     caixa: caixaAtual,
-    cliente: clienteVendaAtual ? {
-      id: clienteVendaAtual.id,
-      nome: clienteVendaAtual.nome,
-      telefone: clienteVendaAtual.telefone
-    } : null,
+    cliente: clienteVendaAtual
+      ? {
+          id: clienteVendaAtual.id,
+          nome: clienteVendaAtual.nome,
+          telefone: clienteVendaAtual.telefone,
+        }
+      : null,
   }
 
   vendas.push(venda)
@@ -472,21 +491,38 @@ async function carregarClientes() {
 
 function mostrarTabelaClientes() {
   const tbody = document.getElementById("clientesTabela")
+
+  if (clientes.length === 0) {
+    tbody.innerHTML =
+      '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #666;">Nenhum cliente cadastrado</td></tr>'
+    return
+  }
+
   tbody.innerHTML = ""
 
   clientes.forEach((cliente) => {
     const tr = document.createElement("tr")
+    tr.style.cursor = "pointer"
+    tr.onclick = () => visualizarCliente(cliente.id)
+
     tr.innerHTML = `
-            <td>${cliente.nome}</td>
-            <td>${cliente.telefone || "—"}</td>
-            <td>${cliente.email || "—"}</td>
-            <td>${formatarData(cliente.dataCadastro)}</td>
-            <td>
-                <button class="btn btn-danger btn-icon" onclick="deletarCliente('${cliente.id}')">
-                    <svg class="icon"><use href="#icon-delete"></use></svg>
-                </button>
-            </td>
-        `
+      <td>
+        <strong>${cliente.nome}</strong>
+        ${cliente.cpf ? `<br><small style="color: #666;">CPF: ${cliente.cpf}</small>` : ""}
+      </td>
+      <td>${cliente.telefone || "—"}</td>
+      <td>${cliente.email ? `<a href="mailto:${cliente.email}" style="color: #00BFFF; text-decoration: none;">${cliente.email}</a>` : "—"}</td>
+      <td>${cliente.cidade ? cliente.cidade + " / " + (cliente.estado || "") : "—"}</td>
+      <td>${formatarData(cliente.dataCadastro)}</td>
+      <td>
+        <button class="btn btn-primary btn-icon" onclick="event.stopPropagation(); visualizarCliente('${cliente.id}')" title="Visualizar">
+          <svg class="icon"><use href="#icon-eye"></use></svg>
+        </button>
+        <button class="btn btn-danger btn-icon" onclick="event.stopPropagation(); if(confirm('Deletar cliente?')) deletarCliente('${cliente.id}')" title="Deletar">
+          <svg class="icon"><use href="#icon-delete"></use></svg>
+        </button>
+      </td>
+    `
     tbody.appendChild(tr)
   })
 }
@@ -503,37 +539,282 @@ function filtrarClientes() {
 }
 
 function abrirModalCliente() {
+  clienteEmEdicao = null
   document.getElementById("clienteNome").value = ""
+  document.getElementById("clienteCPF").value = ""
+  document.getElementById("clienteDataNascimento").value = ""
   document.getElementById("clienteTelefone").value = ""
   document.getElementById("clienteEmail").value = ""
+  document.getElementById("clienteEndereco").value = ""
+  document.getElementById("clienteNumero").value = ""
+  document.getElementById("clienteComplemento").value = ""
+  document.getElementById("clienteBairro").value = ""
+  document.getElementById("clienteCidade").value = ""
+  document.getElementById("clienteEstado").value = ""
+  document.getElementById("clienteCEP").value = ""
+  document.getElementById("clienteObservacoes").value = ""
+  document.querySelector("#modalCliente .modal-header .card-title").textContent = "Novo Cliente"
   document.getElementById("modalCliente").classList.add("active")
 }
 
 function salvarCliente(event) {
   event.preventDefault()
 
+  // Validações
+  const nome = document.getElementById("clienteNome").value.trim()
+  const cpf = document.getElementById("clienteCPF").value
+  const telefone = document.getElementById("clienteTelefone").value
+  const email = document.getElementById("clienteEmail").value
+
+  if (!nome) {
+    alert("⚠️ Nome é obrigatório!")
+    return
+  }
+
+  if (cpf && !validarCPF(cpf)) {
+    alert("⚠️ CPF inválido!")
+    return
+  }
+
+  if (!telefone) {
+    alert("⚠️ Telefone é obrigatório!")
+    return
+  }
+
+  if (email && !email.includes("@")) {
+    alert("⚠️ Email inválido!")
+    return
+  }
+
+  const novoCliente = {
+    id: clienteEmEdicao ? clienteEmEdicao.id : Date.now().toString(),
+    nome: nome,
+    cpf: cpf || null,
+    dataNascimento: document.getElementById("clienteDataNascimento").value || null,
+    telefone: telefone,
+    email: email || null,
+    endereco: document.getElementById("clienteEndereco").value || null,
+    numero: document.getElementById("clienteNumero").value || null,
+    complemento: document.getElementById("clienteComplemento").value || null,
+    bairro: document.getElementById("clienteBairro").value || null,
+    cidade: document.getElementById("clienteCidade").value || null,
+    estado: document.getElementById("clienteEstado").value || null,
+    cep: document.getElementById("clienteCEP").value || null,
+    observacoes: document.getElementById("clienteObservacoes").value || null,
+    dataCadastro: clienteEmEdicao ? clienteEmEdicao.dataCadastro : new Date().toISOString(),
+    dataAtualizacao: new Date().toISOString(),
+  }
+
+  if (clienteEmEdicao) {
+    // Editar cliente existente
+    const index = clientes.findIndex((c) => c.id === clienteEmEdicao.id)
+    if (index !== -1) {
+      clientes[index] = novoCliente
+    }
+  } else {
+    // Novo cliente
+    clientes.push(novoCliente)
+  }
+
+  localStorage.setItem("clientes", JSON.stringify(clientes))
+
+  fecharModal("modalCliente")
+  carregarClientes()
+  carregarClientesNoSelect()
+
+  alert("✅ Cliente " + (clienteEmEdicao ? "atualizado" : "cadastrado") + " com sucesso!")
+}
+
+function visualizarCliente(clienteId) {
+  const cliente = clientes.find((c) => c.id === clienteId)
+  if (!cliente) return
+
+  clienteEmEdicao = cliente
+
+  let conteudo = `
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+      <div class="cliente-field">
+        <div class="cliente-field-label">👤 Nome</div>
+        <div class="cliente-field-value">${cliente.nome}</div>
+      </div>
+  `
+
+  if (cliente.cpf) {
+    conteudo += `
+      <div class="cliente-field">
+        <div class="cliente-field-label">🔐 CPF</div>
+        <div class="cliente-field-value">${cliente.cpf}</div>
+      </div>
+    `
+  }
+
+  if (cliente.dataNascimento) {
+    conteudo += `
+      <div class="cliente-field">
+        <div class="cliente-field-label">🎂 Data Nascimento</div>
+        <div class="cliente-field-value">${new Date(cliente.dataNascimento).toLocaleDateString("pt-BR")}</div>
+      </div>
+    `
+  }
+
+  conteudo += `
+    <div class="cliente-field">
+      <div class="cliente-field-label">📱 Telefone</div>
+      <div class="cliente-field-value">${cliente.telefone}</div>
+    </div>
+  `
+
+  if (cliente.email) {
+    conteudo += `
+      <div class="cliente-field">
+        <div class="cliente-field-label">✉️ Email</div>
+        <div class="cliente-field-value">${cliente.email}</div>
+      </div>
+    `
+  }
+
+  conteudo += `</div>`
+
+  if (cliente.endereco || cliente.cidade || cliente.estado) {
+    conteudo += `
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid rgba(0, 191, 255, 0.2);">
+        <h3 style="color: #00BFFF; font-size: 0.9rem; margin-bottom: 1rem; text-transform: uppercase;">Endereço</h3>
+        <div class="cliente-field">
+          <div class="cliente-field-value">
+            ${cliente.endereco || "—"} ${cliente.numero ? ", " + cliente.numero : ""} ${cliente.complemento ? "- " + cliente.complemento : ""}<br>
+            ${cliente.bairro || "—"} - ${cliente.cidade || "—"} / ${cliente.estado || "—"}<br>
+            ${cliente.cep ? "CEP: " + cliente.cep : ""}
+          </div>
+        </div>
+      </div>
+    `
+  }
+
+  if (cliente.observacoes) {
+    conteudo += `
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid rgba(0, 191, 255, 0.2);">
+        <h3 style="color: #00BFFF; font-size: 0.9rem; margin-bottom: 1rem; text-transform: uppercase;">Notas</h3>
+        <div class="cliente-field">
+          <div class="cliente-field-value">${cliente.observacoes}</div>
+        </div>
+      </div>
+    `
+  }
+
+  conteudo += `
+    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid rgba(0, 191, 255, 0.2); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #666;">
+      <span>Cadastrado: ${formatarData(cliente.dataCadastro)}</span>
+      <span>Atualizado: ${formatarData(cliente.dataAtualizacao || cliente.dataCadastro)}</span>
+    </div>
+  `
+
+  document.getElementById("clienteDetalhes").innerHTML = conteudo
+  document.getElementById("modalVisualizarCliente").classList.add("active")
+}
+
+function abrirEdicaoCliente() {
+  if (!clienteEmEdicao) return
+
+  fecharModal("modalVisualizarCliente")
+
+  document.getElementById("clienteNome").value = clienteEmEdicao.nome
+  document.getElementById("clienteCPF").value = clienteEmEdicao.cpf || ""
+  document.getElementById("clienteDataNascimento").value = clienteEmEdicao.dataNascimento || ""
+  document.getElementById("clienteTelefone").value = clienteEmEdicao.telefone
+  document.getElementById("clienteEmail").value = clienteEmEdicao.email || ""
+  document.getElementById("clienteEndereco").value = clienteEmEdicao.endereco || ""
+  document.getElementById("clienteNumero").value = clienteEmEdicao.numero || ""
+  document.getElementById("clienteComplemento").value = clienteEmEdicao.complemento || ""
+  document.getElementById("clienteBairro").value = clienteEmEdicao.bairro || ""
+  document.getElementById("clienteCidade").value = clienteEmEdicao.cidade || ""
+  document.getElementById("clienteEstado").value = clienteEmEdicao.estado || ""
+  document.getElementById("clienteCEP").value = clienteEmEdicao.cep || ""
+  document.getElementById("clienteObservacoes").value = clienteEmEdicao.observacoes || ""
+
+  document.querySelector("#modalCliente .modal-header .card-title").textContent = "Editar Cliente"
+  document.getElementById("modalCliente").classList.add("active")
+}
+
+function deletarClienteAtual() {
+  if (!clienteEmEdicao) return
+
+  if (confirm(`Tem certeza que deseja deletar ${clienteEmEdicao.nome}?`)) {
+    deletarCliente(clienteEmEdicao.id)
+    fecharModal("modalVisualizarCliente")
+  }
+}
+
+function carregarClientesNoSelect() {
+  const select = document.getElementById("clienteVenda")
+  if (!select) return
+
+  select.innerHTML = '<option value="">Selecione um cliente...</option>'
+
+  clientes.forEach((cliente) => {
+    const option = document.createElement("option")
+    option.value = cliente.id
+    option.textContent = `${cliente.nome} - ${cliente.telefone || "Sem telefone"}`
+    select.appendChild(option)
+  })
+}
+
+function selecionarCliente() {
+  const select = document.getElementById("clienteVenda")
+  const clienteId = select.value
+
+  if (!clienteId) {
+    clienteVendaAtual = null
+    document.getElementById("clienteSelecionado").style.display = "none"
+    return
+  }
+
+  const cliente = clientes.find((c) => c.id === clienteId)
+  if (cliente) {
+    clienteVendaAtual = cliente
+    document.getElementById("clienteNomeSelecionado").textContent = cliente.nome
+    document.getElementById("clienteTelefoneSelecionado").textContent = cliente.telefone || "Sem telefone"
+    document.getElementById("clienteSelecionado").style.display = "block"
+  }
+}
+
+function abrirCadastroRapidoCliente() {
+  document.getElementById("clienteRapidoNome").value = ""
+  document.getElementById("clienteRapidoTelefone").value = ""
+  document.getElementById("clienteRapidoEmail").value = ""
+  document.getElementById("modalClienteRapido").classList.add("active")
+}
+
+function salvarClienteRapido(event) {
+  event.preventDefault()
+
   const novoCliente = {
     id: Date.now().toString(),
-    nome: document.getElementById("clienteNome").value,
-    telefone: document.getElementById("clienteTelefone").value,
-    email: document.getElementById("clienteEmail").value,
+    nome: document.getElementById("clienteRapidoNome").value,
+    telefone: document.getElementById("clienteRapidoTelefone").value,
+    email: document.getElementById("clienteRapidoEmail").value || "",
     dataCadastro: new Date().toISOString(),
   }
 
   clientes.push(novoCliente)
   localStorage.setItem("clientes", JSON.stringify(clientes))
 
-  fecharModal("modalCliente")
-  carregarClientes()
-  carregarClientesNoSelect() // Atualizar select do PDV
+  // Recarregar select
+  carregarClientesNoSelect()
+
+  // Selecionar automaticamente o cliente cadastrado
+  document.getElementById("clienteVenda").value = novoCliente.id
+  selecionarCliente()
+
+  // Fechar modal
+  fecharModal("modalClienteRapido")
+
+  // Mostrar mensagem de sucesso
+  alert("✅ Cliente cadastrado e selecionado com sucesso!")
 }
 
 function deletarCliente(clienteId) {
-  if (confirm("Deletar este cliente?")) {
-    clientes = clientes.filter((c) => c.id !== clienteId)
-    localStorage.setItem("clientes", JSON.stringify(clientes))
-    carregarClientes()
-  }
+  clientes = clientes.filter((c) => c.id !== clienteId)
+  localStorage.setItem("clientes", JSON.stringify(clientes))
 }
 
 // Caixa Functions
@@ -806,71 +1087,48 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 })
 
-// FUNÇÕES DE CLIENTE NO CARRINHO
-function carregarClientesNoSelect() {
-  const select = document.getElementById("clienteVenda")
-  if (!select) return
+function validarCPF(cpf) {
+  cpf = cpf.replace(/\D/g, "")
 
-  select.innerHTML = '<option value="">Selecione um cliente...</option>'
-  
-  clientes.forEach((cliente) => {
-    const option = document.createElement("option")
-    option.value = cliente.id
-    option.textContent = `${cliente.nome} - ${cliente.telefone || "Sem telefone"}`
-    select.appendChild(option)
-  })
-}
+  if (cpf.length !== 11) return false
+  if (/^(\d)\1{10}$/.test(cpf)) return false
 
-function selecionarCliente() {
-  const select = document.getElementById("clienteVenda")
-  const clienteId = select.value
-  
-  if (!clienteId) {
-    clienteVendaAtual = null
-    document.getElementById("clienteSelecionado").style.display = "none"
-    return
+  let soma = 0
+  let resto
+
+  for (let i = 1; i <= 9; i++) {
+    soma += Number.parseInt(cpf.substring(i - 1, i)) * (11 - i)
   }
 
-  const cliente = clientes.find((c) => c.id === clienteId)
-  if (cliente) {
-    clienteVendaAtual = cliente
-    document.getElementById("clienteNomeSelecionado").textContent = cliente.nome
-    document.getElementById("clienteTelefoneSelecionado").textContent = cliente.telefone || "Sem telefone"
-    document.getElementById("clienteSelecionado").style.display = "block"
-  }
-}
+  resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  if (resto !== Number.parseInt(cpf.substring(9, 10))) return false
 
-function abrirCadastroRapidoCliente() {
-  document.getElementById("clienteRapidoNome").value = ""
-  document.getElementById("clienteRapidoTelefone").value = ""
-  document.getElementById("clienteRapidoEmail").value = ""
-  document.getElementById("modalClienteRapido").classList.add("active")
-}
-
-function salvarClienteRapido(event) {
-  event.preventDefault()
-
-  const novoCliente = {
-    id: Date.now().toString(),
-    nome: document.getElementById("clienteRapidoNome").value,
-    telefone: document.getElementById("clienteRapidoTelefone").value,
-    email: document.getElementById("clienteRapidoEmail").value || "",
-    dataCadastro: new Date().toISOString(),
+  soma = 0
+  for (let i = 1; i <= 10; i++) {
+    soma += Number.parseInt(cpf.substring(i - 1, i)) * (12 - i)
   }
 
-  clientes.push(novoCliente)
-  localStorage.setItem("clientes", JSON.stringify(clientes))
+  resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  if (resto !== Number.parseInt(cpf.substring(10, 11))) return false
 
-  // Recarregar select
-  carregarClientesNoSelect()
-
-  // Selecionar automaticamente o cliente cadastrado
-  document.getElementById("clienteVenda").value = novoCliente.id
-  selecionarCliente()
-
-  // Fechar modal
-  fecharModal("modalClienteRapido")
-
-  // Mostrar mensagem de sucesso
-  alert("✅ Cliente cadastrado e selecionado com sucesso!")
+  return true
 }
+
+// Evento de entrada para formatação automática de CPF e CEP
+document.addEventListener("DOMContentLoaded", () => {
+  const cpfInput = document.getElementById("clienteCPF")
+  if (cpfInput) {
+    cpfInput.addEventListener("input", (e) => {
+      e.target.value = formatarCPF(e.target.value)
+    })
+  }
+
+  const cepInput = document.getElementById("clienteCEP")
+  if (cepInput) {
+    cepInput.addEventListener("input", (e) => {
+      e.target.value = formatarCEP(e.target.value)
+    })
+  }
+})
