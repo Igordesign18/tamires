@@ -350,6 +350,8 @@ function mostrarTabelaProdutos() {
             <td>${produto.codigo}</td>
             <td>${produto.nome}</td>
             <td>${produto.categoria}</td>
+            <td>${produto.tamanhos || "—"}</td>
+            <td>${produto.precoCusto ? formatarMoeda(produto.precoCusto) : "—"}</td>
             <td>${formatarMoeda(produto.preco)}</td>
             <td style="color: ${produto.estoque > 10 ? "#2ecc71" : "#f39c12"}; font-weight: bold;">${produto.estoque}</td>
             <td>
@@ -380,6 +382,8 @@ function abrirModalProduto() {
   document.getElementById("produtoCodigo").value = ""
   document.getElementById("produtoNome").value = ""
   document.getElementById("produtoCategoria").value = ""
+  document.getElementById("produtoTamanhos").value = ""
+  document.getElementById("produtoPrecoCusto").value = ""
   document.getElementById("produtoPreco").value = ""
   document.getElementById("produtoEstoque").value = ""
   document.getElementById("modalProduto").classList.add("active")
@@ -393,6 +397,8 @@ function salvarProduto(event) {
     codigo: document.getElementById("produtoCodigo").value,
     nome: document.getElementById("produtoNome").value,
     categoria: document.getElementById("produtoCategoria").value,
+    tamanhos: document.getElementById("produtoTamanhos").value,
+    precoCusto: Number.parseFloat(document.getElementById("produtoPrecoCusto").value),
     preco: Number.parseFloat(document.getElementById("produtoPreco").value),
     estoque: Number.parseInt(document.getElementById("produtoEstoque").value),
   }
@@ -411,6 +417,8 @@ function editarProduto(produtoId) {
   document.getElementById("produtoCodigo").value = produto.codigo
   document.getElementById("produtoNome").value = produto.nome
   document.getElementById("produtoCategoria").value = produto.categoria
+  document.getElementById("produtoTamanhos").value = produto.tamanhos || ""
+  document.getElementById("produtoPrecoCusto").value = produto.precoCusto || 0
   document.getElementById("produtoPreco").value = produto.preco
   document.getElementById("produtoEstoque").value = produto.estoque
 
