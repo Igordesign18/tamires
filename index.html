@@ -113,6 +113,13 @@
         <symbol id="icon-user-plus" viewBox="0 0 24 24">
             <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </symbol>
+
+        <symbol id="icon-phone" viewBox="0 0 24 24">
+            <path d="M17.92 7.02C17.45 6.18 16.51 5.55 15.42 5.55c-1.09 0-2.03.63-2.5 1.47C12.04 5.33 10.33 4.5 8.5 4.5C4.36 4.5 1 7.86 1 12s3.36 7.5 7.5 7.5c1.83 0 3.54-.83 4.67-2.14.47.84 1.41 1.47 2.5 1.47 1.09 0 2.03-.63 2.5-1.47.94 1.48 2.74 2.47 4.75 2.47 3.1 0 5.62-2.52 5.62-5.62 0-2.08-1.14-3.89-2.83-4.85zM19 15.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </symbol>
+        <symbol id="icon-id-card" viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zm-5.04-6.71l-2.75 3.54-2.16-2.66c-.44-.53-1.25-.53-1.69 0-.53.66-.53 1.78.06 2.46l3.15 3.86c.75.92 2.26.92 3.01 0l5.91-7.34c.59-.74.59-1.82.05-2.58-.45-.56-1.25-.56-1.7-.03L14.96 8.79z"/>
+        </symbol>
     </svg>
 
     <!-- Tela Principal -->
@@ -298,7 +305,7 @@
                     
                     <div class="search-container">
                         <svg class="icon search-icon"><use href="#icon-search"></use></svg>
-                        <input type="text" id="searchCliente" class="search-input" placeholder="Buscar cliente...">
+                        <input type="text" id="searchCliente" class="search-input" placeholder="Buscar por nome, telefone ou CPF...">
                     </div>
                     
                     <div class="table-container">
@@ -306,8 +313,10 @@
                             <thead>
                                 <tr>
                                     <th>Nome</th>
+                                    <th>CPF</th>
                                     <th>Telefone</th>
                                     <th>Email</th>
+                                    <th>Cidade</th>
                                     <th>Data Cadastro</th>
                                     <th>Ações</th>
                                 </tr>
@@ -442,32 +451,140 @@
     <div id="modalCliente" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="card-title">Novo Cliente</h2>
+                <h2 class="card-title" id="modalClienteTitulo">Cadastro de Cliente</h2>
                 <button class="modal-close" onclick="fecharModal('modalCliente')">×</button>
             </div>
             
+            <!-- Expandir formulário com mais campos profissionais -->
             <form onsubmit="salvarCliente(event)">
-                <div class="form-group">
-                    <label for="clienteNome" class="form-label">Nome:</label>
-                    <input type="text" id="clienteNome" class="form-control" required>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="clienteTelefone" class="form-label">Telefone:</label>
-                        <input type="tel" id="clienteTelefone" class="form-control">
-                    </div>
+                <!-- Seção Dados Pessoais -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Dados Pessoais</h3>
                     
                     <div class="form-group">
-                        <label for="clienteEmail" class="form-label">Email:</label>
-                        <input type="email" id="clienteEmail" class="form-control">
+                        <label for="clienteNome" class="form-label">Nome Completo: <span class="required">*</span></label>
+                        <input type="text" id="clienteNome" class="form-control" required placeholder="Ex: Maria da Silva Santos">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clienteCPF" class="form-label">CPF: <span class="required">*</span></label>
+                            <input type="text" id="clienteCPF" class="form-control" required placeholder="000.000.000-00" maxlength="14">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clienteDataNascimento" class="form-label">Data de Nascimento:</label>
+                            <input type="date" id="clienteDataNascimento" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clienteTelefone" class="form-label">Telefone: <span class="required">*</span></label>
+                            <input type="tel" id="clienteTelefone" class="form-control" required placeholder="(00) 00000-0000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clienteEmail" class="form-label">Email:</label>
+                            <input type="email" id="clienteEmail" class="form-control" placeholder="cliente@email.com">
+                        </div>
                     </div>
                 </div>
-                
-                <button type="submit" class="btn btn-success" style="width: 100%;">
-                    <svg class="icon"><use href="#icon-save"></use></svg>
-                    Salvar Cliente
-                </button>
+
+                <!-- Seção Endereço -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Endereço</h3>
+                    
+                    <div class="form-group">
+                        <label for="clienteEndereco" class="form-label">Rua:</label>
+                        <input type="text" id="clienteEndereco" class="form-control" placeholder="Ex: Rua das Flores">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 0.6;">
+                            <label for="clienteNumero" class="form-label">Número:</label>
+                            <input type="text" id="clienteNumero" class="form-control" placeholder="123">
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1.4;">
+                            <label for="clienteComplemento" class="form-label">Complemento:</label>
+                            <input type="text" id="clienteComplemento" class="form-control" placeholder="Apto 45">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clienteBairro" class="form-label">Bairro:</label>
+                            <input type="text" id="clienteBairro" class="form-control" placeholder="Centro">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clienteCidade" class="form-label">Cidade:</label>
+                            <input type="text" id="clienteCidade" class="form-control" placeholder="São Paulo">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clienteEstado" class="form-label">Estado:</label>
+                            <select id="clienteEstado" class="form-control">
+                                <option value="">Selecionar</option>
+                                <option value="AC">AC - Acre</option>
+                                <option value="AL">AL - Alagoas</option>
+                                <option value="AP">AP - Amapá</option>
+                                <option value="AM">AM - Amazonas</option>
+                                <option value="BA">BA - Bahia</option>
+                                <option value="CE">CE - Ceará</option>
+                                <option value="DF">DF - Distrito Federal</option>
+                                <option value="ES">ES - Espírito Santo</option>
+                                <option value="GO">GO - Goiás</option>
+                                <option value="MA">MA - Maranhão</option>
+                                <option value="MT">MT - Mato Grosso</option>
+                                <option value="MS">MS - Mato Grosso do Sul</option>
+                                <option value="MG">MG - Minas Gerais</option>
+                                <option value="PA">PA - Pará</option>
+                                <option value="PB">PB - Paraíba</option>
+                                <option value="PR">PR - Paraná</option>
+                                <option value="PE">PE - Pernambuco</option>
+                                <option value="PI">PI - Piauí</option>
+                                <option value="RJ">RJ - Rio de Janeiro</option>
+                                <option value="RN">RN - Rio Grande do Norte</option>
+                                <option value="RS">RS - Rio Grande do Sul</option>
+                                <option value="RO">RO - Rondônia</option>
+                                <option value="RR">RR - Roraima</option>
+                                <option value="SC">SC - Santa Catarina</option>
+                                <option value="SP">SP - São Paulo</option>
+                                <option value="SE">SE - Sergipe</option>
+                                <option value="TO">TO - Tocantins</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clienteCEP" class="form-label">CEP:</label>
+                            <input type="text" id="clienteCEP" class="form-control" placeholder="00000-000" maxlength="9">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção Observações -->
+                <div class="form-section">
+                    <h3 class="form-section-title">Observações</h3>
+                    <div class="form-group">
+                        <label for="clienteObservacoes" class="form-label">Notas:</label>
+                        <textarea id="clienteObservacoes" class="form-control textarea-control" placeholder="Preferências, tamanhos usuais, histórico de compras, etc."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">
+                        <svg class="icon"><use href="#icon-save"></use></svg>
+                        Salvar Cliente
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="fecharModal('modalCliente')">
+                        <svg class="icon"><use href="#icon-close"></use></svg>
+                        Cancelar
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -562,6 +679,33 @@
                     Imprimir
                 </button>
                 <button class="btn btn-danger" style="flex: 1;" onclick="fecharModal('modalComprovante')">
+                    <svg class="icon"><use href="#icon-close"></use></svg>
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Visualizar Cliente -->
+    <div id="modalVisualizarCliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="card-title">Detalhes do Cliente</h2>
+                <button class="modal-close" onclick="fecharModal('modalVisualizarCliente')">×</button>
+            </div>
+            
+            <div id="clienteDetalhes" class="cliente-detalhes"></div>
+            
+            <div class="form-actions">
+                <button class="btn btn-primary" onclick="abrirEdicaoCliente()">
+                    <svg class="icon"><use href="#icon-edit"></use></svg>
+                    Editar
+                </button>
+                <button class="btn btn-danger" onclick="deletarClienteAtual()">
+                    <svg class="icon"><use href="#icon-delete"></use></svg>
+                    Deletar
+                </button>
+                <button class="btn btn-danger" onclick="fecharModal('modalVisualizarCliente')">
                     <svg class="icon"><use href="#icon-close"></use></svg>
                     Fechar
                 </button>
