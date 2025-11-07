@@ -4,876 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LaBella Woman - Sistema PDV</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-black: #0a0a0a;
-            --secondary-black: #1a1a1a;
-            --card-black: #242424;
-            --gold: #d4af37;
-            --gold-hover: #f0c040;
-            --text-white: #ffffff;
-            --text-gray: #b0b0b0;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
-            color: var(--text-white);
-            min-height: 100vh;
-        }
-
-        /* SVG Icons */
-        .icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-            vertical-align: middle;
-        }
-
-        .icon-lg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .icon-xl {
-            width: 32px;
-            height: 32px;
-        }
-
-        /* Header */
-        .header {
-            background: var(--secondary-black);
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .caixa-status {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .caixa-aberto {
-            background: var(--success);
-            color: white;
-        }
-
-        .caixa-fechado {
-            background: var(--danger);
-            color: white;
-        }
-
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        /* Navigation */
-        .nav-tabs {
-            background: var(--secondary-black);
-            padding: 1rem;
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            border-bottom: 1px solid var(--gold);
-        }
-
-        .nav-tab {
-            padding: 0.8rem 1.5rem;
-            background: var(--card-black);
-            border: 1px solid var(--gold);
-            color: var(--text-gray);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            white-space: nowrap;
-            border-radius: 8px;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .nav-tab:hover::before {
-            left: 100%;
-        }
-
-        .nav-tab:hover {
-            background: var(--gold);
-            color: var(--primary-black);
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
-        }
-
-        .nav-tab.active {
-            background: var(--gold);
-            color: var(--primary-black);
-            font-weight: bold;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Cards */
-        .card {
-            background: var(--card-black);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(212, 175, 55, 0.4);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--gold);
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.8rem;
-            background: var(--secondary-black);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            color: var(--text-white);
-            font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--gold-hover);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        /* Address Form Styles */
-        .address-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1rem;
-        }
-
-        .address-row-full {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-        }
-
-        /* Search Field Styles */
-        .search-container {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.8rem 1rem 0.8rem 3rem;
-            background: var(--secondary-black);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            color: var(--text-white);
-            font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--gold-hover);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gold);
-            pointer-events: none;
-        }
-
-        /* Phone Input Container */
-        .phone-container {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .country-code {
-            width: 80px;
-            flex-shrink: 0;
-        }
-
-        .phone-number {
-            flex: 1;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
-            color: var(--primary-black);
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, var(--gold-hover), var(--gold));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), #27ae60);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #27ae60, var(--success));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #c0392b);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #c0392b, var(--danger));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.4);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, var(--warning), #e67e22);
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: linear-gradient(135deg, #e67e22, var(--warning));
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
-        }
-
-        .btn-icon {
-            padding: 0.6rem;
-            font-size: 1.2rem;
-        }
-
-        /* Table */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: var(--secondary-black);
-            color: var(--gold);
-            padding: 1rem;
-            text-align: left;
-            font-weight: bold;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-        }
-
-        tr:hover {
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        /* PDV Específico */
-        .pdv-container {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 2rem;
-        }
-
-        .produtos-busca {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .produto-item {
-            background: var(--secondary-black);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 0.5rem;
-        }
-
-        .produto-item:hover {
-            border-color: var(--gold);
-            transform: translateX(5px) scale(1.02);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
-        }
-
-        .carrinho {
-            position: sticky;
-            top: 120px;
-        }
-
-        .carrinho-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background: var(--secondary-black);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .carrinho-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .carrinho-total {
-            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
-            color: var(--primary-black);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
-        }
-
-        .quantidade-control {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .quantidade-control button {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: none;
-            background: var(--gold);
-            color: var(--primary-black);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quantidade-control button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 3px 10px rgba(212, 175, 55, 0.4);
-        }
-
-        /* Discount Field Styles */
-        .discount-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: var(--secondary-black);
-            border-radius: 8px;
-            border: 1px solid var(--gold);
-        }
-
-        .discount-input {
-            width: 100px;
-            padding: 0.5rem;
-            background: var(--card-black);
-            border: 1px solid var(--gold);
-            border-radius: 4px;
-            color: var(--text-white);
-            text-align: center;
-        }
-
-        .discount-info {
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--card-black);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--gold);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            color: var(--gold);
-            font-weight: bold;
-            margin: 0.5rem 0;
-        }
-
-        .stat-label {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background: var(--card-black);
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 2px solid var(--gold);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: scale(0.8) translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        .modal-close {
-            background: var(--danger);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-        }
-
-        .modal-close:hover {
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
-        }
-
-        /* Comprovante */
-        .comprovante {
-            background: white;
-            color: black;
-            padding: 2rem;
-            max-width: 300px;
-            margin: 0 auto;
-            font-family: 'Courier New', monospace;
-        }
-
-        .comprovante-header {
-            text-align: center;
-            border-bottom: 2px dashed black;
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .comprovante-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 0.5rem 0;
-        }
-
-        .comprovante-footer {
-            border-top: 2px dashed black;
-            padding-top: 1rem;
-            margin-top: 1rem;
-            text-align: center;
-        }
-
-        /* Pagamento Dinheiro */
-        .pagamento-dinheiro {
-            display: none;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: var(--secondary-black);
-            border-radius: 8px;
-            border: 1px solid var(--gold);
-        }
-
-        .pagamento-dinheiro.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Filtros Relatório */
-        .filtros-relatorio {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .filtro-btn {
-            padding: 0.5rem 1rem;
-            background: var(--card-black);
-            border: 1px solid var(--gold);
-            color: var(--text-gray);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .filtro-btn.active {
-            background: var(--gold);
-            color: var(--primary-black);
-        }
-
-        .filtro-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .pdv-container {
-                grid-template-columns: 1fr;
-            }
-
-            .carrinho {
-                position: relative;
-                top: 0;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .address-row {
-                grid-template-columns: 1fr;
-            }
-
-            .address-row-full {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .nav-tabs {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .nav-tab {
-                flex: 1;
-                min-width: 120px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-
-            .filtros-relatorio {
-                justify-content: center;
-            }
-
-            .phone-container {
-                flex-direction: column;
-            }
-
-            .country-code {
-                width: 100%;
-            }
-        }
-
-        /* Loading */
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .loading.active {
-            display: flex;
-        }
-
-        .spinner {
-            border: 4px solid var(--secondary-black);
-            border-top: 4px solid var(--gold);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Alert */
-        .alert {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            animation: slideInDown 0.3s ease;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert-success {
-            background: rgba(46, 204, 113, 0.2);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-
-        .alert-danger {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-        }
-
-        .alert-warning {
-            background: rgba(243, 156, 18, 0.2);
-            border: 1px solid var(--warning);
-            color: var(--warning);
-        }
-
-        /* Hidden */
-        .hidden {
-            display: none !important;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- SVG Icons Library -->
@@ -990,15 +121,13 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo">
-                    <svg class="icon-xl" style="fill: var(--gold);">
-                        <use href="#icon-dress"></use>
-                    </svg>
+                    <svg class="icon-xl"><use href="#icon-bag"></use></svg>
                     LaBella Woman
                 </div>
+                <div id="relogioTime" style="font-size: 0.9rem; color: #d4af37;"></div>
                 <div class="user-info">
-                    <span id="relogioTime"></span>
-                    <span id="caixaStatusBadge" class="caixa-status caixa-fechado">Caixa Fechado</span>
-                    <button class="logout-btn" onclick="realizarLogout()">
+                    <span id="caixaStatus" class="caixa-status caixa-fechado">Caixa Fechado</span>
+                    <button class="logout-btn" onclick="logout()">
                         <svg class="icon"><use href="#icon-lock"></use></svg>
                         Sair
                     </button>
@@ -1006,14 +135,14 @@
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav class="nav-tabs">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
             <button class="nav-tab active" onclick="changeTab('pdv')">
                 <svg class="icon"><use href="#icon-cart"></use></svg>
                 PDV
             </button>
             <button class="nav-tab" onclick="changeTab('produtos')">
-                <svg class="icon"><use href="#icon-shirt"></use></svg>
+                <svg class="icon"><use href="#icon-box"></use></svg>
                 Produtos
             </button>
             <button class="nav-tab" onclick="changeTab('clientes')">
@@ -1032,118 +161,95 @@
                 <svg class="icon"><use href="#icon-chart"></use></svg>
                 Relatórios
             </button>
-        </nav>
+        </div>
 
-        <!-- Container Principal -->
+        <!-- Container -->
         <div class="container">
-            <!-- Seção PDV -->
+            <!-- PDV Section -->
             <section id="pdv" class="section active">
-                <div id="alertPdvCaixa"></div>
-                <div class="pdv-container">
-                    <div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="card-title">Nova Venda</h2>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Cliente</label>
-                                <div style="display: flex; gap: 1rem;">
-                                    <select id="pdvCliente" class="form-control" style="flex: 1;">
-                                        <option value="">Cliente Avulso</option>
-                                    </select>
-                                    <button class="btn btn-success" onclick="abrirCadastroRapidoCliente()">
-                                        <svg class="icon"><use href="#icon-user-plus"></use></svg>
-                                        Cadastrar
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="produtos-busca">
-                                <input type="text" id="buscaProduto" class="form-control" placeholder="Buscar produto por nome ou SKU...">
-                                <button class="btn btn-primary" onclick="buscarProdutos()">
-                                    <svg class="icon"><use href="#icon-search"></use></svg>
-                                    Buscar
-                                </button>
-                            </div>
-
-                            <div id="listaProdutos"></div>
-                        </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title">Ponto de Venda</h1>
                     </div>
-
-                    <div class="carrinho">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Carrinho</h3>
+                    
+                    <div class="pdv-container">
+                        <div>
+                            <div class="search-container">
+                                <svg class="icon search-icon"><use href="#icon-search"></use></svg>
+                                <input type="text" id="searchProduto" class="search-input" placeholder="Buscar produto...">
                             </div>
                             
+                            <div id="produtosList" class="produtos-busca"></div>
+                        </div>
+                        
+                        <div class="carrinho">
+                            <h2 style="color: #d4af37; margin-bottom: 1rem;">Carrinho</h2>
                             <div id="carrinhoItens"></div>
+                            <div class="carrinho-total">
+                                <div>Total: <span id="carrinhoTotal">R$ 0,00</span></div>
+                            </div>
                             
-                            <!-- Campo de Desconto -->
                             <div class="discount-container">
-                                <label class="form-label" style="margin: 0;">Desconto (%):</label>
-                                <input type="number" id="descontoPercentual" class="discount-input" min="0" max="100" step="0.01" placeholder="0" onchange="aplicarDesconto()">
-                                <span class="discount-info" id="descontoInfo">R$ 0,00</span>
+                                <label for="desconto" style="color: #d4af37; font-weight: bold;">Desconto:</label>
+                                <input type="number" id="desconto" class="discount-input" min="0" max="100" value="0" onchange="atualizarDesconto()">
+                                <span class="discount-info">R$ <span id="descontoValor">0,00</span></span>
                             </div>
                             
-                            <div class="carrinho-total" id="carrinhoTotal">
-                                R$ 0,00
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Forma de Pagamento</label>
-                                <select id="formaPagamento" class="form-control" onchange="togglePagamentoDinheiro()">
+                            <div style="margin-bottom: 1rem;">
+                                <label for="metodoPagamento" style="color: #d4af37; font-weight: bold;">Método de Pagamento:</label>
+                                <select id="metodoPagamento" class="form-control" onchange="mostrarPagamentoDinheiro()">
+                                    <option value="credito">Cartão de Crédito</option>
+                                    <option value="debito">Cartão de Débito</option>
                                     <option value="dinheiro">Dinheiro</option>
-                                    <option value="cartao_debito">Cartão Débito</option>
-                                    <option value="cartao_credito">Cartão Crédito</option>
                                     <option value="pix">PIX</option>
                                 </select>
                             </div>
-
-                            <div id="pagamentoDinheiro" class="pagamento-dinheiro active">
+                            
+                            <div id="pagamentoDinheiro" class="pagamento-dinheiro">
                                 <div class="form-group">
-                                    <label class="form-label">Valor Recebido</label>
-                                    <input type="number" id="valorRecebido" class="form-control" step="0.01" placeholder="0,00">
+                                    <label for="valorRecebido" class="form-label">Valor Recebido:</label>
+                                    <input type="number" id="valorRecebido" class="form-control" min="0" step="0.01" onchange="calcularTroco()">
                                 </div>
-                                
                                 <div class="form-group">
-                                    <label class="form-label">Precisa de Troco?</label>
-                                    <select id="precisaTroco" class="form-control">
-                                        <option value="sim">Sim</option>
-                                        <option value="nao">Não</option>
-                                    </select>
-                                </div>
-                                
-                                <div id="trocoInfo" style="margin-top: 1rem; padding: 1rem; background: var(--gold); color: var(--primary-black); border-radius: 8px; font-weight: bold; text-align: center;">
-                                    Troco: R$ 0,00
+                                    <label for="valorTroco" class="form-label">Troco:</label>
+                                    <input type="number" id="valorTroco" class="form-control" readonly>
                                 </div>
                             </div>
-
-                            <button class="btn btn-success" style="width: 100%;" onclick="finalizarVenda()">
+                            
+                            <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;" onclick="finalizarVenda()">
                                 <svg class="icon"><use href="#icon-check"></use></svg>
                                 Finalizar Venda
+                            </button>
+                            <button class="btn btn-danger" style="width: 100%;" onclick="limparCarrinho()">
+                                <svg class="icon"><use href="#icon-close"></use></svg>
+                                Limpar Carrinho
                             </button>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Seção Produtos -->
+            <!-- Produtos Section -->
             <section id="produtos" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Gerenciar Produtos</h2>
+                        <h1 class="card-title">Gerenciar Produtos</h1>
                         <button class="btn btn-primary" onclick="abrirModalProduto()">
                             <svg class="icon"><use href="#icon-plus"></use></svg>
                             Novo Produto
                         </button>
                     </div>
                     
+                    <div class="search-container">
+                        <svg class="icon search-icon"><use href="#icon-search"></use></svg>
+                        <input type="text" id="searchProdutoGerenciamento" class="search-input" placeholder="Buscar produto..." onkeyup="filtrarProdutos()">
+                    </div>
+                    
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>SKU</th>
+                                    <th>Código</th>
                                     <th>Nome</th>
                                     <th>Categoria</th>
                                     <th>Preço</th>
@@ -1151,27 +257,26 @@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabelaProdutos"></tbody>
+                            <tbody id="produtosTabela"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Seção Clientes -->
+            <!-- Clientes Section -->
             <section id="clientes" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Gerenciar Clientes</h2>
+                        <h1 class="card-title">Gerenciar Clientes</h1>
                         <button class="btn btn-primary" onclick="abrirModalCliente()">
-                            <svg class="icon"><use href="#icon-plus"></use></svg>
+                            <svg class="icon"><use href="#icon-user-plus"></use></svg>
                             Novo Cliente
                         </button>
                     </div>
                     
-                    <!-- Campo de Pesquisa -->
                     <div class="search-container">
                         <svg class="icon search-icon"><use href="#icon-search"></use></svg>
-                        <input type="text" id="searchCliente" class="search-input" placeholder="Pesquisar clientes por nome, telefone ou CPF...">
+                        <input type="text" id="searchCliente" class="search-input" placeholder="Buscar cliente...">
                     </div>
                     
                     <div class="table-container">
@@ -1180,156 +285,70 @@
                                 <tr>
                                     <th>Nome</th>
                                     <th>Telefone</th>
-                                    <th>CPF</th>
                                     <th>Email</th>
-                                    <th>Endereço</th>
+                                    <th>Data Cadastro</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabelaClientes"></tbody>
+                            <tbody id="clientesTabela"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Seção Caixa -->
+            <!-- Caixa Section -->
             <section id="caixa" class="section">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Status do Caixa</div>
-                        <div class="stat-value" id="caixaStatusText">Fechado</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Saldo Inicial</div>
-                        <div class="stat-value" id="caixaSaldoInicial">R$ 0,00</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total Vendas</div>
-                        <div class="stat-value" id="caixaTotalVendas">R$ 0,00</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Saldo Atual</div>
-                        <div class="stat-value" id="caixaSaldoAtual">R$ 0,00</div>
-                    </div>
-                </div>
-
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Controle de Caixa</h2>
+                        <h1 class="card-title">Controle de Caixa</h1>
                     </div>
                     
-                    <div id="caixaControles">
-                        <div class="form-group">
-                            <label class="form-label">Valor Inicial</label>
-                            <input type="number" id="valorInicialCaixa" class="form-control" placeholder="0.00" step="0.01">
-                        </div>
-                        <button class="btn btn-success" onclick="abrirCaixa()">
+                    <div class="form-row">
+                        <button class="btn btn-success" onclick="abrirCaixa()" id="btnAbrirCaixa">
                             <svg class="icon"><use href="#icon-unlock"></use></svg>
                             Abrir Caixa
                         </button>
-                    </div>
-
-                    <div id="caixaAberto" style="display: none;">
-                        <button class="btn btn-danger" onclick="fecharCaixa()">
+                        <button class="btn btn-danger" onclick="fecharCaixa()" id="btnFecharCaixa" style="display: none;">
                             <svg class="icon"><use href="#icon-lock"></use></svg>
                             Fechar Caixa
                         </button>
                     </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Histórico de Caixas</h2>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data Abertura</th>
-                                    <th>Data Fechamento</th>
-                                    <th>Valor Inicial</th>
-                                    <th>Valor Final</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaCaixas"></tbody>
-                        </table>
-                    </div>
+                    
+                    <div id="historicoCaixas"></div>
                 </div>
             </section>
 
-            <!-- Seção Movimentações -->
+            <!-- Movimentações Section -->
             <section id="movimentacoes" class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Movimentações Financeiras</h2>
+                        <h1 class="card-title">Movimentações</h1>
                         <button class="btn btn-primary" onclick="abrirModalMovimentacao()">
                             <svg class="icon"><use href="#icon-plus"></use></svg>
                             Nova Movimentação
                         </button>
                     </div>
                     
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data/Hora</th>
-                                    <th>Tipo</th>
-                                    <th>Descrição</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaMovimentacoes"></tbody>
-                        </table>
-                    </div>
+                    <div id="tabelaMovimentacoes"></div>
                 </div>
             </section>
 
-            <!-- Seção Relatórios -->
+            <!-- Relatórios Section -->
             <section id="relatorios" class="section">
-                <div class="filtros-relatorio">
-                    <button class="filtro-btn active" onclick="filtrarRelatorio('hoje')">Hoje</button>
-                    <button class="filtro-btn" onclick="filtrarRelatorio('semana')">Esta Semana</button>
-                    <button class="filtro-btn" onclick="filtrarRelatorio('mes')">Este Mês</button>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Vendas no Período</div>
-                        <div class="stat-value" id="vendasPeriodo">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Total no Período</div>
-                        <div class="stat-value" id="totalPeriodo">R$ 0,00</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Produtos Vendidos</div>
-                        <div class="stat-value" id="produtosVendidos">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Ticket Médio</div>
-                        <div class="stat-value" id="ticketMedio">R$ 0,00</div>
-                    </div>
-                </div>
-
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Vendas Recentes</h2>
+                        <h1 class="card-title">Relatórios</h1>
                     </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data/Hora</th>
-                                    <th>Cliente</th>
-                                    <th>Total</th>
-                                    <th>Pagamento</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelaVendasRelatorio"></tbody>
-                        </table>
+                    
+                    <div class="filtros-relatorio">
+                        <button class="filtro-btn active" onclick="filtrarRelatorio('hoje')">Hoje</button>
+                        <button class="filtro-btn" onclick="filtrarRelatorio('semana')">Última Semana</button>
+                        <button class="filtro-btn" onclick="filtrarRelatorio('mes')">Este Mês</button>
+                        <button class="filtro-btn" onclick="filtrarRelatorio('todos')">Todos</button>
                     </div>
+                    
+                    <div class="stats-grid" id="statsGrid"></div>
+                    <div id="tabelaRelatorios"></div>
                 </div>
             </section>
         </div>
@@ -1339,62 +358,48 @@
     <div id="modalProduto" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="card-title" id="modalProdutoTitulo">Novo Produto</h3>
-                <button class="modal-close" onclick="fecharModalProduto()">×</button>
+                <h2 class="card-title">Novo Produto</h2>
+                <button class="modal-close" onclick="fecharModal('modalProduto')">×</button>
             </div>
             
-            <form id="formProduto" onsubmit="salvarProduto(event)">
-                <input type="hidden" id="produtoId">
+            <form onsubmit="salvarProduto(event)">
+                <div class="form-group">
+                    <label for="produtoCodigo" class="form-label">Código:</label>
+                    <input type="text" id="produtoCodigo" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="produtoNome" class="form-label">Nome:</label>
+                    <input type="text" id="produtoNome" class="form-control" required>
+                </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Nome *</label>
-                        <input type="text" id="produtoNome" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">SKU *</label>
-                        <input type="text" id="produtoSku" class="form-control" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Categoria</label>
-                        <select id="produtoCategoria" class="form-control">
-                            <option value="">Selecione...</option>
-                            <option value="Vestidos">Vestidos</option>
-                            <option value="Blusas">Blusas</option>
-                            <option value="Calças">Calças</option>
-                            <option value="Saias">Saias</option>
-                            <option value="Casacos">Casacos</option>
-                            <option value="Acessórios">Acessórios</option>
-                            <option value="Calçados">Calçados</option>
-                            <option value="Bolsas">Bolsas</option>
+                        <label for="produtoCategoria" class="form-label">Categoria:</label>
+                        <select id="produtoCategoria" class="form-control" required>
+                            <option value="">Selecionar</option>
+                            <option value="vestidos">Vestidos</option>
+                            <option value="camisetas">Camisetas</option>
+                            <option value="calcados">Calçados</option>
+                            <option value="bolsas">Bolsas</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Preço *</label>
-                        <input type="number" id="produtoPreco" class="form-control" step="0.01" required>
+                        <label for="produtoPreco" class="form-label">Preço (R$):</label>
+                        <input type="number" id="produtoPreco" class="form-control" min="0" step="0.01" required>
                     </div>
                 </div>
-
+                
                 <div class="form-group">
-                    <label class="form-label">Quantidade em Estoque *</label>
-                    <input type="number" id="produtoQuantidade" class="form-control" required>
+                    <label for="produtoEstoque" class="form-label">Estoque:</label>
+                    <input type="number" id="produtoEstoque" class="form-control" min="0" required>
                 </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Salvar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalProduto()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
+                
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    <svg class="icon"><use href="#icon-save"></use></svg>
+                    Salvar Produto
+                </button>
             </form>
         </div>
     </div>
@@ -1403,126 +408,32 @@
     <div id="modalCliente" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="card-title" id="modalClienteTitulo">Novo Cliente</h3>
-                <button class="modal-close" onclick="fecharModalCliente()">×</button>
+                <h2 class="card-title">Novo Cliente</h2>
+                <button class="modal-close" onclick="fecharModal('modalCliente')">×</button>
             </div>
             
-            <form id="formCliente" onsubmit="salvarCliente(event)">
-                <input type="hidden" id="clienteId">
-                
+            <form onsubmit="salvarCliente(event)">
                 <div class="form-group">
-                    <label class="form-label">Nome *</label>
+                    <label for="clienteNome" class="form-label">Nome:</label>
                     <input type="text" id="clienteNome" class="form-control" required>
                 </div>
-
+                
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Telefone *</label>
-                        <div class="phone-container">
-                            <select id="codigoPais" class="form-control country-code">
-                                <option value="+55" selected>+55</option>
-                                <option value="+1">+1</option>
-                                <option value="+44">+44</option>
-                                <option value="+49">+49</option>
-                                <option value="+33">+33</option>
-                            </select>
-                            <input type="tel" id="clienteTelefone" class="form-control phone-number" required placeholder="(11) 99999-9999">
-                        </div>
+                        <label for="clienteTelefone" class="form-label">Telefone:</label>
+                        <input type="tel" id="clienteTelefone" class="form-control">
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">CPF</label>
-                        <input type="text" id="clienteCpf" class="form-control" placeholder="000.000.000-00">
+                        <label for="clienteEmail" class="form-label">Email:</label>
+                        <input type="email" id="clienteEmail" class="form-control">
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="clienteEmail" class="form-control" placeholder="cliente@email.com">
-                </div>
-
-                <!-- Campos de Endereço Completo -->
-                <div class="form-group">
-                    <label class="form-label">Endereço Completo</label>
-                    
-                    <div class="address-row" style="margin-bottom: 1rem;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteRua" class="form-control" placeholder="Rua/Avenida">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteNumero" class="form-control" placeholder="Número">
-                        </div>
-                    </div>
-                    
-                    <div class="address-row-full" style="margin-bottom: 1rem;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteBairro" class="form-control" placeholder="Bairro">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteCidade" class="form-control" placeholder="Cidade">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <input type="text" id="clienteEstado" class="form-control" placeholder="Estado">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <input type="text" id="clienteCep" class="form-control" placeholder="CEP">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Salvar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalCliente()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Cadastro Rápido Cliente -->
-    <div id="modalCadastroRapido" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="card-title">Cadastro Rápido - Cliente</h3>
-                <button class="modal-close" onclick="fecharModalCadastroRapido()">×</button>
-            </div>
-            
-            <form id="formCadastroRapido" onsubmit="salvarClienteRapido(event)">
-                <div class="form-group">
-                    <label class="form-label">Nome *</label>
-                    <input type="text" id="clienteRapidoNome" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Telefone *</label>
-                    <div class="phone-container">
-                        <select id="codigoPaisRapido" class="form-control country-code">
-                            <option value="+55" selected>+55</option>
-                            <option value="+1">+1</option>
-                            <option value="+44">+44</option>
-                            <option value="+49">+49</option>
-                            <option value="+33">+33</option>
-                        </select>
-                        <input type="tel" id="clienteRapidoTelefone" class="form-control phone-number" required placeholder="(11) 99999-9999">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Cadastrar e Selecionar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalCadastroRapido()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
+                
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    <svg class="icon"><use href="#icon-save"></use></svg>
+                    Salvar Cliente
+                </button>
             </form>
         </div>
     </div>
@@ -1531,39 +442,34 @@
     <div id="modalMovimentacao" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="card-title">Nova Movimentação</h3>
-                <button class="modal-close" onclick="fecharModalMovimentacao()">×</button>
+                <h2 class="card-title">Nova Movimentação</h2>
+                <button class="modal-close" onclick="fecharModal('modalMovimentacao')">×</button>
             </div>
             
-            <form id="formMovimentacao" onsubmit="salvarMovimentacao(event)">
+            <form onsubmit="salvarMovimentacao(event)">
                 <div class="form-group">
-                    <label class="form-label">Tipo *</label>
+                    <label for="movimentacaoTipo" class="form-label">Tipo:</label>
                     <select id="movimentacaoTipo" class="form-control" required>
+                        <option value="">Selecionar</option>
                         <option value="entrada">Entrada</option>
                         <option value="saida">Saída</option>
                     </select>
                 </div>
-
+                
                 <div class="form-group">
-                    <label class="form-label">Valor *</label>
-                    <input type="number" id="movimentacaoValor" class="form-control" step="0.01" required>
+                    <label for="movimentacaoValor" class="form-label">Valor (R$):</label>
+                    <input type="number" id="movimentacaoValor" class="form-control" min="0" step="0.01" required>
                 </div>
-
+                
                 <div class="form-group">
-                    <label class="form-label">Descrição *</label>
-                    <textarea id="movimentacaoDescricao" class="form-control" rows="3" required></textarea>
+                    <label for="movimentacaoDescricao" class="form-label">Descrição:</label>
+                    <input type="text" id="movimentacaoDescricao" class="form-control" required>
                 </div>
-
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-success" style="flex: 1;">
-                        <svg class="icon"><use href="#icon-save"></use></svg>
-                        Salvar
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="fecharModalMovimentacao()">
-                        <svg class="icon"><use href="#icon-close"></use></svg>
-                        Cancelar
-                    </button>
-                </div>
+                
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    <svg class="icon"><use href="#icon-save"></use></svg>
+                    Salvar Movimentação
+                </button>
             </form>
         </div>
     </div>
@@ -1572,1257 +478,25 @@
     <div id="modalComprovante" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="card-title">Comprovante de Venda</h3>
-                <button class="modal-close" onclick="fecharModalComprovante()">×</button>
+                <h2 class="card-title">Comprovante</h2>
+                <button class="modal-close" onclick="fecharModal('modalComprovante')">×</button>
             </div>
             
             <div id="comprovanteConteudo" class="comprovante"></div>
-
-            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            
+            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
                 <button class="btn btn-primary" style="flex: 1;" onclick="imprimirComprovante()">
                     <svg class="icon"><use href="#icon-print"></use></svg>
                     Imprimir
                 </button>
-                <button class="btn btn-success" style="flex: 1;" onclick="compartilharComprovante()">
-                    <svg class="icon"><use href="#icon-share"></use></svg>
-                    Compartilhar
+                <button class="btn btn-danger" style="flex: 1;" onclick="fecharModal('modalComprovante')">
+                    <svg class="icon"><use href="#icon-close"></use></svg>
+                    Fechar
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Loading -->
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
-    </div>
-
-    <script>
-        // Estado Global - Sistema funciona com localStorage
-        let carrinho = [];
-        let caixaAtual = null;
-        let usuarioAtual = { email: 'sistema@labella.com' };
-        let filtroRelatorioAtual = 'hoje';
-        let descontoAtual = 0;
-
-        // Dados em localStorage
-        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-        let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
-        let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
-        let caixas = JSON.parse(localStorage.getItem('caixas')) || [];
-        let movimentacoes = JSON.parse(localStorage.getItem('movimentacoes')) || [];
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', async () => {
-            await inicializarApp();
-        });
-
-        async function inicializarApp() {
-            await verificarCaixaAberto();
-            await carregarClientes();
-            await carregarProdutos();
-            await carregarHistoricoCaixas();
-            await carregarMovimentacoes();
-            await carregarRelatorios();
-            iniciarRelogio();
-            
-            // Adicionar event listener para pesquisa de clientes
-            document.getElementById('searchCliente').addEventListener('input', filtrarClientes);
-            
-            // Adicionar formatação de telefone
-            adicionarFormatacaoTelefone();
-        }
-
-        // Relógio
-        function iniciarRelogio() {
-            function atualizarRelogio() {
-                const now = new Date();
-                const options = {
-                    timeZone: 'America/Sao_Paulo',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                };
-                const timeString = now.toLocaleString('pt-BR', options);
-                document.getElementById('relogioTime').textContent = timeString;
-            }
-            atualizarRelogio();
-            setInterval(atualizarRelogio, 1000);
-        }
-
-        // Navegação
-        function changeTab(tabName) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-
-            // Recarregar dados ao mudar de aba
-            if (tabName === 'produtos') carregarProdutos();
-            if (tabName === 'clientes') carregarClientes();
-            if (tabName === 'caixa') {
-                verificarCaixaAberto();
-                carregarHistoricoCaixas();
-            }
-            if (tabName === 'movimentacoes') carregarMovimentacoes();
-            if (tabName === 'relatorios') carregarRelatorios();
-        }
-
-        // Formatação
-        function formatarMoeda(valor) {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(valor);
-        }
-
-        function formatarData(data) {
-            return new Date(data).toLocaleString('pt-BR', {
-                timeZone: 'America/Sao_Paulo',
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        // Formatação de telefone
-        function adicionarFormatacaoTelefone() {
-            const telefoneInputs = ['clienteTelefone', 'clienteRapidoTelefone'];
-            
-            telefoneInputs.forEach(inputId => {
-                const input = document.getElementById(inputId);
-                if (input) {
-                    input.addEventListener('input', function(e) {
-                        let value = e.target.value.replace(/\D/g, '');
-                        if (value.length <= 11) {
-                            if (value.length > 6) {
-                                value = value.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
-                            } else if (value.length > 2) {
-                                value = value.replace(/(\d{2})(\d+)/, '($1) $2');
-                            }
-                        }
-                        e.target.value = value;
-                    });
-                }
-            });
-        }
-
-        // Loading
-        function mostrarLoading() {
-            document.getElementById('loading').classList.add('active');
-        }
-
-        function esconderLoading() {
-            document.getElementById('loading').classList.remove('active');
-        }
-
-        // Alertas
-        function mostrarAlerta(mensagem, tipo = 'success') {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${tipo}`;
-            alertDiv.textContent = mensagem;
-            
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            setTimeout(() => alertDiv.remove(), 5000);
-        }
-
-        // Logout simplificado - apenas recarregar página
-        async function realizarLogout() {
-            if (confirm('Deseja realmente sair do sistema?')) {
-                location.reload();
-            }
-        }
-
-        // ==================== DESCONTO ====================
-        function aplicarDesconto() {
-            const percentual = parseFloat(document.getElementById('descontoPercentual').value) || 0;
-            
-            if (percentual < 0 || percentual > 100) {
-                mostrarAlerta('Desconto deve estar entre 0% e 100%!', 'warning');
-                document.getElementById('descontoPercentual').value = 0;
-                descontoAtual = 0;
-                atualizarCarrinho();
-                return;
-            }
-            
-            descontoAtual = percentual;
-            atualizarCarrinho();
-        }
-
-        // ==================== FILTRO DE CLIENTES ====================
-        function filtrarClientes() {
-            const searchTerm = document.getElementById('searchCliente').value.toLowerCase();
-            const rows = document.querySelectorAll('#tabelaClientes tr');
-            
-            rows.forEach(row => {
-                const nome = row.cells[0]?.textContent.toLowerCase() || '';
-                const telefone = row.cells[1]?.textContent.toLowerCase() || '';
-                const cpf = row.cells[2]?.textContent.toLowerCase() || '';
-                const email = row.cells[3]?.textContent.toLowerCase() || '';
-                const endereco = row.cells[4]?.textContent.toLowerCase() || '';
-                
-                const matches = nome.includes(searchTerm) || 
-                               telefone.includes(searchTerm) || 
-                               cpf.includes(searchTerm) || 
-                               email.includes(searchTerm) || 
-                               endereco.includes(searchTerm);
-                
-                row.style.display = matches ? '' : 'none';
-            });
-        }
-
-        // ==================== PAGAMENTO DINHEIRO ====================
-        function togglePagamentoDinheiro() {
-            const formaPagamento = document.getElementById('formaPagamento').value;
-            const pagamentoDinheiro = document.getElementById('pagamentoDinheiro');
-            
-            if (formaPagamento === 'dinheiro') {
-                pagamentoDinheiro.classList.add('active');
-                calcularTroco();
-            } else {
-                pagamentoDinheiro.classList.remove('active');
-            }
-        }
-
-        function calcularTroco() {
-            const valorRecebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-            const totalText = document.getElementById('carrinhoTotal').textContent;
-            const total = parseFloat(totalText.replace('R$', '').replace('.', '').replace(',', '.')) || 0;
-            const troco = valorRecebido - total;
-            
-            const trocoInfo = document.getElementById('trocoInfo');
-            if (troco >= 0) {
-                trocoInfo.textContent = `Troco: ${formatarMoeda(troco)}`;
-                trocoInfo.style.background = 'var(--success)';
-            } else {
-                trocoInfo.textContent = `Faltam: ${formatarMoeda(Math.abs(troco))}`;
-                trocoInfo.style.background = 'var(--danger)';
-            }
-        }
-
-        // Atualizar troco quando valor recebido mudar
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const valorRecebidoInput = document.getElementById('valorRecebido');
-                if (valorRecebidoInput) {
-                    valorRecebidoInput.addEventListener('input', calcularTroco);
-                }
-            }, 1000);
-        });
-
-        // ==================== RELATÓRIOS ====================
-        function filtrarRelatorio(periodo) {
-            // Atualizar botões ativos
-            document.querySelectorAll('.filtro-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            filtroRelatorioAtual = periodo;
-            carregarRelatorios();
-        }
-
-        function obterDataInicioPeriodo(periodo) {
-            const hoje = new Date();
-            let dataInicio;
-            
-            switch (periodo) {
-                case 'hoje':
-                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-                    break;
-                case 'semana':
-                    const diaSemana = hoje.getDay();
-                    const diasParaSegunda = diaSemana === 0 ? 6 : diaSemana - 1;
-                    dataInicio = new Date(hoje);
-                    dataInicio.setDate(hoje.getDate() - diasParaSegunda);
-                    dataInicio.setHours(0, 0, 0, 0);
-                    break;
-                case 'mes':
-                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-                    break;
-                default:
-                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-            }
-            
-            return dataInicio.toISOString();
-        }
-
-        // ==================== CADASTRO RÁPIDO CLIENTE ====================
-        function abrirCadastroRapidoCliente() {
-            document.getElementById('formCadastroRapido').reset();
-            document.getElementById('codigoPaisRapido').value = '+55';
-            document.getElementById('modalCadastroRapido').classList.add('active');
-        }
-
-        function fecharModalCadastroRapido() {
-            document.getElementById('modalCadastroRapido').classList.remove('active');
-        }
-
-        async function salvarClienteRapido(event) {
-            event.preventDefault();
-            
-            const codigoPais = document.getElementById('codigoPaisRapido').value;
-            const telefoneNumero = document.getElementById('clienteRapidoTelefone').value;
-            const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
-            
-            const cliente = {
-                id: Date.now(),
-                nome: document.getElementById('clienteRapidoNome').value,
-                telefone: telefoneCompleto
-            };
-
-            try {
-                mostrarLoading();
-
-                clientes.push(cliente);
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-
-                fecharModalCadastroRapido();
-                await carregarClientes();
-                
-                // Selecionar o cliente recém-cadastrado
-                document.getElementById('pdvCliente').value = cliente.id;
-                
-                mostrarAlerta('Cliente cadastrado e selecionado com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao salvar cliente:', error);
-                mostrarAlerta('Erro ao salvar cliente: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        // ==================== CAIXA ====================
-        async function verificarCaixaAberto() {
-            try {
-                const hoje = new Date().toISOString().split('T')[0];
-                
-                const caixaAberto = caixas.find(c => c.status === 'aberto' && c.data_abertura.startsWith(hoje));
-
-                if (caixaAberto) {
-                    caixaAtual = caixaAberto;
-                    atualizarUICaixaAberto();
-                } else {
-                    caixaAtual = null;
-                    atualizarUICaixaFechado();
-                }
-            } catch (error) {
-                console.error('Erro ao verificar caixa:', error);
-            }
-        }
-
-        function atualizarUICaixaAberto() {
-            document.getElementById('caixaStatusBadge').className = 'caixa-status caixa-aberto';
-            document.getElementById('caixaStatusBadge').textContent = 'Caixa Aberto';
-            document.getElementById('caixaStatusText').textContent = 'Aberto';
-            document.getElementById('caixaControles').style.display = 'none';
-            document.getElementById('caixaAberto').style.display = 'block';
-            
-            if (caixaAtual) {
-                document.getElementById('caixaSaldoInicial').textContent = formatarMoeda(caixaAtual.valor_inicial || 0);
-            }
-            
-            atualizarSaldoCaixa();
-            
-            const alertPdv = document.getElementById('alertPdvCaixa');
-            alertPdv.innerHTML = '';
-        }
-
-        function atualizarUICaixaFechado() {
-            document.getElementById('caixaStatusBadge').className = 'caixa-status caixa-fechado';
-            document.getElementById('caixaStatusBadge').textContent = 'Caixa Fechado';
-            document.getElementById('caixaStatusText').textContent = 'Fechado';
-            document.getElementById('caixaControles').style.display = 'block';
-            document.getElementById('caixaAberto').style.display = 'none';
-            
-            document.getElementById('caixaSaldoInicial').textContent = 'R$ 0,00';
-            document.getElementById('caixaTotalVendas').textContent = 'R$ 0,00';
-            document.getElementById('caixaSaldoAtual').textContent = 'R$ 0,00';
-            
-            const alertPdv = document.getElementById('alertPdvCaixa');
-            alertPdv.innerHTML = '<div class="alert alert-warning">Caixa fechado! Abra o caixa para realizar vendas.</div>';
-        }
-
-        async function atualizarSaldoCaixa() {
-            if (!caixaAtual) return;
-
-            try {
-                // Buscar vendas do caixa
-                const vendasCaixa = vendas.filter(v => v.caixa_id === caixaAtual.id);
-                const totalVendas = vendasCaixa.reduce((sum, v) => sum + parseFloat(v.total), 0) || 0;
-
-                // Buscar movimentações do caixa
-                const movimentacoesCaixa = movimentacoes.filter(m => m.caixa_id === caixaAtual.id);
-                let totalMovimentacoes = 0;
-                movimentacoesCaixa.forEach(m => {
-                    if (m.tipo === 'entrada') {
-                        totalMovimentacoes += parseFloat(m.valor);
-                    } else {
-                        totalMovimentacoes -= parseFloat(m.valor);
-                    }
-                });
-
-                const saldoAtual = parseFloat(caixaAtual.valor_inicial) + totalVendas + totalMovimentacoes;
-
-                document.getElementById('caixaTotalVendas').textContent = formatarMoeda(totalVendas);
-                document.getElementById('caixaSaldoAtual').textContent = formatarMoeda(saldoAtual);
-            } catch (error) {
-                console.error('Erro ao atualizar saldo:', error);
-            }
-        }
-
-        async function abrirCaixa() {
-            const valorInicial = parseFloat(document.getElementById('valorInicialCaixa').value) || 0;
-            
-            if (valorInicial < 0) {
-                mostrarAlerta('Valor inicial não pode ser negativo!', 'danger');
-                return;
-            }
-
-            try {
-                mostrarLoading();
-                
-                const novoCaixa = {
-                    id: Date.now(),
-                    data_abertura: new Date().toISOString(),
-                    valor_inicial: valorInicial,
-                    status: 'aberto',
-                    usuario: usuarioAtual?.email || 'Sistema'
-                };
-
-                caixas.push(novoCaixa);
-                localStorage.setItem('caixas', JSON.stringify(caixas));
-
-                caixaAtual = novoCaixa;
-                atualizarUICaixaAberto();
-                mostrarAlerta('Caixa aberto com sucesso!', 'success');
-                document.getElementById('valorInicialCaixa').value = '';
-            } catch (error) {
-                console.error('Erro ao abrir caixa:', error);
-                mostrarAlerta('Erro ao abrir caixa: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function fecharCaixa() {
-            if (!caixaAtual) {
-                mostrarAlerta('Nenhum caixa aberto!', 'danger');
-                return;
-            }
-
-            if (!confirm('Deseja realmente fechar o caixa?')) return;
-
-            try {
-                mostrarLoading();
-
-                // Calcular valor final
-                const saldoAtualText = document.getElementById('caixaSaldoAtual').textContent;
-                const valorFinal = parseFloat(saldoAtualText.replace('R$', '').replace('.', '').replace(',', '.'));
-
-                // Atualizar caixa no array
-                const index = caixas.findIndex(c => c.id === caixaAtual.id);
-                if (index !== -1) {
-                    caixas[index].data_fechamento = new Date().toISOString();
-                    caixas[index].valor_final = valorFinal;
-                    caixas[index].status = 'fechado';
-                    localStorage.setItem('caixas', JSON.stringify(caixas));
-                }
-
-                caixaAtual = null;
-                atualizarUICaixaFechado();
-                await carregarHistoricoCaixas();
-                mostrarAlerta('Caixa fechado com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao fechar caixa:', error);
-                mostrarAlerta('Erro ao fechar caixa: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function carregarHistoricoCaixas() {
-            try {
-                const caixasOrdenados = [...caixas].sort((a, b) => new Date(b.data_abertura) - new Date(a.data_abertura)).slice(0, 50);
-
-                const tbody = document.getElementById('tabelaCaixas');
-                tbody.innerHTML = '';
-
-                caixasOrdenados.forEach(caixa => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${formatarData(caixa.data_abertura)}</td>
-                        <td>${caixa.data_fechamento ? formatarData(caixa.data_fechamento) : '-'}</td>
-                        <td>${formatarMoeda(caixa.valor_inicial)}</td>
-                        <td>${caixa.valor_final ? formatarMoeda(caixa.valor_final) : '-'}</td>
-                        <td><span class="caixa-status ${caixa.status === 'aberto' ? 'caixa-aberto' : 'caixa-fechado'}">${caixa.status}</span></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar histórico:', error);
-            }
-        }
-
-        // ==================== PRODUTOS ====================
-        async function carregarProdutos() {
-            try {
-                const produtosOrdenados = [...produtos].sort((a, b) => a.nome.localeCompare(b.nome));
-
-                const tbody = document.getElementById('tabelaProdutos');
-                tbody.innerHTML = '';
-
-                produtosOrdenados.forEach(produto => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${produto.sku}</td>
-                        <td>${produto.nome}</td>
-                        <td>${produto.categoria || '-'}</td>
-                        <td>${formatarMoeda(produto.preco)}</td>
-                        <td style="color: ${produto.quantidade < 5 ? 'var(--danger)' : 'var(--success)'}">
-                            ${produto.quantidade}
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-icon" onclick='editarProduto(${JSON.stringify(produto)})'>
-                                <svg class="icon"><use href="#icon-edit"></use></svg>
-                            </button>
-                            <button class="btn btn-danger btn-icon" onclick="excluirProduto('${produto.id}')">
-                                <svg class="icon"><use href="#icon-delete"></use></svg>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar produtos:', error);
-                mostrarAlerta('Erro ao carregar produtos', 'danger');
-            }
-        }
-
-        function abrirModalProduto() {
-            document.getElementById('modalProdutoTitulo').textContent = 'Novo Produto';
-            document.getElementById('formProduto').reset();
-            document.getElementById('produtoId').value = '';
-            document.getElementById('modalProduto').classList.add('active');
-        }
-
-        function fecharModalProduto() {
-            document.getElementById('modalProduto').classList.remove('active');
-        }
-
-        function editarProduto(produto) {
-            document.getElementById('modalProdutoTitulo').textContent = 'Editar Produto';
-            document.getElementById('produtoId').value = produto.id;
-            document.getElementById('produtoNome').value = produto.nome;
-            document.getElementById('produtoSku').value = produto.sku;
-            document.getElementById('produtoCategoria').value = produto.categoria || '';
-            document.getElementById('produtoPreco').value = produto.preco;
-            document.getElementById('produtoQuantidade').value = produto.quantidade;
-            document.getElementById('modalProduto').classList.add('active');
-        }
-
-        async function salvarProduto(event) {
-            event.preventDefault();
-            
-            const id = document.getElementById('produtoId').value;
-            const produto = {
-                id: id || Date.now(),
-                nome: document.getElementById('produtoNome').value,
-                sku: document.getElementById('produtoSku').value,
-                categoria: document.getElementById('produtoCategoria').value,
-                preco: parseFloat(document.getElementById('produtoPreco').value),
-                quantidade: parseInt(document.getElementById('produtoQuantidade').value)
-            };
-
-            try {
-                mostrarLoading();
-
-                if (id) {
-                    const index = produtos.findIndex(p => p.id == id);
-                    if (index !== -1) {
-                        produtos[index] = produto;
-                    }
-                    mostrarAlerta('Produto atualizado com sucesso!', 'success');
-                } else {
-                    produtos.push(produto);
-                    mostrarAlerta('Produto cadastrado com sucesso!', 'success');
-                }
-
-                localStorage.setItem('produtos', JSON.stringify(produtos));
-                fecharModalProduto();
-                await carregarProdutos();
-            } catch (error) {
-                console.error('Erro ao salvar produto:', error);
-                mostrarAlerta('Erro ao salvar produto: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function excluirProduto(id) {
-            if (!confirm('Deseja realmente excluir este produto?')) return;
-
-            try {
-                mostrarLoading();
-                
-                produtos = produtos.filter(p => p.id != id);
-                localStorage.setItem('produtos', JSON.stringify(produtos));
-
-                mostrarAlerta('Produto excluído com sucesso!', 'success');
-                await carregarProdutos();
-            } catch (error) {
-                console.error('Erro ao excluir produto:', error);
-                mostrarAlerta('Erro ao excluir produto: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        // ==================== CLIENTES ====================
-        async function carregarClientes() {
-            try {
-                const clientesOrdenados = [...clientes].sort((a, b) => a.nome.localeCompare(b.nome));
-
-                // Atualizar tabela
-                const tbody = document.getElementById('tabelaClientes');
-                tbody.innerHTML = '';
-
-                clientesOrdenados.forEach(cliente => {
-                    // Montar endereço completo para exibição
-                    let enderecoCompleto = '';
-                    if (cliente.rua || cliente.numero || cliente.bairro || cliente.cidade || cliente.estado || cliente.cep) {
-                        const partes = [];
-                        if (cliente.rua) partes.push(cliente.rua);
-                        if (cliente.numero) partes.push(cliente.numero);
-                        if (cliente.bairro) partes.push(cliente.bairro);
-                        if (cliente.cidade) partes.push(cliente.cidade);
-                        if (cliente.estado) partes.push(cliente.estado);
-                        if (cliente.cep) partes.push(cliente.cep);
-                        enderecoCompleto = partes.join(', ');
-                    } else if (cliente.endereco) {
-                        enderecoCompleto = cliente.endereco;
-                    }
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${cliente.nome}</td>
-                        <td>${cliente.telefone}</td>
-                        <td>${cliente.cpf || '-'}</td>
-                        <td>${cliente.email || '-'}</td>
-                        <td>${enderecoCompleto || '-'}</td>
-                        <td>
-                            <button class="btn btn-primary btn-icon" onclick='editarCliente(${JSON.stringify(cliente)})'>
-                                <svg class="icon"><use href="#icon-edit"></use></svg>
-                            </button>
-                            <button class="btn btn-danger btn-icon" onclick="excluirCliente('${cliente.id}')">
-                                <svg class="icon"><use href="#icon-delete"></use></svg>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                // Atualizar select do PDV
-                const select = document.getElementById('pdvCliente');
-                select.innerHTML = '<option value="">Cliente Avulso</option>';
-                
-                clientesOrdenados.forEach(cliente => {
-                    const option = document.createElement('option');
-                    option.value = cliente.id;
-                    option.textContent = cliente.nome;
-                    select.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar clientes:', error);
-            }
-        }
-
-        function abrirModalCliente() {
-            document.getElementById('modalClienteTitulo').textContent = 'Novo Cliente';
-            document.getElementById('formCliente').reset();
-            document.getElementById('clienteId').value = '';
-            document.getElementById('codigoPais').value = '+55';
-            document.getElementById('modalCliente').classList.add('active');
-        }
-
-        function fecharModalCliente() {
-            document.getElementById('modalCliente').classList.remove('active');
-        }
-
-        function editarCliente(cliente) {
-            document.getElementById('modalClienteTitulo').textContent = 'Editar Cliente';
-            document.getElementById('clienteId').value = cliente.id;
-            document.getElementById('clienteNome').value = cliente.nome;
-            
-            // Separar código do país e número de telefone
-            const telefoneCompleto = cliente.telefone || '';
-            if (telefoneCompleto.startsWith('+55')) {
-                document.getElementById('codigoPais').value = '+55';
-                document.getElementById('clienteTelefone').value = telefoneCompleto.substring(3).trim();
-            } else if (telefoneCompleto.startsWith('+')) {
-                const codigoPais = telefoneCompleto.substring(0, 3);
-                document.getElementById('codigoPais').value = codigoPais;
-                document.getElementById('clienteTelefone').value = telefoneCompleto.substring(3).trim();
-            } else {
-                document.getElementById('codigoPais').value = '+55';
-                document.getElementById('clienteTelefone').value = telefoneCompleto;
-            }
-            
-            document.getElementById('clienteCpf').value = cliente.cpf || '';
-            document.getElementById('clienteEmail').value = cliente.email || '';
-            
-            // Preencher campos de endereço
-            document.getElementById('clienteRua').value = cliente.rua || '';
-            document.getElementById('clienteNumero').value = cliente.numero || '';
-            document.getElementById('clienteBairro').value = cliente.bairro || '';
-            document.getElementById('clienteCidade').value = cliente.cidade || '';
-            document.getElementById('clienteEstado').value = cliente.estado || '';
-            document.getElementById('clienteCep').value = cliente.cep || '';
-            
-            document.getElementById('modalCliente').classList.add('active');
-        }
-
-        async function salvarCliente(event) {
-            event.preventDefault();
-            
-            const id = document.getElementById('clienteId').value;
-            const codigoPais = document.getElementById('codigoPais').value;
-            const telefoneNumero = document.getElementById('clienteTelefone').value;
-            const telefoneCompleto = codigoPais + ' ' + telefoneNumero;
-            
-            const cliente = {
-                id: id || Date.now(),
-                nome: document.getElementById('clienteNome').value,
-                telefone: telefoneCompleto,
-                cpf: document.getElementById('clienteCpf').value,
-                email: document.getElementById('clienteEmail').value,
-                rua: document.getElementById('clienteRua').value,
-                numero: document.getElementById('clienteNumero').value,
-                bairro: document.getElementById('clienteBairro').value,
-                cidade: document.getElementById('clienteCidade').value,
-                estado: document.getElementById('clienteEstado').value,
-                cep: document.getElementById('clienteCep').value
-            };
-
-            try {
-                mostrarLoading();
-
-                if (id) {
-                    const index = clientes.findIndex(c => c.id == id);
-                    if (index !== -1) {
-                        clientes[index] = cliente;
-                    }
-                    mostrarAlerta('Cliente atualizado com sucesso!', 'success');
-                } else {
-                    clientes.push(cliente);
-                    mostrarAlerta('Cliente cadastrado com sucesso!', 'success');
-                }
-
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-                fecharModalCliente();
-                await carregarClientes();
-            } catch (error) {
-                console.error('Erro ao salvar cliente:', error);
-                mostrarAlerta('Erro ao salvar cliente: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function excluirCliente(id) {
-            if (!confirm('Deseja realmente excluir este cliente?')) return;
-
-            try {
-                mostrarLoading();
-                
-                clientes = clientes.filter(c => c.id != id);
-                localStorage.setItem('clientes', JSON.stringify(clientes));
-
-                mostrarAlerta('Cliente excluído com sucesso!', 'success');
-                await carregarClientes();
-            } catch (error) {
-                console.error('Erro ao excluir cliente:', error);
-                mostrarAlerta('Erro ao excluir cliente: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        // ==================== PDV ====================
-        async function buscarProdutos() {
-            const busca = document.getElementById('buscaProduto').value.toLowerCase();
-            
-            try {
-                const produtosFiltrados = produtos.filter(produto => 
-                    (produto.nome.toLowerCase().includes(busca) || produto.sku.toLowerCase().includes(busca)) &&
-                    produto.quantidade > 0
-                ).sort((a, b) => a.nome.localeCompare(b.nome));
-
-                const lista = document.getElementById('listaProdutos');
-                lista.innerHTML = '';
-
-                if (produtosFiltrados.length === 0) {
-                    lista.innerHTML = '<p style="color: var(--text-gray);">Nenhum produto encontrado</p>';
-                    return;
-                }
-
-                produtosFiltrados.forEach(produto => {
-                    const div = document.createElement('div');
-                    div.className = 'produto-item';
-                    div.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <strong>${produto.nome}</strong><br>
-                                <small style="color: var(--text-gray);">SKU: ${produto.sku} | Estoque: ${produto.quantidade}</small>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-size: 1.2rem; color: var(--gold); font-weight: bold;">
-                                    ${formatarMoeda(produto.preco)}
-                                </div>
-                                <button class="btn btn-primary btn-icon" onclick='adicionarAoCarrinho(${JSON.stringify(produto)})'>
-                                    <svg class="icon"><use href="#icon-plus"></use></svg>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    lista.appendChild(div);
-                });
-            } catch (error) {
-                console.error('Erro ao buscar produtos:', error);
-            }
-        }
-
-        function adicionarAoCarrinho(produto) {
-            const itemExistente = carrinho.find(item => item.id === produto.id);
-            
-            if (itemExistente) {
-                if (itemExistente.quantidade < produto.quantidade) {
-                    itemExistente.quantidade++;
-                } else {
-                    mostrarAlerta('Quantidade máxima em estoque atingida!', 'warning');
-                    return;
-                }
-            } else {
-                carrinho.push({
-                    ...produto,
-                    quantidade: 1,
-                    quantidade_original: produto.quantidade
-                });
-            }
-            
-            atualizarCarrinho();
-        }
-
-        function removerDoCarrinho(produtoId) {
-            carrinho = carrinho.filter(item => item.id !== produtoId);
-            atualizarCarrinho();
-        }
-
-        function alterarQuantidade(produtoId, delta) {
-            const item = carrinho.find(item => item.id === produtoId);
-            if (!item) return;
-
-            const novaQuantidade = item.quantidade + delta;
-            
-            if (novaQuantidade <= 0) {
-                removerDoCarrinho(produtoId);
-            } else if (novaQuantidade <= item.quantidade_original) {
-                item.quantidade = novaQuantidade;
-                atualizarCarrinho();
-            } else {
-                mostrarAlerta('Quantidade máxima em estoque atingida!', 'warning');
-            }
-        }
-
-        function atualizarCarrinho() {
-            const container = document.getElementById('carrinhoItens');
-            container.innerHTML = '';
-
-            if (carrinho.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-gray); text-align: center;">Carrinho vazio</p>';
-                document.getElementById('carrinhoTotal').textContent = 'R$ 0,00';
-                document.getElementById('descontoInfo').textContent = 'R$ 0,00';
-                calcularTroco();
-                return;
-            }
-
-            let subtotal = 0;
-
-            carrinho.forEach(item => {
-                const subtotalItem = item.preco * item.quantidade;
-                subtotal += subtotalItem;
-
-                const div = document.createElement('div');
-                div.className = 'carrinho-item';
-                div.innerHTML = `
-                    <div>
-                        <strong>${item.nome}</strong><br>
-                        <small style="color: var(--text-gray);">${formatarMoeda(item.preco)} x ${item.quantidade}</small>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
-                            ${formatarMoeda(subtotalItem)}
-                        </div>
-                        <div class="quantidade-control">
-                            <button onclick="alterarQuantidade('${item.id}', -1)">
-                                <svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-minus"></use></svg>
-                            </button>
-                            <span>${item.quantidade}</span>
-                            <button onclick="alterarQuantidade('${item.id}', 1)">
-                                <svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-plus"></use></svg>
-                            </button>
-                            <button onclick="removerDoCarrinho('${item.id}')" style="background: var(--danger); margin-left: 0.5rem;">
-                                <svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-delete"></use></svg>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-
-            // Calcular desconto
-            const valorDesconto = (subtotal * descontoAtual) / 100;
-            const total = subtotal - valorDesconto;
-
-            document.getElementById('descontoInfo').textContent = formatarMoeda(valorDesconto);
-            document.getElementById('carrinhoTotal').textContent = formatarMoeda(total);
-            calcularTroco();
-        }
-
-        async function finalizarVenda() {
-            if (!caixaAtual) {
-                mostrarAlerta('Caixa fechado! Abra o caixa para realizar vendas.', 'danger');
-                return;
-            }
-
-            if (carrinho.length === 0) {
-                mostrarAlerta('Adicione produtos ao carrinho!', 'warning');
-                return;
-            }
-
-            const clienteId = document.getElementById('pdvCliente').value || null;
-            const formaPagamento = document.getElementById('formaPagamento').value;
-            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
-            const valorDesconto = (subtotal * descontoAtual) / 100;
-            const total = subtotal - valorDesconto;
-
-            // Validar pagamento em dinheiro
-            if (formaPagamento === 'dinheiro') {
-                const valorRecebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-                const precisaTroco = document.getElementById('precisaTroco').value;
-                
-                if (precisaTroco === 'sim' && valorRecebido < total) {
-                    mostrarAlerta('Valor recebido é insuficiente!', 'danger');
-                    return;
-                }
-            }
-
-            try {
-                mostrarLoading();
-
-                // Inserir venda
-                const vendaData = {
-                    id: Date.now(),
-                    cliente_id: clienteId,
-                    subtotal: subtotal,
-                    desconto_percentual: descontoAtual,
-                    desconto_valor: valorDesconto,
-                    total: total,
-                    forma_pagamento: formaPagamento,
-                    caixa_id: caixaAtual.id,
-                    data: new Date().toISOString(),
-                    itens: [...carrinho]
-                };
-
-                // Adicionar dados do pagamento em dinheiro
-                if (formaPagamento === 'dinheiro') {
-                    vendaData.valor_recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
-                    vendaData.precisa_troco = document.getElementById('precisaTroco').value;
-                }
-
-                vendas.push(vendaData);
-                localStorage.setItem('vendas', JSON.stringify(vendas));
-
-                // Atualizar estoque
-                carrinho.forEach(item => {
-                    const produto = produtos.find(p => p.id === item.id);
-                    if (produto) {
-                        produto.quantidade -= item.quantidade;
-                    }
-                });
-                localStorage.setItem('produtos', JSON.stringify(produtos));
-
-                // Salvar carrinho para o comprovante
-                const carrinhoParaComprovante = [...carrinho];
-
-                // Limpar carrinho e desconto
-                carrinho = [];
-                descontoAtual = 0;
-                document.getElementById('descontoPercentual').value = '';
-                atualizarCarrinho();
-                document.getElementById('buscaProduto').value = '';
-                document.getElementById('listaProdutos').innerHTML = '';
-                document.getElementById('pdvCliente').value = '';
-                document.getElementById('valorRecebido').value = '';
-
-                await atualizarSaldoCaixa();
-                await carregarProdutos();
-
-                mostrarAlerta('Venda finalizada com sucesso!', 'success');
-                
-                // Gerar e mostrar comprovante
-                gerarComprovante(vendaData, carrinhoParaComprovante);
-                
-            } catch (error) {
-                console.error('Erro ao finalizar venda:', error);
-                mostrarAlerta('Erro ao finalizar venda: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        function gerarComprovante(venda, itens) {
-            const comprovanteDiv = document.getElementById('comprovanteConteudo');
-            
-            let itensHTML = '';
-            itens.forEach(item => {
-                itensHTML += `
-                    <div class="comprovante-item">
-                        <span>${item.nome} (${item.quantidade}x)</span>
-                        <span>${formatarMoeda(item.preco * item.quantidade)}</span>
-                    </div>
-                `;
-            });
-
-            let pagamentoInfo = venda.forma_pagamento.toUpperCase();
-            if (venda.forma_pagamento === 'dinheiro' && venda.valor_recebido) {
-                const troco = venda.valor_recebido - venda.total;
-                pagamentoInfo += `<br>Recebido: ${formatarMoeda(venda.valor_recebido)}`;
-                if (troco > 0) {
-                    pagamentoInfo += `<br>Troco: ${formatarMoeda(troco)}`;
-                }
-            }
-
-            let descontoHTML = '';
-            if (venda.desconto_valor > 0) {
-                descontoHTML = `
-                    <div class="comprovante-item">
-                        <span>Subtotal:</span>
-                        <span>${formatarMoeda(venda.subtotal)}</span>
-                    </div>
-                    <div class="comprovante-item">
-                        <span>Desconto (${venda.desconto_percentual}%):</span>
-                        <span>-${formatarMoeda(venda.desconto_valor)}</span>
-                    </div>
-                `;
-            }
-
-            comprovanteDiv.innerHTML = `
-                <div class="comprovante-header">
-                    <h2>LaBella Woman</h2>
-                    <p>COMPROVANTE DE VENDA</p>
-                    <p>${formatarData(venda.data)}</p>
-                </div>
-                
-                <div style="margin: 1rem 0;">
-                    ${itensHTML}
-                    ${descontoHTML}
-                </div>
-                
-                <div class="comprovante-footer">
-                    <strong>TOTAL: ${formatarMoeda(venda.total)}</strong>
-                    <p>${pagamentoInfo}</p>
-                    <p style="margin-top: 1rem;">Obrigado pela preferência!</p>
-                    <p>Volte sempre!</p>
-                </div>
-            `;
-
-            document.getElementById('modalComprovante').classList.add('active');
-        }
-
-        function fecharModalComprovante() {
-            document.getElementById('modalComprovante').classList.remove('active');
-        }
-
-        function imprimirComprovante() {
-            const conteudo = document.getElementById('comprovanteConteudo').innerHTML;
-            const janelaImpressao = window.open('', '', 'width=300,height=600');
-            janelaImpressao.document.write(`
-                <html>
-                    <head>
-                        <title>Comprovante</title>
-                        <style>
-                            body { font-family: 'Courier New', monospace; }
-                            .comprovante { padding: 1rem; }
-                            .comprovante-header { text-align: center; border-bottom: 2px dashed black; padding-bottom: 1rem; margin-bottom: 1rem; }
-                            .comprovante-item { display: flex; justify-content: space-between; margin: 0.5rem 0; }
-                            .comprovante-footer { border-top: 2px dashed black; padding-top: 1rem; margin-top: 1rem; text-align: center; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="comprovante">${conteudo}</div>
-                    </body>
-                </html>
-            `);
-            janelaImpressao.document.close();
-            janelaImpressao.print();
-        }
-
-        function compartilharComprovante() {
-            const texto = document.getElementById('comprovanteConteudo').innerText;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Comprovante LaBella Woman',
-                    text: texto
-                }).catch(err => console.log('Erro ao compartilhar:', err));
-            } else {
-                // Fallback: copiar para clipboard
-                navigator.clipboard.writeText(texto).then(() => {
-                    mostrarAlerta('Comprovante copiado para área de transferência!', 'success');
-                });
-            }
-        }
-
-        // ==================== MOVIMENTAÇÕES ====================
-        function abrirModalMovimentacao() {
-            if (!caixaAtual) {
-                mostrarAlerta('Abra o caixa primeiro para registrar movimentações!', 'danger');
-                return;
-            }
-            document.getElementById('formMovimentacao').reset();
-            document.getElementById('modalMovimentacao').classList.add('active');
-        }
-
-        function fecharModalMovimentacao() {
-            document.getElementById('modalMovimentacao').classList.remove('active');
-        }
-
-        async function salvarMovimentacao(event) {
-            event.preventDefault();
-
-            if (!caixaAtual) {
-                mostrarAlerta('Caixa fechado!', 'danger');
-                return;
-            }
-
-            const movimentacao = {
-                id: Date.now(),
-                tipo: document.getElementById('movimentacaoTipo').value,
-                valor: parseFloat(document.getElementById('movimentacaoValor').value),
-                descricao: document.getElementById('movimentacaoDescricao').value,
-                data: new Date().toISOString(),
-                caixa_id: caixaAtual.id
-            };
-
-            try {
-                mostrarLoading();
-
-                movimentacoes.push(movimentacao);
-                localStorage.setItem('movimentacoes', JSON.stringify(movimentacoes));
-
-                fecharModalMovimentacao();
-                await carregarMovimentacoes();
-                await atualizarSaldoCaixa();
-                mostrarAlerta('Movimentação registrada com sucesso!', 'success');
-            } catch (error) {
-                console.error('Erro ao salvar movimentação:', error);
-                mostrarAlerta('Erro ao salvar movimentação: ' + error.message, 'danger');
-            } finally {
-                esconderLoading();
-            }
-        }
-
-        async function carregarMovimentacoes() {
-            try {
-                const movimentacoesOrdenadas = [...movimentacoes].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 100);
-
-                const tbody = document.getElementById('tabelaMovimentacoes');
-                tbody.innerHTML = '';
-
-                movimentacoesOrdenadas.forEach(mov => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${formatarData(mov.data)}</td>
-                        <td>
-                            <span style="color: ${mov.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)'}">
-                                ${mov.tipo === 'entrada' ? 'Entrada' : 'Saída'}
-                            </span>
-                        </td>
-                        <td>${mov.descricao}</td>
-                        <td style="color: ${mov.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)'}; font-weight: bold;">
-                            ${mov.tipo === 'entrada' ? '+' : '-'} ${formatarMoeda(mov.valor)}
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar movimentações:', error);
-            }
-        }
-
-        // ==================== RELATÓRIOS ====================
-        async function carregarRelatorios() {
-            try {
-                const dataInicio = obterDataInicioPeriodo(filtroRelatorioAtual);
-
-                // Vendas do período
-                const vendasPeriodo = vendas.filter(v => new Date(v.data) >= new Date(dataInicio));
-
-                const totalVendas = vendasPeriodo.length;
-                const totalValor = vendasPeriodo.reduce((sum, v) => sum + parseFloat(v.total), 0);
-                const totalProdutos = vendasPeriodo.reduce((sum, v) => {
-                    return sum + v.itens.reduce((s, i) => s + i.quantidade, 0);
-                }, 0);
-                const ticketMedio = totalVendas > 0 ? totalValor / totalVendas : 0;
-
-                document.getElementById('vendasPeriodo').textContent = totalVendas;
-                document.getElementById('totalPeriodo').textContent = formatarMoeda(totalValor);
-                document.getElementById('produtosVendidos').textContent = totalProdutos;
-                document.getElementById('ticketMedio').textContent = formatarMoeda(ticketMedio);
-
-                // Tabela de vendas recentes
-                const vendasRecentes = [...vendas].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 20);
-
-                const tbody = document.getElementById('tabelaVendasRelatorio');
-                tbody.innerHTML = '';
-
-                vendasRecentes.forEach(venda => {
-                    const cliente = clientes.find(c => c.id == venda.cliente_id);
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${formatarData(venda.data)}</td>
-                        <td>${cliente?.nome || 'Cliente Avulso'}</td>
-                        <td style="color: var(--gold); font-weight: bold;">${formatarMoeda(venda.total)}</td>
-                        <td>${venda.forma_pagamento}</td>
-                        <td>
-                            <button class="btn btn-primary btn-icon" onclick="visualizarVenda('${venda.id}')">
-                                <svg class="icon"><use href="#icon-eye"></use></svg>
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar relatórios:', error);
-            }
-        }
-
-        async function visualizarVenda(vendaId) {
-            // Implementar visualização detalhada da venda
-            mostrarAlerta('Função em desenvolvimento', 'warning');
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
