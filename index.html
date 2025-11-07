@@ -27,7 +27,7 @@
         </symbol>
         
         <symbol id="icon-store" viewBox="0 0 24 24">
-            <path d="M12 2L2 7v2h20V7L12 2zm0 2.18L18.09 7H5.91L12 4.18zM4 9v12h16V9H4zm2 2h12v8H6v-8zm2 2v4h8v-4H8z"/>
+            <path d="M12 2L2 7v2h20V7L12 2zm0 2.18L18.09 7H5.91L12 4.18zM4 9v12h16V9H4zm2 2h12v8H6v-8zm2 2v4h8v-4H8zm2 2v4h8v-4H8z"/>
         </symbol>
         
         <symbol id="icon-cart" viewBox="0 0 24 24">
@@ -121,6 +121,77 @@
             <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zm-5.04-6.71l-2.75 3.54-2.16-2.66c-.44-.53-1.25-.53-1.69 0-.53.66-.53 1.78.06 2.46l3.15 3.86c.75.92 2.26.92 3.01 0l5.91-7.34c.59-.74.59-1.82.05-2.58-.45-.56-1.25-.56-1.7-.03L14.96 8.79z"/>
         </symbol>
     </svg>
+
+    <!-- Adicionando sidebar navegação -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <svg class="icon-lg"><use href="#icon-bag"></use></svg>
+                <span class="sidebar-title">LaBella</span>
+            </div>
+            <button class="sidebar-toggle-close" onclick="toggleSidebar()">
+                <svg class="icon"><use href="#icon-close"></use></svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-label">Menu Principal</div>
+                <button class="sidebar-nav-item active" onclick="changeTabSidebar('pdv')">
+                    <svg class="icon"><use href="#icon-cart"></use></svg>
+                    <span>Ponto de Venda</span>
+                </button>
+                <button class="sidebar-nav-item" onclick="changeTabSidebar('produtos')">
+                    <svg class="icon"><use href="#icon-box"></use></svg>
+                    <span>Produtos</span>
+                </button>
+                <button class="sidebar-nav-item" onclick="changeTabSidebar('clientes')">
+                    <svg class="icon"><use href="#icon-users"></use></svg>
+                    <span>Clientes</span>
+                </button>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-label">Operações</div>
+                <button class="sidebar-nav-item" onclick="changeTabSidebar('caixa')">
+                    <svg class="icon"><use href="#icon-cash"></use></svg>
+                    <span>Controle de Caixa</span>
+                </button>
+                <button class="sidebar-nav-item" onclick="changeTabSidebar('movimentacoes')">
+                    <svg class="icon"><use href="#icon-money-transfer"></use></svg>
+                    <span>Movimentações</span>
+                </button>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-label">Análise</div>
+                <button class="sidebar-nav-item" onclick="changeTabSidebar('relatorios')">
+                    <svg class="icon"><use href="#icon-chart"></use></svg>
+                    <span>Relatórios</span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-avatar">
+                    <svg class="icon"><use href="#icon-users"></use></svg>
+                </div>
+                <div class="sidebar-user-details">
+                    <div class="sidebar-user-name">Admin</div>
+                    <div class="sidebar-user-status" id="statusFooter">Caixa Fechado</div>
+                </div>
+            </div>
+            <button class="sidebar-logout" onclick="logout()">
+                <svg class="icon"><use href="#icon-lock"></use></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Adicionando toggle button para sidebar mobile -->
+    <button class="sidebar-toggle-btn" onclick="toggleSidebar()" id="sidebarToggleBtn">
+        <svg class="icon"><use href="#icon-cart"></use></svg>
+    </button>
 
     <!-- Tela Principal -->
     <div id="mainApp">

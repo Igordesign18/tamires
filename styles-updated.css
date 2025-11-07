@@ -1,0 +1,93 @@
+/* ... existing code from styles ... */
+
+/* Estilos específicos para tabela de clientes aprimorada */
+.cliente-row {
+  background: rgba(26, 26, 26, 0.9);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 191, 255, 0.2);
+  margin-bottom: 1rem;
+  transition: all var(--transition-smooth);
+  cursor: pointer;
+}
+
+.cliente-row:hover {
+  border-color: var(--capri-blue);
+  background: rgba(26, 26, 26, 1);
+  transform: translateX(3px);
+}
+
+.cliente-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.cliente-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.cliente-field-label {
+  color: var(--capri-blue-light);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+}
+
+.cliente-field-value {
+  color: var(--text-light-gray);
+  font-size: 0.95rem;
+}
+
+/* Textarea style */
+textarea.form-control {
+  font-family: inherit;
+  resize: vertical;
+}
+
+/* Validação visual */
+.form-control.error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.1);
+}
+
+.form-control.success {
+  border-color: var(--success);
+}
+
+.error-message {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-info {
+  background: rgba(0, 191, 255, 0.2);
+  color: var(--capri-blue-light);
+  border: 1px solid var(--capri-blue);
+}
+
+.badge-success {
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
